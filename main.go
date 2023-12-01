@@ -42,8 +42,7 @@ func main() {
 		}, "layouts/main")
 	})
 
-	app.Static("/", "./public")
-	app.Static("/", "./favicon")
+	app.Static("/static", "./public")
 
 	radarRouter := app.Group("/user")
 
