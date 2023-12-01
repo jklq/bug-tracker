@@ -22,3 +22,4 @@ db/*.go
 go.work
 
 .env
+tmp/
