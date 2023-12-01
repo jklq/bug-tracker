@@ -1,0 +1,4 @@
+<div class="p-4">
+    <h1 class="text-red-500 text-4xl">{{ title }}</h1>
+    <p>This is the start of a Go + Htmx project. Made by Sebastian.</p>
+</div>
