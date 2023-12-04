@@ -32,21 +32,22 @@ func main() {
 	defer dbpool.Close()
 
 	app := fiber.New(fiber.Config{
-		Views: engine,
+		Views:       engine,
+		ViewsLayout: "layouts/main",
 	})
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		// Render index within layouts/main
 		return c.Render("index", fiber.Map{
 			"title": "Hello, World!",
-		}, "layouts/main")
+		})
 	})
 
 	app.Static("/static", "./public")
 
 	radarRouter := app.Group("/user")
 
-	user.InitRadar(radarRouter, queries)
+	user.InitModule(radarRouter, queries, dbpool)
 
 	log.Fatal(app.Listen(":3001"))
 }

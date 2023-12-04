@@ -13,6 +13,9 @@ RETURNING *;
 -- name: GetUserById :one
 SELECT * FROM users WHERE user_id = $1;
 
+-- name: GetUserByEmail :one
+SELECT * FROM users WHERE email = $1;
+
 -- name: GetAllUsers :many
 SELECT * FROM users ORDER BY created_at DESC;
 
