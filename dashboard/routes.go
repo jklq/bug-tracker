@@ -14,5 +14,8 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Get("/", func(c *fiber.Ctx) error {
 		return handleDashboardGet(c, queries, db)
 	})
+	protected.Post("/project", func(c *fiber.Ctx) error {
+		return handleProjectPost(c, queries, db)
+	})
 
 }

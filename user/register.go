@@ -1,15 +1,10 @@
 package user
 
 import (
-	"fmt"
-
-	"github.com/go-playground/locales/en"
-	ut "github.com/go-playground/universal-translator"
-	"github.com/go-playground/validator/v10"
-	enTranslations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
+	"github.com/jklq/bug-tracker/helpers"
 	"github.com/jklq/bug-tracker/store"
 	"github.com/lucsky/cuid"
 	"golang.org/x/crypto/bcrypt"
@@ -20,26 +15,6 @@ type RegisterParams struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,min=7,max=200"`
 	Username string `json:"username" validate:"required"`
-}
-
-var validate = validator.New()
-
-var english = en.New()
-var uni = ut.New(english, english)
-var trans, _ = uni.GetTranslator("en")
-
-var _ = enTranslations.RegisterDefaultTranslations(validate, trans)
-
-func translateError(err error, trans ut.Translator) (errs []error) {
-	if err == nil {
-		return nil
-	}
-	validatorErrs := err.(validator.ValidationErrors)
-	for _, e := range validatorErrs {
-		translatedErr := fmt.Errorf(e.Translate(trans))
-		errs = append(errs, translatedErr)
-	}
-	return errs
 }
 
 // handleRegisterGet renders the registration page
@@ -57,9 +32,9 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Invalid request format"})
 	}
 
-	err := validate.Struct(params)
+	err := helpers.Validate.Struct(params)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": translateError(err, trans)[0].Error()})
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": helpers.TranslateError(err, helpers.Translator)[0].Error()})
 	}
 
 	// Check if the user already exists

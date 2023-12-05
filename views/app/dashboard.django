@@ -1,0 +1,15 @@
+{% include 'app/modules/create-project-form.django' %}
+
+<div class="border">
+    <ul>
+        {% for project in projects %}
+        <li><b>{{ project.Name }}</b> {{ project.Description }}</li>
+        {% endfor %}
+    </ul>
+    
+
+</div>
+
+<div class="text-red-800">
+    {{ error }}
+</div>

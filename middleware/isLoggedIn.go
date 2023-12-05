@@ -11,7 +11,7 @@ func IsNotLoggedIn(c *fiber.Ctx) error {
 	isLoggedIn := helpers.IsLoggedIn(c)
 
 	if isLoggedIn {
-		return c.Redirect("/")
+		return c.Redirect("/app")
 	}
 
 	// Continue stack

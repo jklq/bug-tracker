@@ -61,6 +61,17 @@ INSERT INTO projects (
 ) VALUES ($1, $2, $3, $4)
 RETURNING *;
 
+-- name: CreateProjectByUser :one
+WITH new_project AS (
+    INSERT INTO projects (project_id, name, description, created_by)
+    VALUES ($1, $2, $3, $4)
+    RETURNING project_id
+)
+INSERT INTO user_projects (user_id, project_id)
+SELECT $4, project_id FROM new_project
+RETURNING *;
+
+
 -- name: GetProjectById :one
 SELECT * FROM projects WHERE project_id = $1;
 
