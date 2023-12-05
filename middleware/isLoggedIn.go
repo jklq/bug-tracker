@@ -13,10 +13,8 @@ func IsNotLoggedIn(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
 	}
 
-	print(sess.Get("user_id") == nil)
-	print(sess.Get("user_id"))
-
 	if sess.Get("user_id") != nil {
+		c.Set("HX-Redirect", "/")
 		return c.Redirect("/")
 	}
 

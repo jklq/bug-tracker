@@ -14,7 +14,7 @@ func ProtectedRouteMiddleware(c *fiber.Ctx) error {
 	}
 
 	if sess.Get("user_id") == nil {
-		return c.Redirect("/login")
+		return c.Redirect("/user/login")
 	}
 
 	// Continue stack

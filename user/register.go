@@ -53,18 +53,18 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 	var params RegisterParams
 
 	if err := c.BodyParser(&params); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Invalid request format")
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Invalid request format"})
 	}
 
 	err := validate.Struct(params)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(translateError(err, trans)[0].Error())
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": translateError(err, trans)[0].Error()})
 	}
 
 	// Check if the user already exists
 	_, err = q.GetUserByEmail(c.Context(), params.Email)
 	if err == nil {
-		return c.Status(fiber.StatusConflict).SendString("User already exists")
+		return c.Status(fiber.StatusConflict).Render("register", fiber.Map{"error": "User already exists"})
 	}
 
 	// Hash the password
@@ -81,19 +81,19 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 		PasswordHash: string(hashedPassword),
 	})
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Failed to create user")
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Failed to create user"})
 	}
 
 	// Create a new session and save the user ID or other necessary information
 	sess, err := store.Store.Get(c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"})
 	}
 
 	sess.Set("user_id", user.UserID)
 
 	if err := sess.Save(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"})
 	}
 
 	return c.Redirect("/")
