@@ -1,8 +1,27 @@
 package store
 
-import "github.com/gofiber/fiber/v2/middleware/session"
+import (
+	"time"
 
-// Session store
-var Store = session.New(session.Config{
-	CookieHTTPOnly: true,
-})
+	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/gofiber/storage/postgres/v3"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+var Store *session.Store
+
+func InitializeStore(dbPool *pgxpool.Pool) {
+	// Initialize custom config
+	var storage = postgres.New(postgres.Config{
+		DB:         dbPool,
+		Table:      "user_sessions",
+		Reset:      false,
+		GCInterval: 10 * time.Second,
+	})
+
+	// Session store
+	Store = session.New(session.Config{
+		CookieHTTPOnly: true,
+		Storage:        storage,
+	})
+}

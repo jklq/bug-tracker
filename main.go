@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/template/django/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jklq/bug-tracker/db"
+	"github.com/jklq/bug-tracker/store"
 	"github.com/jklq/bug-tracker/user"
 	"github.com/joho/godotenv"
 )
@@ -26,6 +27,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	store.InitializeStore(dbpool)
 
 	queries := db.New(dbpool)
 
