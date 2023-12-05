@@ -10,6 +10,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+--
 -- Name: update_updated_at_column_users(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -32,33 +46,13 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.projects (
-    project_id integer NOT NULL,
+    project_id text NOT NULL,
     name text NOT NULL,
     description text,
-    created_by integer,
+    created_by text,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-
-
---
--- Name: projects_project_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.projects_project_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: projects_project_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.projects_project_id_seq OWNED BY public.projects.project_id;
 
 
 --
@@ -75,36 +69,37 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.tickets (
-    ticket_id integer NOT NULL,
+    ticket_id text NOT NULL,
     title text NOT NULL,
     description text,
     status text NOT NULL,
     priority text NOT NULL,
-    assigned_to integer,
-    project_id integer,
+    assigned_to text,
+    project_id text,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
 --
--- Name: tickets_ticket_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: user_projects; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.tickets_ticket_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+CREATE TABLE public.user_projects (
+    user_id text NOT NULL,
+    project_id text NOT NULL
+);
 
 
 --
--- Name: tickets_ticket_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: user_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.tickets_ticket_id_seq OWNED BY public.tickets.ticket_id;
+CREATE TABLE public.user_sessions (
+    k character varying(64) DEFAULT ''::character varying NOT NULL,
+    v bytea NOT NULL,
+    e bigint DEFAULT '0'::bigint NOT NULL
+);
 
 
 --
@@ -112,54 +107,13 @@ ALTER SEQUENCE public.tickets_ticket_id_seq OWNED BY public.tickets.ticket_id;
 --
 
 CREATE TABLE public.users (
-    user_id integer NOT NULL,
+    user_id text NOT NULL,
     username text NOT NULL,
     password_hash text NOT NULL,
     email text NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-
-
---
--- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.users_user_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
-
-
---
--- Name: projects project_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects ALTER COLUMN project_id SET DEFAULT nextval('public.projects_project_id_seq'::regclass);
-
-
---
--- Name: tickets ticket_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tickets ALTER COLUMN ticket_id SET DEFAULT nextval('public.tickets_ticket_id_seq'::regclass);
-
-
---
--- Name: users user_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
 
 
 --
@@ -187,6 +141,22 @@ ALTER TABLE ONLY public.tickets
 
 
 --
+-- Name: user_projects user_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_projects
+    ADD CONSTRAINT user_projects_pkey PRIMARY KEY (user_id, project_id);
+
+
+--
+-- Name: user_sessions user_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_sessions
+    ADD CONSTRAINT user_sessions_pkey PRIMARY KEY (k);
+
+
+--
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -208,6 +178,13 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- Name: e; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX e ON public.user_sessions USING btree (e);
 
 
 --
@@ -256,6 +233,22 @@ ALTER TABLE ONLY public.tickets
 
 
 --
+-- Name: user_projects user_projects_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_projects
+    ADD CONSTRAINT user_projects_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(project_id);
+
+
+--
+-- Name: user_projects user_projects_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_projects
+    ADD CONSTRAINT user_projects_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -265,4 +258,5 @@ ALTER TABLE ONLY public.tickets
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20231201152815');
+    ('20231201152815'),
+    ('20231205191657');

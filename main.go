@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/django/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jklq/bug-tracker/dashboard"
 	"github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/store"
 	"github.com/jklq/bug-tracker/user"
@@ -48,9 +49,11 @@ func main() {
 
 	app.Static("/static", "./public")
 
-	radarRouter := app.Group("/user")
+	userRouter := app.Group("/user")
+	dashboardRouter := app.Group("/app")
 
-	user.InitModule(radarRouter, queries, dbpool)
+	user.InitModule(userRouter, queries, dbpool)
+	dashboard.InitModule(dashboardRouter, queries, dbpool)
 
 	log.Fatal(app.Listen(":3001"))
 }

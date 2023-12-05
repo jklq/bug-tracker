@@ -2,7 +2,7 @@
 
 -- Create users table
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
+    user_id TEXT PRIMARY KEY NOT NULL,
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
@@ -12,23 +12,23 @@ CREATE TABLE users (
 
 -- Create projects table
 CREATE TABLE projects (
-    project_id SERIAL PRIMARY KEY,
+    project_id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     description TEXT,
-    created_by INT REFERENCES users(user_id),
+    created_by TEXT REFERENCES users(user_id),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 -- Create tickets table
 CREATE TABLE tickets (
-    ticket_id SERIAL PRIMARY KEY,
+    ticket_id TEXT PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
     status TEXT NOT NULL,
     priority TEXT NOT NULL,
-    assigned_to INT REFERENCES users(user_id),
-    project_id INT REFERENCES projects(project_id),
+    assigned_to TEXT REFERENCES users(user_id),
+    project_id TEXT REFERENCES projects(project_id),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -62,13 +62,13 @@ EXECUTE FUNCTION update_updated_at_column_users();
 
 -- Drop the triggers on users, projects, and tickets table
 DROP TRIGGER IF EXISTS update_user_modtime ON users;
-DROP TRIGGER IF EXISTS update_project_modtime ON projects;
 DROP TRIGGER IF EXISTS update_ticket_modtime ON tickets;
+DROP TRIGGER IF EXISTS update_project_modtime ON projects;
 
 -- Drop the users, projects, and tickets tables
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS tickets;
+DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS users;
 
 -- Drop the function update_updated_at_column_users
 DROP FUNCTION IF EXISTS update_updated_at_column_users();

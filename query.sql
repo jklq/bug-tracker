@@ -4,10 +4,11 @@
 
 -- name: CreateUser :one
 INSERT INTO users (
+  user_id,
   username,
   password_hash,
   email
-) VALUES ($1, $2, $3)
+) VALUES ($1, $2, $3, $4)
 RETURNING *;
 
 -- name: GetUserById :one
@@ -33,16 +34,36 @@ DELETE FROM users WHERE user_id = $1;
 
 -- Projects Table Queries
 
+-- name: GetProjectsByUserId :many
+SELECT p.* FROM projects p
+JOIN user_projects up ON p.project_id = up.project_id
+WHERE up.user_id = $1;
+
+-- name: AddUserToProject :exec
+INSERT INTO user_projects (user_id, project_id) VALUES ($1, $2);
+
+-- name: RemoveUserFromProject :exec
+DELETE FROM user_projects WHERE user_id = $1 AND project_id = $2;
+
+-- name: GetUserProjects :many
+SELECT project_id FROM user_projects WHERE user_id = $1;
+
+-- name: GetProjectUsers :many
+SELECT user_id FROM user_projects WHERE project_id = $1;
+
+
 -- name: CreateProject :one
 INSERT INTO projects (
+  project_id,
   name,
   description,
   created_by
-) VALUES ($1, $2, $3)
+) VALUES ($1, $2, $3, $4)
 RETURNING *;
 
 -- name: GetProjectById :one
 SELECT * FROM projects WHERE project_id = $1;
+
 
 -- name: GetAllProjects :many
 SELECT * FROM projects ORDER BY created_at DESC;
@@ -62,13 +83,14 @@ DELETE FROM projects WHERE project_id = $1;
 
 -- name: CreateTicket :one
 INSERT INTO tickets (
+  ticket_id,
   title,
   description,
   status,
   priority,
   assigned_to,
   project_id
-) VALUES ($1, $2, $3, $4, $5, $6)
+) VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING *;
 
 -- name: GetTicketById :one
@@ -93,3 +115,5 @@ DELETE FROM tickets WHERE ticket_id = $1;
 
 -- name: GetTicketsByStatus :many
 SELECT * FROM tickets WHERE status = $1 ORDER BY created_at DESC;
+
+

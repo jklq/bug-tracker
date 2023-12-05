@@ -23,5 +23,6 @@ func InitializeStore(dbPool *pgxpool.Pool) {
 	Store = session.New(session.Config{
 		CookieHTTPOnly: true,
 		Storage:        storage,
+		Expiration:     7 * 24 * time.Hour,
 	})
 }

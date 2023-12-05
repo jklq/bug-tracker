@@ -6,3 +6,8 @@ This repository contains the source code for a Bug Tracker web application. Buil
 2. Run `dbrocket up` to push the migrations
 3. Run `air` to start the go server
 4. Run `npx tailwindcss -i ./public/tailwind.css -o ./public/styles.css --watch` if you're going to modify tailwind code
+
+
+## Todo
+
+- Fix errror where if you have a cookie that appears logged in in the session, you cant log in, even if the user does not actually exist

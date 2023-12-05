@@ -11,6 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/store"
+	"github.com/lucsky/cuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -75,9 +76,9 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 
 	// Create new user
 	user, err := q.CreateUser(c.Context(), queryProvider.CreateUserParams{
-		Email:    params.Email,
-		Username: params.Username,
-
+		UserID:       cuid.New(),
+		Email:        params.Email,
+		Username:     params.Username,
 		PasswordHash: string(hashedPassword),
 	})
 	if err != nil {
@@ -96,5 +97,5 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"})
 	}
 
-	return c.Redirect("/")
+	return c.Redirect("/app")
 }
