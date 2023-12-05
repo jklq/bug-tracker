@@ -27,7 +27,7 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 		return handleRegisterPost(c, queries, db)
 	})
 
-	protected := router.Group("", middleware.ProtectedRouteMiddleware(queries))
+	protected := router.Group("", middleware.ProtectedRouteMiddleware)
 
 	protected.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("hello")
