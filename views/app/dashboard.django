@@ -3,11 +3,10 @@
 <div class="border">
     <ul>
         {% for project in projects %}
-        <li><b>{{ project.Name }}</b> {{ project.Description }}</li>
+        <li><b>{{ project.Name }}</b> {{ project.Description.Value }}</li>
         {% endfor %}
     </ul>
     
-
 </div>
 
 <div class="text-red-800">
