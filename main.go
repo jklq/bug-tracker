@@ -10,6 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jklq/bug-tracker/dashboard"
 	"github.com/jklq/bug-tracker/db"
+	"github.com/jklq/bug-tracker/helpers"
 	"github.com/jklq/bug-tracker/middleware"
 	"github.com/jklq/bug-tracker/store"
 	"github.com/jklq/bug-tracker/user"
@@ -22,6 +23,10 @@ func init() {
 func main() {
 	// Initialize standard Go html template engine
 	engine := django.New("./views", ".django")
+
+	// register functions
+	engine.AddFunc("parseDate", helpers.ParseDate)
+	engine.AddFunc("parseTime", helpers.ParseTime)
 
 	// Init database pool
 	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))

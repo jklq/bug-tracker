@@ -1,4 +1,13 @@
-<div>
-    <h1 class="text-xl font-bold">{{project.Name}}</h1>
-    <p>{{project.Description.Value}}</p>
+<div class="border-b border-gray-300 p-4">
+    <div class="flex max-w-screen-lg items-center">
+        <div class="flex-grow">
+            <h1 class="text-xl font-bold">{{project.Name}}</h1>
+            <p>{{project.Description.Value}}</p>
+        </div>
+        <div>
+            <span class="font-bold">Created:</span>
+            {{parseDate(project.CreatedAt)}}
+        </div>
+    </div>
+
 </div>
