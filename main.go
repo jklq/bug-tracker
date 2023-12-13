@@ -10,6 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jklq/bug-tracker/dashboard"
 	"github.com/jklq/bug-tracker/db"
+	"github.com/jklq/bug-tracker/middleware"
 	"github.com/jklq/bug-tracker/store"
 	"github.com/jklq/bug-tracker/user"
 	"github.com/joho/godotenv"
@@ -40,11 +41,13 @@ func main() {
 		ViewsLayout: "layouts/main",
 	})
 
+	app.Use(middleware.RedirectTrailingSlash)
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		// Render index within layouts/main
 		return c.Render("index", fiber.Map{
 			"title": "Hello, World!",
-		})
+		}, "layouts/marketing")
 	})
 
 	app.Static("/static", "./public")

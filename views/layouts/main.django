@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html id="doc">
-  <head>
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="/static/styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="/static/htmx.min.js"></script>
-    <script src="/static/htmx-error-ex.min.js"></script>
+
+<head>
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/static/htmx.min.js"></script>
+  <script src="/static/htmx-error-ex.min.js"></script>
 
 
-  </head>
+</head>
 
-  <body>
-    {{ embed }}
-  </body>
+<body class="bg-stone-100">
+  <div class="progress" style="height: 3px;">
+    <div class=" indeterminate bg-lime-400"></div>
+  </div>
+
+  <div class="flex">
+    {% include 'app/modules/sidebar.django' %}
+
+    <div class="flex-grow max-w-screen-lg">
+      <div class="p-10">
+        {% if error %}
+        <div class="text-white bg-red-500 rounded inline-block p-2 mb-2">
+          Error: {{error}}
+        </div>
+        {% endif %}
+
+
+        <div id="page-content" class="loading-indicator">{{ embed }}</div>
+
+      </div>
+    </div>
+
+
+  </div>
+</body>
+
 </html>

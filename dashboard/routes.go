@@ -12,10 +12,16 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected := router.Group("", middleware.ProtectedRouteMiddleware)
 
 	protected.Get("/", func(c *fiber.Ctx) error {
-		return handleDashboardGet(c, queries, db)
+		return c.Render("app/overview", nil)
+	})
+	protected.Get("/projects", func(c *fiber.Ctx) error {
+		return handleProjectListGet(c, queries, db)
 	})
 	protected.Post("/project", func(c *fiber.Ctx) error {
 		return handleProjectPost(c, queries, db)
+	})
+	protected.Get("/project/:id/view", func(c *fiber.Ctx) error {
+		return handleProjectView(c, queries, db)
 	})
 
 }

@@ -6,7 +6,7 @@ import (
 )
 
 // Middleware to check if user is logged in
-func IsNotLoggedIn(c *fiber.Ctx) error {
+func RedirectIfLoggedIn(c *fiber.Ctx) error {
 	// Get session from store
 	isLoggedIn := helpers.IsLoggedIn(c)
 

@@ -15,8 +15,7 @@ type PostProjectParams struct {
 	Description string
 }
 
-func handleDashboardGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
-
+func handleProjectListGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	sess, err := store.Store.Get(c)
 
 	if err != nil {
@@ -35,7 +34,7 @@ func handleDashboardGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return c.Render("app/dashboard", fiber.Map{"projects": projects})
+	return c.Render("app/projects", fiber.Map{"projects": projects, "url": c.Path()}, helpers.HtmxTemplate(c))
 }
 
 func handleProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {

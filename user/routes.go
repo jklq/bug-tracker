@@ -20,7 +20,7 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 		return c.Redirect("/user/login")
 	})
 
-	onlyUnlogged := router.Group("", middleware.IsNotLoggedIn)
+	onlyUnlogged := router.Group("", middleware.RedirectIfLoggedIn)
 
 	onlyUnlogged.Get("/login", func(c *fiber.Ctx) error {
 		return handleLoginGet(c, queries, db)

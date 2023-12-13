@@ -1,0 +1,7 @@
+<div>
+    [[Statistics and numbers to be added]]
+</div>
+
+<div class="text-red-800">
+    {{ error }}
+</div>
