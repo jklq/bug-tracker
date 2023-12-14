@@ -22,12 +22,11 @@
     <div class="flex-grow ">
       <div>
         {% if error %}
-        <div class="p-10 text-white bg-red-500 rounded inline-block p-2 mb-2">
-          Error: {{error}}
-        </div>
-
+          <div class="m-10 text-white bg-red-500 rounded inline-block p-2 mb-2">
+            Error: {{error}}
+          </div>
         {% else %}
-        <div id="page-content" class="loading-indicator">{{ embed }}</div>
+          <div id="page-content" class="loading-indicator">{{ embed }}</div>
         {% endif %}
 
 
