@@ -10,7 +10,7 @@
         <ul class="block">
             {% for project in projects %}
             <li class="border bg-white rounded mb-2 ">
-                <a href="/app/project/{{ project.ProjectID }}/view" hx-get="/app/project/{{ project.ProjectID }}/view"
+                <a href="/app/project/{{ project.ProjectID }}/view"  hx-get="/app/project/{{ project.ProjectID }}/view"
                     hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
                     class="block flex items-center gap-16 px-5 py-3 hover:bg-lime-50 duration-100 cursor-pointer">
 
