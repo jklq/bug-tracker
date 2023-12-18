@@ -17,7 +17,10 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Get("/projects", func(c *fiber.Ctx) error {
 		return handleProjectListGet(c, queries, db)
 	})
-	protected.Post("/project", func(c *fiber.Ctx) error {
+	protected.Get("/project/create", func(c *fiber.Ctx) error {
+		return handleProjectCreateView(c, queries, db)
+	})
+	protected.Post("/project/create", func(c *fiber.Ctx) error {
 		return handleProjectPost(c, queries, db)
 	})
 	protected.Get("/project/:id/view", func(c *fiber.Ctx) error {
