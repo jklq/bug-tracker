@@ -51,6 +51,13 @@ func handleProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
+	projects, err := q.GetProjectsByUserId(c.Context(), userId)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
 	c.Set("HX-Push-Url", "/app/projects")
-	return c.Status(fiber.StatusOK).Render("app/projects", fiber.Map{"success": "Project added successfully!"}, helpers.HtmxTemplate(c))
+	// TODO: this does not work
+	return c.Status(fiber.StatusOK).Render("app/projects", fiber.Map{"projects": projects, "success": "Project added successfully!"}, helpers.HtmxTemplate(c))
 }

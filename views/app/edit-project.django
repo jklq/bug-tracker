@@ -1,0 +1,33 @@
+<div class="border-b border-gray-300 p-4">
+    <div class="flex max-w-screen-lg items-center gap-3">
+        <div class="h-full">
+            <a href="view" hx-get="view" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
+                class="p-1 h-full block rounded hover:bg-lime-100 border border-lime-900 duration-100 px-3">
+                &lt; Go back</a>
+        </div>
+        <div class="flex-grow">
+            <h1 class="text-xl font-bold">Edit "{{ project.Name }}"</h1>
+            <p>{{ project.Description.Value }}</p>
+        </div>
+
+
+    </div>
+
+</div>
+
+<form hx-ext="response-targets" hx-target="#page-content" hx-target-error="#project-edit-error" hx-post="edit"
+    class="p-4 max-w-screen-lg" method="post">
+    <input type="text" class="hidden" name="id" value="{{project.ProjectID}}">
+    <div class="mb-2">
+        <label for="project-name-input" class="block">Project Name:</label>
+        <input id="project-name-input" value="{{project.Name}}" class="w-full border border-gray-700 p-1 text-lg"
+            type="text" name="name">
+    </div>
+    <div class="mb-2">
+        <label for="project-name-description" class="block">Project Description:</label>
+        <textarea id="project-name-description" class="w-full border border-gray-700 p-1 text-lg" type="text"
+            name="description">{{project.Description.Value}}</textarea>
+    </div>
+    <button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100">Save changes</button>
+    <div class="text-red-600 inline-block p-2" id="project-edit-error"></div>
+</form>

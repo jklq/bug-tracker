@@ -1,8 +1,10 @@
 <div class="p-10 max-w-screen-sm" hx-ext="response-targets">
-    <a href="/app/projects" hx-get="/app/projects"
-    hx-target="#page-content" hx-push-url="true" hx-indicator=".progress" class="text-blue-900 hover:underline">&lt; Go back</a>
+    <a href="/app/projects" hx-get="/app/projects" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
+        class="text-blue-900 hover:underline">&lt; Go
+        back</a>
 
-    <form action="/app/project/create" method="post">
+    <form action="/app/project/create" hx-post="create" hx-ext="response-targets" hx-target-error="#project-edit-error"
+        method="post">
 
         <h1 class="text-2xl">Create Project</h1>
 
@@ -12,9 +14,12 @@
         </div>
         <div class="mb-2">
             <label for="project-name-description" class="block">Project Description:</label>
-            <textarea id="project-name-description" class="w-full border border-gray-700 p-1 text-lg" type="text" name="description"></textarea>
-        </div> 
+            <textarea id="project-name-description" class="w-full border border-gray-700 p-1 text-lg" type="text"
+                name="description"></textarea>
+        </div>
         <button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100">Create new project</button>
     </form>
-    
+
+    <div id="project-edit-error"></div>
+
 </div>
