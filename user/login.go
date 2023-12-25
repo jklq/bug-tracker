@@ -18,7 +18,7 @@ type LoginParams struct {
 func handleLoginGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	return c.Render("login", fiber.Map{
 		"Title": "Login Page",
-	})
+	}, "layouts/marketing")
 }
 
 // handleLoginPost processes the login request
