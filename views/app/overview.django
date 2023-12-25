@@ -4,4 +4,4 @@
 
 <div class="text-red-800">
     {{ error }}
-</div>
+</div>  

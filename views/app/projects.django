@@ -1,7 +1,15 @@
 <div class="max-w-screen-lg p-10">
+
+    {% if success %}
+    <div class="bg-green-300">
+        <span class="text-green-800">{{ success }}</span>
+    </div>
+    {% endif %}
     <div class="flex items-end mb-5">
         <h1 class="flex-grow font-bold text-2xl">Your Projects</h1>
-        <a href="/app"
+        <a
+        href="/app/project/create"  hx-get="/app/project/create"
+                    hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
             class="border border-lime-900 flex items-center bg-lime-300 rounded hover:bg-lime-400 duration-100 pl-5 pr-7 py-3">
             <span>+ Add New Project</span></a>
     </div>
@@ -10,7 +18,7 @@
         <ul class="block">
             {% for project in projects %}
             <li class="border bg-white rounded mb-2 ">
-                <a href="/app/project/{{ project.ProjectID }}/view" hx-get="/app/project/{{ project.ProjectID }}/view"
+                <a href="/app/project/{{ project.ProjectID }}/view"  hx-get="/app/project/{{ project.ProjectID }}/view"
                     hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
                     class="block flex items-center gap-16 px-5 py-3 hover:bg-lime-50 duration-100 cursor-pointer">
 
