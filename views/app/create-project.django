@@ -17,7 +17,7 @@
             <textarea id="project-name-description" class="w-full border border-gray-700 p-1 text-lg" type="text"
                 name="description"></textarea>
         </div>
-        <button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100">Create new project</button>
+        <button type="submit" class="p-2 border border-black hover:bg-gray-200 duration-100">Create new project</button>
     </form>
 
     <div class="text-red-600" id="project-creation-error"></div>

@@ -60,5 +60,5 @@ func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 	}
 
 	c.Set("HX-Push-Url", "/app/project/"+params.Id+"/view")
-	return c.Status(fiber.StatusOK).Render("app/project-details", fiber.Map{"project": project}, helpers.HtmxTemplate(c))
+	return c.Status(fiber.StatusOK).Render("app/project-view", fiber.Map{"project": project}, helpers.HtmxTemplate(c))
 }
