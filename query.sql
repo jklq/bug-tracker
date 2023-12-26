@@ -88,7 +88,11 @@ WHERE project_id = $1
 RETURNING *;
 
 -- name: DeleteProject :exec
-DELETE FROM projects WHERE project_id = $1;
+WITH deleted_user_projects AS (
+    DELETE FROM user_projects WHERE user_projects.project_id = $1
+)
+DELETE FROM projects WHERE projects.project_id = $1;
+
 
 -- Tickets Table Queries
 

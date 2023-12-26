@@ -32,5 +32,8 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Post("/project/:id/edit", func(c *fiber.Ctx) error {
 		return handleEditProjectPost(c, queries, db)
 	})
+	protected.Post("/project/:id/delete", func(c *fiber.Ctx) error {
+		return handleProjectDeletion(c, queries, db)
+	})
 
 }

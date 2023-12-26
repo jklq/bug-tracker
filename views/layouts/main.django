@@ -5,11 +5,14 @@
   <title>{{ title }}</title>
   <link rel="stylesheet" href="/static/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
   <script src="/static/htmx.min.js"></script>
   <script src="/static/htmx-error-ex.min.js"></script>
+
 </head>
 
-<body class="bg-stone-100">
+<body class="bg-stone-100" hx-ext="response-targets">
   <div class="progress" style="height: 3px;">
     <div class=" indeterminate bg-lime-400"></div>
   </div>
@@ -20,15 +23,16 @@
     <div class="flex-grow ">
       <div>
         {% if error %}
-          <div class="m-10 text-white bg-red-500 rounded inline-block p-2 mb-2">
-            Error: {{error}}
-          </div>
+        <div class="m-10 text-white bg-red-500 rounded inline-block p-2 mb-2">
+          Error: {{error}}
+        </div>
         {% else %}
-          <div id="page-content" class="loading-indicator">{{ embed }}</div>
+        <div id="page-content" class="loading-indicator">{{ embed }}</div>
         {% endif %}
       </div>
     </div>
   </div>
+
 </body>
 
 </html>
