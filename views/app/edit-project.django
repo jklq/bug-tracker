@@ -14,35 +14,41 @@
     </div>
 
 </div>
-<div>
-    <form hx-push-url="true" hx-indicator=".progress" hx-post="edit" class="p-4 max-w-screen-lg"
-        hx-target="#page-content" hx-target-error="#project-edit-error" method="post">
-        <input type="text" class="hidden" name="id" value="{{project.ProjectID}}">
-        <div class="mb-2">
-            <label for="project-name-input" class="block">Project Name:</label>
-            <input id="project-name-input" value="{{project.Name}}" class="w-full border border-gray-700 p-1 text-lg"
-                type="text" name="name">
+
+<div class="flex max-w-screen-lg">
+    <div class="flex-grow">
+        <form hx-push-url="true" hx-indicator=".progress" hx-post="edit" class="p-4" hx-target="#page-content"
+            hx-target-error="#project-edit-error" method="post">
+            <input type="text" class="hidden" name="id" value="{{project.ProjectID}}">
+            <div class="mb-2">
+                <label for="project-name-input" class="block">Project Name:</label>
+                <input id="project-name-input" value="{{project.Name}}"
+                    class="w-full border border-gray-700 p-1 text-lg" type="text" name="name">
+            </div>
+            <div class="mb-2">
+                <label for="project-name-description" class="block">Project Description:</label>
+                <textarea id="project-name-description" class="w-full border border-gray-700 p-1 text-lg" type="text"
+                    name="description">{{project.Description.Value}}</textarea>
+            </div>
+            <button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100">Save changes</button>
+
+
+            <div class="text-red-600 inline-block p-2" id="project-edit-error"></div>
+
+
+        </form>
+    </div>
+
+    <div class="p-4 ">
+        <h2 class="text-xl text-bold mb-2">Other actions</h2>
+        <div class="p-3 border border-red-800 rounded">
+            <form action="post" method="post" hx-post="delete" hx-target="#page-content" hx-push-url="true"
+                hx-push-url="true" hx-indicator=".progress" method="post">
+                <input type="text" class="hidden" name="id" value="{{project.ProjectID}}">
+                <input type="submit"
+                    class="p-1 py-2 bg-red-600 cursor-pointer rounded hover:bg-red-700 border border-red-900 text-white duration-100 px-8"
+                    value="Delete project">
+            </form>
         </div>
-        <div class="mb-2">
-            <label for="project-name-description" class="block">Project Description:</label>
-            <textarea id="project-name-description" class="w-full border border-gray-700 p-1 text-lg" type="text"
-                name="description">{{project.Description.Value}}</textarea>
-        </div>
-        <button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100">Save changes</button>
-
-
-        <div class="text-red-600 inline-block p-2" id="project-edit-error"></div>
-
-
-    </form>
-</div>
-
-<div class="p-4">
-    <form action="post" method="post" hx-post="delete" hx-target="#page-content" hx-push-url="true" hx-push-url="true"
-        hx-indicator=".progress" method="post">
-        <input type="text" class="hidden" name="id" value="{{project.ProjectID}}">
-        <input type="submit"
-            class="p-1 py-2 bg-red-600 cursor-pointer rounded hover:bg-red-700 border border-red-900 text-white duration-100 px-8"
-            value="Delete project">
-    </form>
+    </div>
 </div>
