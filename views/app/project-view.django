@@ -22,8 +22,9 @@
 
         <div>
             <a href="edit" hx-get="edit" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
-                class="p-2 px-8 bg-lime-300 rounded hover:bg-lime-400 border border-lime-900 duration-100 ">Edit
-                project</a>
+                class="p-2 px-8 bg-lime-300 rounded hover:bg-lime-400 border border-lime-900 duration-100 ">
+                Edit project
+            </a>
         </div>
     </div>
 
