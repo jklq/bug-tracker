@@ -24,6 +24,7 @@ func handleEditProjectView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 }
 
 func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+
 	var params EditProjectParams
 
 	if err := c.BodyParser(&params); err != nil {
@@ -60,5 +61,6 @@ func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 	}
 
 	c.Set("HX-Push-Url", "/app/project/"+params.Id+"/view")
+
 	return c.Status(fiber.StatusOK).Render("app/project-view", fiber.Map{"project": project}, helpers.HtmxTemplate(c))
 }
