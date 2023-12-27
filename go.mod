@@ -6,6 +6,7 @@ require (
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/gofiber/fiber/v2 v2.51.0
+	github.com/rs/zerolog v1.31.0
 	golang.org/x/crypto v0.14.0
 )
 

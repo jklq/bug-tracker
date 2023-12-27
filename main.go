@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/django/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jklq/bug-tracker/dashboard"
@@ -21,6 +22,7 @@ func init() {
 	godotenv.Load(".env")
 }
 func main() {
+
 	// Initialize standard Go html template engine
 	engine := django.New("./views", ".django")
 
@@ -45,6 +47,8 @@ func main() {
 		Views:       engine,
 		ViewsLayout: "layouts/main",
 	})
+
+	app.Use(logger.New())
 
 	app.Use(middleware.RedirectTrailingSlash)
 
