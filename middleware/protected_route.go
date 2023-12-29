@@ -10,6 +10,7 @@ func ProtectedRouteMiddleware(c *fiber.Ctx) error {
 	// Get session from store
 	sess, err := store.Store.Get(c)
 	if err != nil {
+		print(err)
 		return c.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
 	}
 

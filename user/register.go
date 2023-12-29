@@ -21,7 +21,7 @@ type RegisterParams struct {
 func handleRegisterGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	return c.Render("register", fiber.Map{
 		"Title": "Register Page",
-	})
+	}, "layouts/marketing")
 }
 
 // handleRegisterPost processes the registration request
@@ -29,18 +29,18 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 	var params RegisterParams
 
 	if err := c.BodyParser(&params); err != nil {
-		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Invalid request format"})
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Invalid request format"}, "layouts/marketing")
 	}
 
 	err := helpers.Validate.Struct(params)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": helpers.TranslateError(err, helpers.Translator)[0].Error()})
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": helpers.TranslateError(err, helpers.Translator)[0].Error()}, "layouts/marketing")
 	}
 
 	// Check if the user already exists
 	_, err = q.GetUserByEmail(c.Context(), params.Email)
 	if err == nil {
-		return c.Status(fiber.StatusConflict).Render("register", fiber.Map{"error": "User already exists"})
+		return c.Status(fiber.StatusConflict).Render("register", fiber.Map{"error": "User already exists"}, "layouts/marketing")
 	}
 
 	// Hash the password
@@ -57,19 +57,19 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 		PasswordHash: string(hashedPassword),
 	})
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Failed to create user"})
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Failed to create user"}, "layouts/marketing")
 	}
 
 	// Create a new session and save the user ID or other necessary information
 	sess, err := store.Store.Get(c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"})
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"}, "layouts/marketing")
 	}
 
 	sess.Set("user_id", user.UserID)
 
 	if err := sess.Save(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"})
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"}, "layouts/marketing")
 	}
 
 	return c.Redirect("/app")

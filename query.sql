@@ -103,13 +103,17 @@ INSERT INTO tickets (
   description,
   status,
   priority,
+  created_by,
   assigned_to,
   project_id
-) VALUES ($1, $2, $3, $4, $5, $6, $7)
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING *;
 
 -- name: GetTicketById :one
 SELECT * FROM tickets WHERE ticket_id = $1;
+
+-- name: GetTicketsByProjectId :many
+SELECT * FROM tickets WHERE project_id = $1 ORDER BY created_at DESC;
 
 -- name: GetAllTickets :many
 SELECT * FROM tickets ORDER BY created_at DESC;

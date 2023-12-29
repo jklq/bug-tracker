@@ -26,27 +26,27 @@ func handleLoginPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) e
 	var params LoginParams
 
 	if err := c.BodyParser(&params); err != nil {
-		return c.Status(fiber.StatusBadRequest).Render("login", fiber.Map{"error": "Invalid request format"})
+		return c.Status(fiber.StatusBadRequest).Render("login", fiber.Map{"error": "Invalid request format"}, "layouts/marketing")
 	}
 	user, err := q.GetUserByEmail(c.Context(), params.Email)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).Render("login", fiber.Map{"error": "Invalid credentials"})
+		return c.Status(fiber.StatusUnauthorized).Render("login", fiber.Map{"error": "Invalid credentials"}, "layouts/marketing")
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(params.Password)); err != nil {
-		return c.Status(fiber.StatusUnauthorized).Render("login", fiber.Map{"error": "Invalid credentials"})
+		return c.Status(fiber.StatusUnauthorized).Render("login", fiber.Map{"error": "Invalid credentials"}, "layouts/marketing")
 	}
 
 	// Create a new session and save the user ID or other necessary information
 	sess, err := store.Store.Get(c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("login", fiber.Map{"error": "Internal Server Error"})
+		return c.Status(fiber.StatusInternalServerError).Render("login", fiber.Map{"error": "Internal Server Error"}, "layouts/marketing")
 	}
 
 	sess.Set("user_id", user.UserID)
 
 	if err := sess.Save(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("login", fiber.Map{"error": "Internal Server Error"})
+		return c.Status(fiber.StatusInternalServerError).Render("login", fiber.Map{"error": "Internal Server Error"}, "layouts/marketing")
 	}
 
 	return c.Redirect("/app")

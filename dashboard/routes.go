@@ -36,4 +36,8 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 		return handleProjectDeletion(c, queries, db)
 	})
 
+	protected.Post("/project/:projectId/ticket/create", func(c *fiber.Ctx) error {
+		return handleTicketCreation(c, queries, db)
+	})
+
 }

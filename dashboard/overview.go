@@ -8,11 +8,6 @@ import (
 	"github.com/jklq/bug-tracker/store"
 )
 
-type PostProjectParams struct {
-	Name        string `validate:"required,min=3"`
-	Description string
-}
-
 func handleProjectListGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	sess, err := store.Store.Get(c)
 

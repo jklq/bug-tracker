@@ -26,9 +26,10 @@ CREATE TABLE tickets (
     title TEXT NOT NULL,
     description TEXT,
     status TEXT NOT NULL,
-    priority TEXT NOT NULL,
+    priority SMALLINT NOT NULL,
     assigned_to TEXT REFERENCES users(user_id),
-    project_id TEXT REFERENCES projects(project_id),
+    created_by TEXT REFERENCES users(user_id) NOT NULL,
+    project_id TEXT REFERENCES projects(project_id) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );

@@ -73,9 +73,10 @@ CREATE TABLE public.tickets (
     title text NOT NULL,
     description text,
     status text NOT NULL,
-    priority text NOT NULL,
+    priority smallint NOT NULL,
     assigned_to text,
-    project_id text,
+    created_by text NOT NULL,
+    project_id text NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -222,6 +223,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.tickets
     ADD CONSTRAINT tickets_assigned_to_fkey FOREIGN KEY (assigned_to) REFERENCES public.users(user_id);
+
+
+--
+-- Name: tickets tickets_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tickets
+    ADD CONSTRAINT tickets_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(user_id);
 
 
 --
