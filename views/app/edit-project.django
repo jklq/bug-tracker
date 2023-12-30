@@ -19,7 +19,6 @@
     <div class="flex-grow">
         <form hx-push-url="true" hx-indicator=".progress" hx-post="edit" class="p-4" hx-target="#page-content"
             hx-target-error="#project-edit-error" method="post">
-            <input type="text" class="hidden" name="id" value="{{project.ProjectID}}">
             <div class="mb-2">
                 <label for="project-name-input" class="block">Project Name:</label>
                 <input id="project-name-input" value="{{project.Name}}"

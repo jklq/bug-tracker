@@ -1,0 +1,36 @@
+<div class="border-b border-gray-300 px-8 py-4">
+    <div class="flex max-w-screen-lg items-center gap-10">
+        <div class="flex flex-grow gap-3">
+            <div class="">
+                <a href="/app/project/{{project.ProjectID}}/view" hx-boost="true" hx-target="#page-content"
+                    hx-push-url="true" hx-indicator=".progress"
+                    class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3">
+                    &lt;</a>
+            </div>
+            <div class="flex-grow">
+
+                <h1 class="text-xl font-bold">{{project.Name}}</h1>
+                <p>{{project.Description.Value}}</p>
+            </div>
+        </div>
+
+        <div>
+            <span class="font-bold">Created:</span>
+            {% if project %}{{parseDate(project.CreatedAt)}}{% endif %}
+        </div>
+
+
+        <div>
+            <a href="edit" hx-get="edit" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
+                class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 ">
+                Edit project
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 px-8 py-4">
+    {% comment %}
+    TODO: add ticket info
+    {% endcomment %}
+</div>

@@ -14,11 +14,10 @@ type PostTicketParams struct {
 	Title       string `validate:"required,min=3"`
 	Description string
 	Priority    int16 `validate:"oneof=1 2 3"`
-	AssignedTo  string
 }
 
 func handleTicketCreateView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
-	return c.Render("app/create-ticket", fiber.Map{}, helpers.HtmxTemplate(c))
+	return c.Render("app/create-ticket", fiber.Map{"projectID": c.Params("projectID")}, helpers.HtmxTemplate(c))
 
 }
 
@@ -52,8 +51,8 @@ func handleTicketCreation(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		Title:       params.Title,
 		Description: pgtype.Text{String: params.Description, Valid: true},
 		Priority:    params.Priority,
-		AssignedTo:  pgtype.Text{String: params.AssignedTo, Valid: true},
-		ProjectID:   c.Params("projectId"),
+		ProjectID:   c.Params("projectID"),
+		Status:      "To Do",
 		CreatedBy:   userId,
 	})
 
@@ -61,12 +60,18 @@ func handleTicketCreation(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	tickets, err := q.GetTicketsByProjectId(c.Context(), c.Params("projectId"))
+	tickets, err := q.GetTicketsByProjectId(c.Context(), c.Params("projectID"))
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	c.Set("HX-Push-Url", "/app/tickets")
-	return c.Status(fiber.StatusOK).Render("app/tickets", fiber.Map{"tickets": tickets, "success": "Ticket added successfully!"}, helpers.HtmxTemplate(c))
+	project, err := q.GetProjectById(c.Context(), c.Params("projectID"))
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	c.Set("HX-Push-Url", "/app/project/"+c.Params("projectID")+"/view")
+	return c.Status(fiber.StatusOK).Render("app/project-view", fiber.Map{"project": project, "tickets": tickets, "success": "Ticket added successfully!"}, helpers.HtmxTemplate(c))
 }

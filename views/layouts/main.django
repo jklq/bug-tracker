@@ -20,7 +20,7 @@
   <div class="flex">
     {% include 'app/modules/sidebar.django' %}
 
-    <div class="flex-grow ">
+    <div class="flex-grow overflow-scroll h-screen">
       <div>
         {% if error %}
         <div class="m-10 text-white bg-red-500 rounded inline-block p-2 mb-2">

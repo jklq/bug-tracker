@@ -1,0 +1,32 @@
+<div class="p-10 max-w-screen-sm">
+    <a href="/app/project/{{ projectID }}/view" hx-boost="true" hx-target="#page-content"
+        hx-target-error="#ticket-creation-error" hx-push-url="true" hx-indicator=".progress"
+        class="text-blue-900 hover:underline">&lt; Go back</a>
+
+    <form hx-boost="true" method="post" action="/app/ticket/create" hx-target="#page-content" hx-post="create"
+        hx-target-error="#ticket-creation-error" method="post">
+
+        <h1 class="text-2xl mt-3 mb-2">Create Ticket</h1>
+
+        <div class="mb-2">
+            <label for="ticket-title-input" class="block">Ticket Title:</label>
+            <input id="ticket-title-input" class="w-full border border-gray-700 p-1 text-lg" type="text" name="title">
+        </div>
+        <div class="mb-2">
+            <label for="ticket-description-input" class="block">Ticket Description:</label>
+            <textarea id="ticket-description-input" class="w-full border border-gray-700 p-1 text-lg"
+                name="description"></textarea>
+        </div>
+        <div class="mb-4">
+            <label for="ticket-priority-select" class="block">Priority:</label>
+            <select id="ticket-priority-select" class="w-full border border-gray-700 p-1 text-lg" name="priority">
+                <option value="1">High</option>
+                <option value="2">Medium</option>
+                <option value="3">Low</option>
+            </select>
+        </div>
+        <button type="submit" class="p-2 border border-black hover:bg-gray-200 duration-100">Create new ticket</button>
+    </form>
+
+    <div class="text-red-600" id="ticket-creation-error"></div>
+</div>

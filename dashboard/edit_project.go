@@ -9,7 +9,6 @@ import (
 )
 
 type EditProjectParams struct {
-	Id          string `validate:"required,min=3"`
 	Name        string `validate:"required,min=3"`
 	Description string
 }
@@ -51,7 +50,7 @@ func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 	// }
 
 	project, err := q.UpdateProject(c.Context(), queryProvider.UpdateProjectParams{
-		ProjectID:   params.Id,
+		ProjectID:   c.Params("id"),
 		Name:        params.Name,
 		Description: pgtype.Text{String: params.Description, Valid: true},
 	})
@@ -60,7 +59,7 @@ func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	c.Set("HX-Push-Url", "/app/project/"+params.Id+"/view")
+	c.Set("HX-Push-Url", "/app/project/"+c.Params("id")+"/view")
 
 	return c.Status(fiber.StatusOK).Render("app/project-view", fiber.Map{"project": project}, helpers.HtmxTemplate(c))
 }
