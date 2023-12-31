@@ -29,6 +29,7 @@ func main() {
 	// register functions
 	engine.AddFunc("parseDate", helpers.ParseDate)
 	engine.AddFunc("parseTime", helpers.ParseTime)
+	engine.AddFunc("statusToText", helpers.StatusToText)
 
 	// Init database pool
 	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))

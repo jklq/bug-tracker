@@ -4,8 +4,7 @@
         <div class="flex max-w-screen-lg items-center gap-10">
             <div class="flex flex-grow gap-3">
                 <div class="">
-                    <a href="/app/projects" hx-get="/app/projects" hx-target="#page-content" hx-push-url="true"
-                        hx-indicator=".progress"
+                    <a href="/app/projects" hx-boost="true" hx-target="#page-content" hx-indicator=".progress"
                         class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3">
                         &lt;</a>
                 </div>
@@ -23,7 +22,7 @@
 
 
             <div>
-                <a href="edit" hx-get="edit" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
+                <a href="edit" hx-boost="true" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
                     class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 ">
                     Edit project
                 </a>
@@ -33,10 +32,10 @@
 
     </div>
 
-    <div class="p-4 px-8 flex-grow overflow-auto">
-        <div class=" py-4 max-w-screen-lg">
+    <div class="p-4 px-8 flex-grow  overflow-auto">
+        <div class="py-4 max-w-screen-lg">
             <div class="flex gap-3 items-end pb-3">
-                <div class="flex-grow  gap-3">
+                <div class="flex-grow gap-3">
                     <h1 class="text-3xl">Tickets</h1>
                 </div>
                 <a href="/app/project/{{ project.ProjectID }}/ticket/create"
@@ -45,59 +44,75 @@
                 </a>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 pb-3">
                 {% if tickets|length == 0 %}
                 <span class="text-3xl text-gray-400 bg-gray-200 p-3 text-center block">(No tickets)</span>
 
                 {% else %}
-                <ul class="overflow-auto">
-                    {% for ticket in tickets %}
-                    <li class="border bg-white rounded mb-1">
-                        <a href="/app/project/{{ project.ProjectID }}/ticket/{{ ticket.TicketID }}/view" hx-boost="true"
-                            hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
-                            class="block hover:bg-gray-100 duration-100 cursor-pointer">
-                            <div class="flex justify-between items-center px-4 py-1">
-                                <div>
-                                    <span class="font-semibold">{{ ticket.Title }}</span>
-                                    {% if ticket.Description.Value %}
-                                    <span class="text-sm text-gray-600 hidden md:block">
-                                        {{ ticket.Description.Value | truncatechars:50 }}
-                                    </span>
-                                    {% endif %}
-                                </div>
 
-                                <div class="flex items-center w-1/3">
-                                    <div class="mr-2 w-1/2">
-                                        <span class=" text-sm font-medium">Status:</span>
-                                        <span class="font-semibold">{{ ticket.Status }}</span>
-                                    </div>
-                                    <div class="w-1/2">
-                                        <span class="text-sm font-medium">Priority:</span>
-                                        <span class="font-semibold">
-                                            {% if ticket.Priority == 1 %}Low
-                                            {% elif ticket.Priority == 2 %}Medium
-                                            {% elif ticket.Priority == 3 %}High
-                                            {% else %}{{ ticket.Priority }}
-                                            {% endif %}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <div class="overflow-x-auto h-[500px] overflow-auto">
+                    <table class="w-full text-left">
+                        <thead class="text-sm border border-gray-300 text-gray-700 uppercase bg-gray-200">
+                            <tr>
 
+                                <th scope="col" class="pl-3 ">
+                                    <span class="h-5 w-5"></span>
+                                </th>
+                                <th scope="col" class="pl-2 pr-6 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Assignee
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Priority
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    MVP
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Type
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in tickets %}
+                            <tr class="bg-gray-100 border-b border-x border-gray-300 hover:bg-gray-150">
 
+                                <td class="pl-3" id="dropdown-{{ticket.TicketID}}">
+                                    <a class="h-5 w-5 rounded-full {% if ticket.Status == 1 %} bg-gray-200 {% elif ticket.Status == 2 %} bg-yellow-400 {% elif ticket.Status == 0 %} bg-lime-500 {% endif %} block cursor-pointer border border-gray-500"
+                                        hx-get="/app/ticket/{{ticket.TicketID}}/dropdown/{% if action == 'open' %}close{% else %}open{% endif %}"
+                                        hx-target="#dropdown-{{ticket.TicketID}}"></a>
 
+                                </td>
+                                <td scope="row" class="flex pl-2 pr-6 font-medium whitespace-nowrap">
+                                    <a href="ticket/{{ticket.TicketID}}/view" hx-boost="true" hx-target="#page-content" hx-indicator=".progress"
+                                        hx-push-url="true"
+                                        class="py-3 hover:text-green-700 flex-grow">{{ticket.Title}}</a>
+                                </td>
+                                <td class="px-6 py-3">
+                                    SA
+                                </td>
+                                <td class="px-6 py-3">
+                                    {%if ticket.Priority == 3 %} Low {% elif ticket.Priority == 2  %} Medium {% elif ticket.Priority == 1  %} High {% endif %}
+                                </td>
+                                <td class="px-6 py-3">
+                                    -
+                                </td>
+                                <td class="px-6 py-3">
+                                    -
+                                </td>
+                            </tr>
+
+                            {% endfor%}
+                        </tbody>
+                    </table>
+                </div>
                 {% endif %}
+
+
+
             </div>
-
-
-
         </div>
     </div>
-
-</div>
-
 </div>

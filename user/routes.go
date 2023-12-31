@@ -43,4 +43,5 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("hello")
 	})
+
 }

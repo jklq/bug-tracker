@@ -72,7 +72,7 @@ CREATE TABLE public.tickets (
     ticket_id text NOT NULL,
     title text NOT NULL,
     description text,
-    status text NOT NULL,
+    status smallint NOT NULL,
     priority smallint NOT NULL,
     assigned_to text,
     created_by text NOT NULL,

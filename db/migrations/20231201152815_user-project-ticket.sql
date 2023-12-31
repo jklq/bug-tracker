@@ -25,7 +25,7 @@ CREATE TABLE tickets (
     ticket_id TEXT PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
-    status TEXT NOT NULL,
+    status SMALLINT NOT NULL,
     priority SMALLINT NOT NULL,
     assigned_to TEXT REFERENCES users(user_id),
     created_by TEXT REFERENCES users(user_id) NOT NULL,

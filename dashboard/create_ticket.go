@@ -2,6 +2,7 @@ package dashboard
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
@@ -52,23 +53,26 @@ func handleTicketCreation(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		Description: pgtype.Text{String: params.Description, Valid: true},
 		Priority:    params.Priority,
 		ProjectID:   c.Params("projectID"),
-		Status:      "To Do",
+		Status:      1,
 		CreatedBy:   userId,
 	})
 
 	if err != nil {
+		log.Error(err.Error())
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
 	tickets, err := q.GetTicketsByProjectId(c.Context(), c.Params("projectID"))
 
 	if err != nil {
+		log.Error(err.Error())
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
 	project, err := q.GetProjectById(c.Context(), c.Params("projectID"))
 
 	if err != nil {
+		log.Error(err.Error())
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 

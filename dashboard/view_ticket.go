@@ -31,3 +31,14 @@ func handleTicketView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) 
 
 	return c.Render("app/ticket-view", fiber.Map{"project": project, "ticket": ticket}, helpers.HtmxTemplate(c))
 }
+
+func handleTicketDropdownView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	ticket, err := q.GetTicketById(c.Context(), c.Params("ticketID"))
+
+	if err != nil {
+		return c.Render("app/project-view", fiber.Map{"error": "Error in finding ticket."}, helpers.HtmxTemplate(c))
+	}
+
+	return c.Render("app/modules/dropdown", fiber.Map{"ticket": ticket, "action": c.Params("action")}, helpers.HtmxTemplate(c))
+
+}

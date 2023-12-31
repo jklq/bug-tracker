@@ -45,4 +45,11 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Get("/project/:projectID/ticket/:ticketID/view", func(c *fiber.Ctx) error {
 		return handleTicketView(c, queries, db)
 	})
+	protected.Get("/ticket/:ticketID/dropdown/:action", func(c *fiber.Ctx) error {
+		return handleTicketDropdownView(c, queries, db)
+	})
+
+	protected.Post("/ticket/:ticketID/status/set/:status<int>", func(c *fiber.Ctx) error {
+		return handleTicketSetStatus(c, queries, db)
+	})
 }
