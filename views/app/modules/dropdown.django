@@ -15,7 +15,7 @@
             <li class="w-full text-center"><a hx-post="/app/ticket/{{ticket.TicketID}}/status/set/2" class="w-full px-4 py-1 block whitespace-nowrap cursor-pointer hover:bg-gray-200" hx-target="#dropdown-{{ticket.TicketID}}">Doing</a></li>
             {% endif %}
             {% if ticket.Status != 0 %}
-            <li class="w-full text-center"><a hx-post="/app/ticket/{{ticket.TicketID}}/status/set/0" class="w-full px-4 py-1 block whitespace-nowrap cursor-pointer hover:bg-gray-200" hx-target="#dropdown-{{ticket.TicketID}}">Close</a></li>
+            <li class="w-full text-center"><a hx-post="/app/ticket/{{ticket.TicketID}}/status/set/0" class="w-full px-4 py-1 block whitespace-nowrap cursor-pointer hover:bg-gray-200" hx-target="#dropdown-{{ticket.TicketID}}">Closed</a></li>
             {% endif %}
         </ul>
     </div>

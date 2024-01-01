@@ -1,29 +1,28 @@
-<div class="h-screen flex flex-col">
+<div class="h-screen flex flex-col ">
 
     <div class="border-b border-gray-300 px-8 py-4">
         <div class="flex max-w-screen-lg items-center gap-10">
             <div class="flex flex-grow gap-3">
-                <div class="">
+                <div class="inline">
                     <a href="/app/projects" hx-boost="true" hx-target="#page-content" hx-indicator=".progress"
-                        class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3">
+                        class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3 max-h-[100px]">
                         &lt;</a>
                 </div>
                 <div class="flex-grow">
-
-                    <h1 class="text-xl font-bold">{{project.Name}}</h1>
-                    <p>{{project.Description.Value}}</p>
+                    <h1 class="text-xl font-bold">{{project.Name | truncatechars:40}}</h1>
+                    <p>{{project.Description.Value | truncatechars:80}}</p>
                 </div>
             </div>
 
             <div>
                 <span class="font-bold">Created:</span>
-                {% if project %}{{parseDate(project.CreatedAt)}}{% endif %}
+                <span class="whitespace-nowrap">{% if project %}{{parseDate(project.CreatedAt)}}{% endif %}</span>
             </div>
 
 
             <div>
                 <a href="edit" hx-boost="true" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
-                    class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 ">
+                    class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
                     Edit project
                 </a>
             </div>
@@ -32,7 +31,7 @@
 
     </div>
 
-    <div class="p-4 px-8 flex-grow  overflow-auto">
+    <div class="p-4 px-8 flex-grow overflow-auto pb-12">
         <div class="py-4 max-w-screen-lg">
             <div class="flex gap-3 items-end pb-3">
                 <div class="flex-grow gap-3">
@@ -50,9 +49,9 @@
 
                 {% else %}
 
-                <div class="overflow-x-auto h-[500px] overflow-auto">
+                <div class="border border-gray-300 ">
                     <table class="w-full text-left">
-                        <thead class="text-sm border border-gray-300 text-gray-700 uppercase bg-gray-200">
+                        <thead class="text-sm text-gray-700 uppercase bg-gray-200">
                             <tr>
 
                                 <th scope="col" class="pl-3 ">
@@ -86,15 +85,19 @@
 
                                 </td>
                                 <td scope="row" class="flex pl-2 pr-6 font-medium whitespace-nowrap">
-                                    <a href="ticket/{{ticket.TicketID}}/view" hx-boost="true" hx-target="#page-content" hx-indicator=".progress"
-                                        hx-push-url="true"
-                                        class="py-3 hover:text-green-700 flex-grow">{{ticket.Title}}</a>
+                                    <a href="ticket/{{ticket.TicketID}}/view" hx-boost="true" hx-target="#page-content"
+                                        hx-indicator=".progress" hx-push-url="true"
+                                        class="py-3 hover:text-green-700 flex-grow">
+                                        {{ ticket.Title | truncatechars:60}}
+                                    </a>
                                 </td>
                                 <td class="px-6 py-3">
                                     SA
                                 </td>
                                 <td class="px-6 py-3">
-                                    {%if ticket.Priority == 3 %} Low {% elif ticket.Priority == 2  %} Medium {% elif ticket.Priority == 1  %} High {% endif %}
+                                    {%if ticket.Priority == 3 %} Low
+                                    {% elif ticket.Priority == 2 %} Medium
+                                    {% elif ticket.Priority == 1 %} High {% endif %}
                                 </td>
                                 <td class="px-6 py-3">
                                     -

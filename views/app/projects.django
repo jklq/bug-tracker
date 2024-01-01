@@ -24,23 +24,29 @@
                     hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
                     class="block flex items-center gap-16 px-5 py-3 hover:bg-gray-50 duration-100 cursor-pointer">
 
-                    <div class=" flex-grow">
-                        <b class="text-bold text-lg block">{{ project.Name }}</b>
+                    <div class="flex-grow">
+                        <b class="text-bold text-lg block">{{ project.Name | truncatechars:30}}</b>
                         {% if project.Description.Value %}
-                        {{ project.Description.Value}}
+                        {{ project.Description.Value | truncatechars:100}}
                         {% endif %}
                     </div>
 
                     {% comment %}
                     TODO: add dynamic info for "your tickets", "tickets" and "assigned"
                     {% endcomment %}
-                    <div><span class="text-sm">Your Tickets:</span> <span class="block text-lg">3 open tickets</span>
+                    <div class="text-sm min-w-1/6"><span>Your Tickets:</span> <span
+                            class="whitespace-nowrap block text-lg">
+                            3 open tickets
+                        </span>
                     </div>
 
-                    <div><span class="text-sm">Tickets:</span> <span class="block text-lg">8 open tickets</span>
+                    <div class="text-sm min-w-1/6"><span>Tickets:</span> <span class="whitespace-nowrap block text-lg">
+                            8 open tickets
+                        </span>
                     </div>
 
-                    <div><span class="text-sm">Assigned:</span> <span class="block text-lg">4 people</span>
+                    <div class="text-sm min-w-1/6"><span>Assigned:</span> <span
+                            class="whitespace-nowrap block text-lg">4 people</span>
                     </div>
                 </a>
             </li>

@@ -8,22 +8,25 @@
                     &lt;</a>
             </div>
             <div class="flex-grow">
-
-                <h1 class="text-xl font-bold">{{project.Name}}</h1>
-                <p>{{project.Description.Value}}</p>
+                <p class="font-bold">Ticket</p>
+                <h1 class="text-lg">{{ticket.Title}}</h1>
             </div>
         </div>
 
+
         <div>
             <span class="font-bold">Created:</span>
-            {% if project %}{{parseDate(project.CreatedAt)}}{% endif %}
+
+            <span class="whitespace-nowrap">
+                {% if project %}{{parseDate(ticket.CreatedAt)}}{% endif %}</span>
         </div>
 
 
         <div>
-            <a href="edit" hx-get="edit" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
-                class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 ">
-                Edit project
+            <a href="/app/project/{{project.ProjectID}}/edit" hx-boost="true" hx-target="#page-content"
+                hx-push-url="true" hx-indicator=".progress"
+                class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
+                Edit ticket
             </a>
         </div>
     </div>
