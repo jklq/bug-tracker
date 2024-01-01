@@ -29,8 +29,30 @@
     </div>
 </div>
 
-<div class="mt-4 px-8 py-4">
-    {% comment %}
-    TODO: add ticket info
-    {% endcomment %}
+<div class="px-8 py-4">
+
+    <div class="max-w-screen-lg flex gap-7">
+
+        {% if ticket.Description.Value %}
+        <div class="w-1/2 bg-white rounded border py-4 px-6 flex-grow">
+            <span class="font-bold mb-2 block">Description</span>
+            <p>
+                {{ticket.Description.Value}}
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="bg-white rounded border py-4 px-6">
+
+
+            <p>
+                <span class="font-bold">Priority:</span> {{ priorityToText(ticket.Priority) }}
+            </p>
+
+            <p>
+                <span class="font-bold">Status:</span> {{ statusToText(ticket.Status) }}
+            </p>
+
+        </div>
+    </div>
 </div>

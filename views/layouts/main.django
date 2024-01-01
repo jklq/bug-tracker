@@ -12,7 +12,7 @@
 
 </head>
 
-<body class="bg-stone-100" hx-ext="response-targets" hx-indicator=".progress">
+<body class="bg-stone-100 text-stone-950" hx-ext="response-targets" hx-indicator=".progress">
   <div class="progress" style="height: 3px;">
     <div class=" indeterminate bg-lime-400"></div>
   </div>
