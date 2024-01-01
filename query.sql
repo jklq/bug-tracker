@@ -90,8 +90,12 @@ RETURNING *;
 -- name: DeleteProject :exec
 WITH deleted_user_projects AS (
     DELETE FROM user_projects WHERE user_projects.project_id = $1
+),
+deleted_tickets AS (
+    DELETE FROM tickets WHERE tickets.project_id = $1
 )
 DELETE FROM projects WHERE projects.project_id = $1;
+
 
 
 -- Tickets Table Queries

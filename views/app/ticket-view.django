@@ -2,8 +2,7 @@
     <div class="flex max-w-screen-lg items-center gap-10">
         <div class="flex flex-grow gap-3">
             <div class="">
-                <a href="/app/project/{{project.ProjectID}}/view" hx-boost="true" hx-target="#page-content"
-                    hx-push-url="true"
+                <a href="/app/project/{{project.ProjectID}}/view" hx-boost="true" hx-push-url="true"
                     class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3">
                     &lt;</a>
             </div>
@@ -20,11 +19,16 @@
                 {% if project %}{{parseDate(ticket.CreatedAt)}}{% endif %}</span>
         </div>
 
-        <div>
-            <a href="edit" hx-boost="true" hx-target="#page-content" hx-push-url="true"
+        <div class="flex gap-3">
+            <a href="edit" hx-boost="true" hx-push-url="true"
                 class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
                 Edit ticket
             </a>
+            <form action="post" method="post" hx-post="delete" hx-push-url="true" hx-push-url="true" method="post">
+                <input type="submit"
+                    class="p-2 px-8 border border-red-600 bg-red-600 cursor-pointer rounded hover:bg-red-700 text-white duration-100 px-8"
+                    value="Delete project">
+            </form>
         </div>
     </div>
 </div>

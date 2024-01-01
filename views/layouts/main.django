@@ -27,7 +27,7 @@
           Error: {{error}}
         </div>
         {% else %}
-        <div id="page-content" class="loading-indicator">{{ embed }}</div>
+        <div id="page-content" hx-target="#page-content" class="loading-indicator">{{ embed }}</div>
         {% endif %}
       </div>
     </div>
