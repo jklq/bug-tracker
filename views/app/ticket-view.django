@@ -13,7 +13,6 @@
             </div>
         </div>
 
-
         <div>
             <span class="font-bold">Created:</span>
 
@@ -21,10 +20,8 @@
                 {% if project %}{{parseDate(ticket.CreatedAt)}}{% endif %}</span>
         </div>
 
-
         <div>
-            <a href="/app/project/{{project.ProjectID}}/edit" hx-boost="true" hx-target="#page-content"
-                hx-push-url="true" hx-indicator=".progress"
+            <a href="edit" hx-boost="true" hx-target="#page-content" hx-push-url="true" hx-indicator=".progress"
                 class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
                 Edit ticket
             </a>
