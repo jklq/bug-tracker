@@ -1,7 +1,7 @@
 <div class="p-10 max-w-screen-sm">
     <a href="/app/project/{{ projectID }}/view" hx-boost="true" hx-target="#page-content"
-        hx-target-error="#ticket-creation-error" hx-push-url="true" hx-indicator=".progress"
-        class="text-blue-900 hover:underline">&lt; Go back</a>
+        hx-target-error="#ticket-creation-error" hx-push-url="true" class="text-blue-900 hover:underline">&lt; Go
+        back</a>
 
     <form hx-boost="true" method="post" action="/app/ticket/create" hx-target="#page-content" hx-post="create"
         hx-target-error="#ticket-creation-error" method="post">

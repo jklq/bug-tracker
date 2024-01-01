@@ -1,6 +1,6 @@
 <div class="p-10 max-w-screen-sm">
     <a href="/app/projects" hx-get="/app/projects" hx-target="#page-content" hx-target-error="#project-creation-error"
-        hx-push-url="true" hx-indicator=".progress" class="text-blue-900 hover:underline">&lt; Go
+        hx-push-url="true" class="text-blue-900 hover:underline">&lt; Go
         back</a>
 
     <form hx-ext="response-targets" action="/app/project/create" hx-post="/app/project/create" hx-target="#page-content"
