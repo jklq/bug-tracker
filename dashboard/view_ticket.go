@@ -39,6 +39,6 @@ func handleTicketDropdownView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpoo
 		return c.Render("app/project-view", fiber.Map{"error": "Error in finding ticket."}, helpers.HtmxTemplate(c))
 	}
 
-	return c.Render("app/modules/dropdown", fiber.Map{"ticket": ticket, "action": c.Params("action")}, helpers.HtmxTemplate(c))
+	return c.Render("app/modules/ticket-status-dropdown", fiber.Map{"ticket": ticket, "action": c.Params("action")}, helpers.HtmxTemplate(c))
 
 }
