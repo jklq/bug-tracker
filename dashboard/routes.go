@@ -23,16 +23,16 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Post("/project/create", func(c *fiber.Ctx) error {
 		return handleProjectPost(c, queries, db)
 	})
-	protected.Get("/project/:id/view", func(c *fiber.Ctx) error {
+	protected.Get("/project/:projectID/view", func(c *fiber.Ctx) error {
 		return handleProjectView(c, queries, db)
 	})
-	protected.Get("/project/:id/edit", func(c *fiber.Ctx) error {
+	protected.Get("/project/:projectID/edit", func(c *fiber.Ctx) error {
 		return handleEditProjectView(c, queries, db)
 	})
-	protected.Post("/project/:id/edit", func(c *fiber.Ctx) error {
+	protected.Post("/project/:projectID/edit", func(c *fiber.Ctx) error {
 		return handleEditProjectPost(c, queries, db)
 	})
-	protected.Post("/project/:id/delete", func(c *fiber.Ctx) error {
+	protected.Post("/project/:projectID/delete", func(c *fiber.Ctx) error {
 		return handleProjectDeletion(c, queries, db)
 	})
 
@@ -45,6 +45,18 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Get("/project/:projectID/ticket/:ticketID/view", func(c *fiber.Ctx) error {
 		return handleTicketView(c, queries, db)
 	})
+	protected.Get("/project/:projectID/ticket/:ticketID/edit", func(c *fiber.Ctx) error {
+		return handleEditTicketView(c, queries, db)
+	})
+
+	protected.Post("/project/:projectID/ticket/:ticketID/edit", func(c *fiber.Ctx) error {
+		return handleEditTicketPost(c, queries, db)
+	})
+
+	protected.Post("/project/:projectID/ticket/:ticketID/delete", func(c *fiber.Ctx) error {
+		return handleTicketDeletion(c, queries, db)
+	})
+
 	protected.Get("/ticket/:ticketID/dropdown/:action", func(c *fiber.Ctx) error {
 		return handleTicketDropdownView(c, queries, db)
 	})

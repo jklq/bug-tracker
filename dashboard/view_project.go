@@ -10,7 +10,7 @@ import (
 
 func handleProjectView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 
-	project, err := q.GetProjectById(c.Context(), c.Params("id"))
+	project, err := q.GetProjectById(c.Context(), c.Params("projectID"))
 
 	if err != nil {
 		log.Error(err.Error())

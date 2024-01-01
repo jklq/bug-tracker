@@ -14,7 +14,7 @@ type EditProjectParams struct {
 }
 
 func handleEditProjectView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
-	project, err := q.GetProjectById(c.Context(), c.Params("id"))
+	project, err := q.GetProjectById(c.Context(), c.Params("projectID"))
 
 	if err != nil {
 		return c.Render("app/edit-project", fiber.Map{"error": "Did not find project."}, helpers.HtmxTemplate(c))
@@ -50,7 +50,7 @@ func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 	// }
 
 	project, err := q.UpdateProject(c.Context(), queryProvider.UpdateProjectParams{
-		ProjectID:   c.Params("id"),
+		ProjectID:   c.Params("projectID"),
 		Name:        params.Name,
 		Description: pgtype.Text{String: params.Description, Valid: true},
 	})
@@ -59,7 +59,7 @@ func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	c.Set("HX-Push-Url", "/app/project/"+c.Params("id")+"/view")
+	c.Set("HX-Push-Url", "/app/project/"+c.Params("projectID")+"/view")
 
 	return c.Status(fiber.StatusOK).Render("app/project-view", fiber.Map{"project": project}, helpers.HtmxTemplate(c))
 }
