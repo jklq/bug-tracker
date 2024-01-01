@@ -32,3 +32,26 @@ func handleTicketSetStatus(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 
 	return c.Redirect("/app/ticket/" + c.Params("ticketID") + "/dropdown/close")
 }
+
+func handleTicketSetPriority(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	priority, err := strconv.Atoi(c.Params("priority"))
+
+	if err != nil {
+		log.Error(err.Error())
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid Input")
+	}
+
+	if priority != 1 && priority != 2 && priority != 3 {
+		log.Errorf("priority not valid number: %v", priority)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid Input")
+	}
+
+	_, err = q.SetTicketPrioirty(c.Context(), queryProvider.SetTicketPrioirtyParams{TicketID: c.Params("ticketID"), Priority: int16(priority)})
+
+	if err != nil {
+		log.Errorf(err.Error())
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return c.Render("app/modules/ticket-priority-col", fiber.Map{"ticket": fiber.Map{"Priority": priority, "TicketID": c.Params("ticketID")}}, "")
+}

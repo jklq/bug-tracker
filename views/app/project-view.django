@@ -46,7 +46,6 @@
             <div class="mt-4 pb-3">
                 {% if tickets|length == 0 %}
                 <span class="text-3xl text-gray-400 bg-gray-200 p-3 text-center block">(No tickets)</span>
-
                 {% else %}
 
                 <div class="border border-gray-300 ">
@@ -65,6 +64,7 @@
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Priority
+
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     MVP
@@ -94,10 +94,8 @@
                                 <td class="px-6 py-3">
                                     SA
                                 </td>
-                                <td class="px-6 py-3">
-                                    {%if ticket.Priority == 3 %} Low
-                                    {% elif ticket.Priority == 2 %} Medium
-                                    {% elif ticket.Priority == 1 %} High {% endif %}
+                                <td class="px-6 py-3" id="ticket-priority-col-{{ticket.TicketID}}">
+                                    {% include 'app/modules/ticket-priority-col.django' %}
                                 </td>
                                 <td class="px-6 py-3">
                                     -

@@ -52,4 +52,7 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Post("/ticket/:ticketID/status/set/:status<int>", func(c *fiber.Ctx) error {
 		return handleTicketSetStatus(c, queries, db)
 	})
+	protected.Post("/ticket/:ticketID/priority/set/:priority<int>", func(c *fiber.Ctx) error {
+		return handleTicketSetPriority(c, queries, db)
+	})
 }

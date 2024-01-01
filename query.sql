@@ -113,7 +113,7 @@ RETURNING *;
 SELECT * FROM tickets WHERE ticket_id = $1;
 
 -- name: GetTicketsByProjectId :many
-SELECT * FROM tickets WHERE project_id = $1 ORDER BY status DESC, priority DESC, created_at DESC;
+SELECT * FROM tickets WHERE project_id = $1 ORDER BY status DESC, priority ASC, created_at DESC;
 
 -- name: GetAllTickets :many
 SELECT * FROM tickets ORDER BY created_at DESC;
@@ -121,6 +121,13 @@ SELECT * FROM tickets ORDER BY created_at DESC;
 -- name: SetTicketStatus :one
 UPDATE tickets SET 
   status = $2,
+  updated_at = CURRENT_TIMESTAMP
+WHERE ticket_id = $1
+RETURNING *;
+
+-- name: SetTicketPrioirty :one
+UPDATE tickets SET 
+  priority = $2,
   updated_at = CURRENT_TIMESTAMP
 WHERE ticket_id = $1
 RETURNING *;
