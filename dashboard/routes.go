@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
+	"github.com/jklq/bug-tracker/helpers"
 	"github.com/jklq/bug-tracker/middleware"
 )
 
@@ -12,7 +13,7 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected := router.Group("", middleware.ProtectedRouteMiddleware)
 
 	protected.Get("/", func(c *fiber.Ctx) error {
-		return c.Render("app/overview", nil)
+		return c.Render("app/overview", nil, helpers.HtmxTemplate(c))
 	})
 	protected.Get("/projects", func(c *fiber.Ctx) error {
 		return handleProjectListGet(c, queries, db)
