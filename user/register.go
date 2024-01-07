@@ -12,9 +12,10 @@ import (
 
 // RegisterParams holds the structure for registration request
 type RegisterParams struct {
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=7,max=200"`
-	Username string `json:"username" validate:"required"`
+	Email           string `json:"email" validate:"required,email"`
+	Password        string `json:"password" validate:"required,min=7,max=200"`
+	ConfirmPassword string `json:"password-confirm"`
+	Username        string `json:"username" validate:"required"`
 }
 
 // handleRegisterGet renders the registration page
@@ -35,6 +36,10 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 	err := helpers.Validate.Struct(params)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": helpers.TranslateError(err, helpers.Translator)[0].Error()}, "layouts/marketing")
+	}
+
+	if params.ConfirmPassword != params.Password {
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Passwords do not match."}, "layouts/marketing")
 	}
 
 	// Check if the user already exists
