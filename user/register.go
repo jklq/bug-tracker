@@ -1,6 +1,8 @@
 package user
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
@@ -12,10 +14,10 @@ import (
 
 // RegisterParams holds the structure for registration request
 type RegisterParams struct {
-	Email           string `json:"email" validate:"required,email"`
-	Password        string `json:"password" validate:"required,min=7,max=200"`
-	ConfirmPassword string `json:"password-confirm"`
-	Username        string `json:"username" validate:"required"`
+	Email     string `json:"email" validate:"required,email"`
+	Password  string `json:"password" validate:"required,min=7,max=200"`
+	PasswordC string `json:"passwordc"`
+	Username  string `json:"username" validate:"required"`
 }
 
 // handleRegisterGet renders the registration page
@@ -30,22 +32,24 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 	var params RegisterParams
 
 	if err := c.BodyParser(&params); err != nil {
-		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Invalid request format"}, "layouts/marketing")
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Invalid request format", "username": params.Username, "email": params.Email}, "layouts/marketing")
 	}
 
 	err := helpers.Validate.Struct(params)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": helpers.TranslateError(err, helpers.Translator)[0].Error()}, "layouts/marketing")
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": helpers.TranslateError(err, helpers.Translator)[0].Error(), "username": params.Username, "email": params.Email}, "layouts/marketing")
 	}
 
-	if params.ConfirmPassword != params.Password {
-		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Passwords do not match."}, "layouts/marketing")
+	fmt.Println(params.PasswordC)
+
+	if params.PasswordC != params.Password {
+		return c.Status(fiber.StatusBadRequest).Render("register", fiber.Map{"error": "Passwords do not match.", "username": params.Username, "email": params.Email}, "layouts/marketing")
 	}
 
 	// Check if the user already exists
 	_, err = q.GetUserByEmail(c.Context(), params.Email)
 	if err == nil {
-		return c.Status(fiber.StatusConflict).Render("register", fiber.Map{"error": "User already exists"}, "layouts/marketing")
+		return c.Status(fiber.StatusConflict).Render("register", fiber.Map{"error": "User already exists", "username": params.Username, "email": params.Email}, "layouts/marketing")
 	}
 
 	// Hash the password
@@ -62,19 +66,19 @@ func handleRegisterPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool
 		PasswordHash: string(hashedPassword),
 	})
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Failed to create user"}, "layouts/marketing")
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Failed to create user", "username": params.Username, "email": params.Email}, "layouts/marketing")
 	}
 
 	// Create a new session and save the user ID or other necessary information
 	sess, err := store.Store.Get(c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"}, "layouts/marketing")
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error", "username": params.Username, "email": params.Email}, "layouts/marketing")
 	}
 
 	sess.Set("user_id", user.UserID)
 
 	if err := sess.Save(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error"}, "layouts/marketing")
+		return c.Status(fiber.StatusInternalServerError).Render("register", fiber.Map{"error": "Internal Server Error", "username": params.Username, "email": params.Email}, "layouts/marketing")
 	}
 
 	return c.Redirect("/app")
