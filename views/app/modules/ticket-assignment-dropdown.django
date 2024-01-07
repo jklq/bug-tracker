@@ -1,0 +1,29 @@
+<a hx-get="/app/ticket/{{ticket.TicketID}}/assignment-dropdown/{% if assignmentDropdownState == 'open' %}close{% else %}open{% endif %}"
+    class="select-none p-1  border border-transparent hover:border-gray-300 duration-50 rounded cursor-pointer"
+    hx-target="#ticket-assignment-dropdown-{{ticket.TicketID}}">
+
+    {% if ticket.AssignedTo.Valid %}
+    <span>{{ticket.AssigneeUsername.String}} ({{ticket.AssigneeEmail.String}})</span>
+    {% else %}
+    <span class="text-gray-500">(Nobody)</span>
+    {% endif %}
+</a>
+
+{% if assignmentDropdownState == "open" %}
+<div class="relative h-0 bg-white z-20">
+    <div class="absolute bg-white rounded border mt-2 min-w-[400px] p-4">
+        <h3 class="mb-1 text-lg">Search for user</h3>
+        <input class="w-full p-1 border border-gray-300"
+            hx-get="/app/project/{{ticket.ProjectID}}/ticket/{{ticket.TicketID}}/assign/search" name="q"
+            hx-trigger="keyup changed" type="text" hx-target="#assignment-dropdown-{{ticket.ProjectID}}-search-results"
+            autocomplete="off" autofocus>
+
+        <div id="assignment-dropdown-{{ticket.ProjectID}}-search-results" class="">
+
+        </div>
+    </div>
+</div>
+
+<a id="fullscreen-overlay" class="fixed inset-0 z-10" hx-get="/app/ticket/{{ticket.TicketID}}/assignment-dropdown/close"
+    hx-target="#ticket-assignment-dropdown-{{ticket.TicketID}}"></a>
+{% endif %}

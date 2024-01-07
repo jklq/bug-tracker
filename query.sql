@@ -29,8 +29,19 @@ UPDATE users SET
 WHERE user_id = $1
 RETURNING *;
 
+
+-- name: SearchUserByProject :many
+SELECT u.* FROM users u
+JOIN user_projects up ON u.user_id = up.user_id
+WHERE up.project_id = $1
+AND (u.username LIKE '%' || $2 || '%' OR u.email LIKE '%' || $2 || '%')
+LIMIT 5;
+
+
+
 -- name: DeleteUser :exec
 DELETE FROM users WHERE user_id = $1;
+
 
 -- Projects Table Queries
 
@@ -114,10 +125,18 @@ INSERT INTO tickets (
 RETURNING *;
 
 -- name: GetTicketById :one
-SELECT * FROM tickets WHERE ticket_id = $1;
+SELECT t.*, u.username AS assignee_username, u.email AS assignee_email
+FROM tickets t
+LEFT JOIN users u ON t.assigned_to = u.user_id
+WHERE t.ticket_id = $1;
+
 
 -- name: GetTicketsByProjectId :many
-SELECT * FROM tickets WHERE project_id = $1 ORDER BY status DESC, priority ASC, created_at DESC;
+SELECT t.*, u.username AS assignee_username, u.email AS assignee_email
+FROM tickets t
+LEFT JOIN users u ON t.assigned_to = u.user_id
+WHERE t.project_id = $1
+ORDER BY t.status DESC, t.priority ASC, t.created_at DESC;
 
 -- name: GetAllTickets :many
 SELECT * FROM tickets ORDER BY created_at DESC;
@@ -135,6 +154,14 @@ UPDATE tickets SET
   updated_at = CURRENT_TIMESTAMP
 WHERE ticket_id = $1
 RETURNING *;
+
+-- name: SetTicketAssignee :one
+UPDATE tickets SET 
+  assigned_to = $2,
+  updated_at = CURRENT_TIMESTAMP
+WHERE ticket_id = $1
+RETURNING *;
+
 
 -- name: UpdateTicket :one
 UPDATE tickets SET 

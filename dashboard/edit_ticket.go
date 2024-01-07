@@ -113,7 +113,7 @@ func handleTicketSetStatus(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return c.Redirect("/app/ticket/" + c.Params("ticketID") + "/dropdown/close")
+	return c.Redirect("/app/ticket/" + c.Params("ticketID") + "/status-dropdown/close")
 }
 
 func handleTicketSetPriority(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
@@ -137,4 +137,29 @@ func handleTicketSetPriority(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool
 	}
 
 	return c.Render("app/modules/ticket-priority-col", fiber.Map{"ticket": fiber.Map{"Priority": priority, "TicketID": c.Params("ticketID")}}, "")
+}
+
+func handleTicketDropdownAssign(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	ticketID := c.Params("ticketID")
+	userID := c.Params("userID")
+
+	_, err := q.SetTicketAssignee(c.Context(), queryProvider.SetTicketAssigneeParams{
+		TicketID:   ticketID,
+		AssignedTo: pgtype.Text{String: userID, Valid: true},
+	})
+
+	if err != nil {
+		log.Error(err.Error())
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	ticket, err := q.GetTicketById(c.Context(), ticketID)
+
+	if err != nil {
+		log.Error(err.Error())
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return c.Render("app/modules/ticket-assignment-dropdown", fiber.Map{"ticket": ticket}, "")
+
 }

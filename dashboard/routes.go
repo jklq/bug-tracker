@@ -58,12 +58,28 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 		return handleTicketDeletion(c, queries, db)
 	})
 
-	protected.Get("/ticket/:ticketID/dropdown/:action", func(c *fiber.Ctx) error {
-		return handleTicketDropdownView(c, queries, db)
+	protected.Get("/ticket/:ticketID/status-dropdown/:action", func(c *fiber.Ctx) error {
+		return handleTicketStatusDropdownView(c, queries, db)
 	})
 
 	protected.Post("/ticket/:ticketID/status/set/:status<int>", func(c *fiber.Ctx) error {
 		return handleTicketSetStatus(c, queries, db)
+	})
+
+	protected.Get("/project/:projectID/ticket/:ticketID/assignee", func(c *fiber.Ctx) error {
+		return handleGetAssignee(c, queries, db)
+	})
+
+	protected.Get("/ticket/:ticketID/assignment-dropdown/:action", func(c *fiber.Ctx) error {
+		return handleTicketAssignmentDropdownView(c, queries, db)
+	})
+
+	protected.Get("/project/:projectID/ticket/:ticketID/assign/search", func(c *fiber.Ctx) error {
+		return handleTicketAssigneeSearch(c, queries, db)
+	})
+
+	protected.Post("/project/:projectID/ticket/:ticketID/assign/:userID", func(c *fiber.Ctx) error {
+		return handleTicketDropdownAssign(c, queries, db)
 	})
 	protected.Post("/ticket/:ticketID/priority/set/:priority<int>", func(c *fiber.Ctx) error {
 		return handleTicketSetPriority(c, queries, db)

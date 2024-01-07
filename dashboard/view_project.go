@@ -18,7 +18,6 @@ func handleProjectView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 	}
 
 	tickets, err := q.GetTicketsByProjectId(c.Context(), project.ProjectID)
-
 	if err != nil {
 		log.Error(err.Error())
 		return c.Render("app/project-view", fiber.Map{"error": "Error in finding tickets."}, helpers.HtmxTemplate(c))
