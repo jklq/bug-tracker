@@ -8,9 +8,11 @@
                         class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3 max-h-[100px]">
                         &lt;</a>
                 </div>
-                <div class="flex-grow">
-                    <h1 class="text-xl font-bold">{{project.Name | truncatechars:40}}</h1>
-                    <p>{{project.Description.Value | truncatechars:80}}</p>
+                <div class="flex-grow flex items-center">
+                    <div>
+                        <h1 class="text-xl font-bold">{{project.Name | truncatechars:40}}</h1>
+                        <p>{{project.Description.Value | truncatechars:80}}</p>
+                    </div>
                 </div>
             </div>
 
