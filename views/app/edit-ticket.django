@@ -52,9 +52,9 @@
                     <option value="1">High</option>
                 </select>
             </div>
-
             <!-- Submit Button -->
-            <button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100">Save changes</button>
+            <button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100 mt-3">Save
+                changes</button>
 
             <!-- Error Display -->
             <div class="text-red-600 inline-block p-2" id="project-edit-error"></div>

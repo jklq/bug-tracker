@@ -161,5 +161,4 @@ func handleTicketDropdownAssign(c *fiber.Ctx, q *queryProvider.Queries, db *pgxp
 	}
 
 	return c.Render("app/modules/ticket-assignment-dropdown", fiber.Map{"ticket": ticket}, "")
-
 }
