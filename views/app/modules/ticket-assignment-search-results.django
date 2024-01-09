@@ -1,8 +1,12 @@
 <div class="whitespace-nowrap mt-3">
-    {% for user in users %}
-    <a class="bg-gray-100 even:bg-white py-2 border border-transparent px-1 block cursor-pointer hover:pl-4 hover:border-gray-300 duration-100"
-        hx-post="ticket/{{ticketID}}/assign/{{user.UserID}}" hx-target="#ticket-assignment-dropdown-{{ticketID}}">
-        {{ user.Username }}
-        ({{user.Email}})</a>
-    {% endfor %}
+    {% if users|length > 0 %}
+        {% for user in users %}
+        <a class="bg-gray-100 even:bg-white py-2 border border-transparent px-1 block cursor-pointer hover:pl-4 hover:border-gray-300 duration-100"
+            hx-post="ticket/{{ticketID}}/assign/{{user.UserID}}" hx-target="#ticket-assignment-dropdown-{{ticketID}}">
+            {{ user.Username }}
+            ({{user.Email}})</a>
+        {% endfor %}
+    {% else %}
+    (No results)
+    {% endif %}
 </div>
