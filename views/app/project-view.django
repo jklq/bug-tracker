@@ -61,14 +61,12 @@
                                 <th scope="col" class="pl-2 pr-6 py-3">
                                     Name
                                 </th>
+
                                 <th scope="col" class="px-6 py-3">
-                                    Assignee
+                                    Assigned To
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Priority
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Assigned To
                                 </th>
                             </tr>
                         </thead>
@@ -84,18 +82,16 @@
                                 </td>
                                 <td scope="row" class="pl-2 pr-6 font-medium whitespace-nowrap h-full">
                                     <a href="ticket/{{ticket.TicketID}}/view" hx-boost="true" hx-push-url="true"
-                                        class="py-3 hover:text-green-700 flex-grow h-full flex items-center mb-1 ml-1">
+                                        class="py-2 hover:text-green-700 flex-grow h-full flex items-center ml-1">
                                         {{ ticket.Title | truncatechars:60}}
                                     </a>
                                 </td>
-                                <td class="px-6 py-3">
-                                    SA
-                                </td>
-                                <td class="px-6 py-3" id="ticket-priority-col-{{ticket.TicketID}}">
-                                    {% include 'app/modules/ticket-priority-col.django' %}
-                                </td>
-                                <td class="px-6 py-3" id="ticket-assignment-dropdown-{{ticket.TicketID}}">
+
+                                <td class="px-6 py-2" id="ticket-assignment-dropdown-{{ticket.TicketID}}">
                                     {% include 'app/modules/ticket-assignment-dropdown.django' %}
+                                </td>
+                                <td class="px-6 py-2" id="ticket-priority-col-{{ticket.TicketID}}">
+                                    {% include 'app/modules/ticket-priority-col.django' %}
                                 </td>
                             </tr>
 
