@@ -74,7 +74,7 @@
                         </thead>
                         <tbody>
                             {% for ticket in tickets %}
-                            <tr class="bg-gray-100 border-b border-x border-gray-300 hover:bg-gray-150">
+                            <tr class="bg-gray-100 border-b border-x border-gray-300 hover:bg-gray-150  text-sm">
 
                                 <td class="pl-3" id="ticket-status-dropdown-{{ticket.TicketID}}">
                                     <a class="h-5 w-5 rounded-full {% if ticket.Status == 1 %} bg-gray-200 {% elif ticket.Status == 2 %} bg-yellow-400 {% elif ticket.Status == 0 %} bg-lime-500 {% endif %} block cursor-pointer border border-gray-500"
@@ -82,9 +82,9 @@
                                         hx-target="#ticket-status-dropdown-{{ticket.TicketID}}"></a>
 
                                 </td>
-                                <td scope="row" class="flex pl-2 pr-6 font-medium whitespace-nowrap">
+                                <td scope="row" class="pl-2 pr-6 font-medium whitespace-nowrap h-full">
                                     <a href="ticket/{{ticket.TicketID}}/view" hx-boost="true" hx-push-url="true"
-                                        class="py-3 hover:text-green-700 flex-grow">
+                                        class="py-3 hover:text-green-700 flex-grow h-full flex items-center mb-1 ml-1">
                                         {{ ticket.Title | truncatechars:60}}
                                     </a>
                                 </td>
