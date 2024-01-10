@@ -1,4 +1,4 @@
-<div class="h-screen flex flex-col ">
+<div class="max-h-screen overflow-hidden flex flex-col ">
 
     <div class="border-b border-gray-300 px-8 py-4">
         <div class="flex max-w-screen-lg items-center gap-10">
@@ -33,7 +33,7 @@
 
     </div>
 
-    <div class="p-4 px-8 flex-grow overflow-auto pb-12">
+    <div class="p-4 px-8 flex-grow overflow-auto">
         <div class="py-4 max-w-screen-lg">
             <div class="flex gap-3 items-end pb-3">
                 <div class="flex-grow gap-3">
