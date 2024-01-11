@@ -12,11 +12,13 @@
 {% if assignmentDropdownState == "open" %}
 <div class="relative h-0 bg-white z-20">
     <div class="absolute bg-white rounded border border-gray-400 mt-2 min-w-[400px] p-2 px-4 pb-4">
-        <h3 class="mb-1 text-lg">Search for user</h3>
-        <input class="w-full p-1 border border-gray-300"
+        <label for="assignment-dropdown-search-bar" class="mb-2 inline-block text-sm whitespace-nowrap">Search for
+            user:</label>
+        <input class="w-full border border-gray-300 px-1" id="assignment-dropdown-search-bar"
             hx-get="/app/project/{{ticket.ProjectID}}/ticket/{{ticket.TicketID}}/assign/search" name="q"
             hx-trigger="keyup changed" type="text" hx-target="#assignment-dropdown-{{ticket.ProjectID}}-search-results"
             autocomplete="off" autofocus>
+
 
         <div id="assignment-dropdown-{{ticket.ProjectID}}-search-results" class="">
 
