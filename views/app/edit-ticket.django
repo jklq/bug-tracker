@@ -6,8 +6,8 @@
                 &lt;</a>
         </div>
         <div class="flex-grow">
-            <h1 class="text-xl font-bold">Edit "{{ ticket.Title }}"</h1>
-            <p>{{ Ticket.Description.Value }}</p>
+            <h1 class="text-xl font-bold">Edit "{{ c(ticket.Title) }}"</h1>
+            <p>{{ c(ticket.Description.Value) }}</p>
         </div>
 
 
@@ -22,15 +22,15 @@
             <!-- Ticket Title -->
             <div class="mb-2">
                 <label for="ticket-name-input" class="block">Ticket Title:</label>
-                <input id="ticket-name-input" value="{{ticket.Title}}" class="w-full border border-gray-700 p-1 text-lg"
-                    type="text" name="title">
+                <input id="ticket-name-input" value="{{c(ticket.Title)}}"
+                    class="w-full border border-gray-700 p-1 text-lg" type="text" name="title">
             </div>
 
             <!-- Ticket Description -->
             <div class="mb-2">
                 <label for="ticket-description-input" class="block">Ticket Description:</label>
                 <textarea id="ticket-description-input" class="w-full border border-gray-700 p-1 text-lg" type="text"
-                    name="description">{{ticket.Description.Value}}</textarea>
+                    name="description">{{c(ticket.Description.Value)}}</textarea>
             </div>
 
             <!-- Ticket Status -->

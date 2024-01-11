@@ -39,11 +39,13 @@ func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 	var params EditTicketParams
 
 	if err := c.BodyParser(&params); err != nil {
+
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid request format")
 	}
 
 	err := helpers.Validate.Struct(params)
 	if err != nil {
+		log.Error(err.Error())
 		return c.Status(fiber.StatusBadRequest).SendString(helpers.TranslateError(err, helpers.Translator)[0].Error())
 	}
 
@@ -62,14 +64,15 @@ func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 	}
 
 	_, err = q.UpdateTicket(c.Context(), queryProvider.UpdateTicketParams{
-		TicketID:    c.Params("TicketID"),
-		Title:       params.Title,
-		Description: pgtype.Text{String: params.Description, Valid: true},
+		TicketID:    c.Params("ticketID"),
+		Title:       helpers.CleanHTML(params.Title),
+		Description: pgtype.Text{String: helpers.CleanHTML(params.Description), Valid: true},
 		Status:      int16(status),
 		Priority:    int16(priority),
 	})
 
 	if err != nil {
+		log.Error(err.Error())
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 

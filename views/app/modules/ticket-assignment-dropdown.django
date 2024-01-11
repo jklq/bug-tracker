@@ -3,7 +3,7 @@
     hx-target="#ticket-assignment-dropdown-{{ticket.TicketID}}">
 
     {% if ticket.AssignedTo.Valid %}
-    <span>{{ticket.AssigneeUsername.String}} ({{ticket.AssigneeEmail.String}})</span>
+    <span>{{c(ticket.AssigneeUsername.String)}} ({{c(ticket.AssigneeEmail.String)}})</span>
     {% else %}
     <span class="text-gray-500">(Nobody)</span>
     {% endif %}
@@ -12,7 +12,7 @@
 {% if assignmentDropdownState == "open" %}
 <div class="relative h-0 bg-white z-20">
     <div class="absolute bg-white rounded border border-gray-400 mt-2 min-w-[400px] p-2 px-4 pb-4">
-        <label for="assignment-dropdown-search-bar" class="mb-2 inline-block text-sm whitespace-nowrap">Search for
+        <label for="assignment-dropdown-search-bar" class="mb-1 inline-block text-sm whitespace-nowrap">Search for
             user:</label>
         <input class="w-full border border-gray-300 px-1" id="assignment-dropdown-search-bar"
             hx-get="/app/project/{{ticket.ProjectID}}/ticket/{{ticket.TicketID}}/assign/search" name="q"

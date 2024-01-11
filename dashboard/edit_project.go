@@ -51,8 +51,8 @@ func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 
 	project, err := q.UpdateProject(c.Context(), queryProvider.UpdateProjectParams{
 		ProjectID:   c.Params("projectID"),
-		Name:        params.Name,
-		Description: pgtype.Text{String: params.Description, Valid: true},
+		Name:        helpers.CleanHTML(params.Name),
+		Description: pgtype.Text{String: helpers.CleanHTML(params.Description), Valid: true},
 	})
 
 	if err != nil {

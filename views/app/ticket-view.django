@@ -7,7 +7,7 @@
                     &lt;</a>
             </div>
             <div class="flex-grow flex items-center">
-                <h1 class="text-xl">{{ticket.Title}}</h1>
+                <h1 class="text-xl">{{c(ticket.Title)}}</h1>
             </div>
         </div>
 
@@ -40,7 +40,7 @@
         <div class="w-1/2 bg-white rounded border py-4 px-6 flex-grow">
             <span class="font-bold mb-2 block">Description</span>
             <p>
-                {{ticket.Description.Value}}
+                {{c(ticket.Description.Value)}}
             </p>
         </div>
         {% endif %}

@@ -6,8 +6,8 @@
                 &lt;</a>
         </div>
         <div class="flex-grow">
-            <h1 class="text-xl font-bold">Edit "{{ project.Name }}"</h1>
-            <p>{{ project.Description.Value }}</p>
+            <h1 class="text-xl font-bold">Edit "{{ c(project.Name) }}"</h1>
+            <p>{{ c(project.Description.Value) }}</p>
         </div>
 
 
@@ -20,13 +20,13 @@
         <form hx-push-url="true" hx-post="edit" class="p-4" hx-target-error="#project-edit-error" method="post">
             <div class="mb-2">
                 <label for="project-name-input" class="block">Project Name:</label>
-                <input id="project-name-input" value="{{project.Name}}"
+                <input id="project-name-input" value="{{c(project.Name)}}"
                     class="w-full border border-gray-700 p-1 text-lg" type="text" name="name">
             </div>
             <div class="mb-2">
                 <label for="project-name-description" class="block">Project Description:</label>
                 <textarea id="project-name-description" class="w-full border border-gray-700 p-1 text-lg" type="text"
-                    name="description">{{project.Description.Value}}</textarea>
+                    name="description">{{c(project.Description.Value)}}</textarea>
             </div>
             <button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100">Save changes</button>
 

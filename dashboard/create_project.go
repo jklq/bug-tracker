@@ -55,8 +55,8 @@ func handleProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 
 	_, err = q.CreateProjectByUser(c.Context(), queryProvider.CreateProjectByUserParams{
 		ProjectID:   cuid.New(),
-		Name:        params.Name,
-		Description: pgtype.Text{String: params.Description, Valid: true},
+		Name:        helpers.CleanHTML(params.Name),
+		Description: pgtype.Text{String: helpers.CleanHTML(params.Description), Valid: true},
 		UserID:      userId,
 	})
 

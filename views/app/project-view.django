@@ -10,8 +10,8 @@
                 </div>
                 <div class="flex-grow flex items-center">
                     <div>
-                        <h1 class="text-xl font-bold">{{project.Name | truncatechars:40}}</h1>
-                        <p>{{project.Description.Value | truncatechars:80}}</p>
+                        <h1 class="text-xl font-bold">{{c(project.Name) | truncatechars:40}}</h1>
+                        <p>{{c(project.Description.Value) | truncatechars:80}}</p>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                                 <td scope="row" class="pl-2 pr-6 font-medium whitespace-nowrap h-full">
                                     <a href="ticket/{{ticket.TicketID}}/view" hx-boost="true" hx-push-url="true"
                                         class="py-2 hover:text-green-700 flex-grow h-full flex items-center ml-1">
-                                        {{ ticket.Title | truncatechars:60}}
+                                        {{ c(ticket.Title) | truncatechars:60}}
                                     </a>
                                 </td>
 
@@ -100,9 +100,6 @@
                     </table>
                 </div>
                 {% endif %}
-
-
-
             </div>
         </div>
     </div>

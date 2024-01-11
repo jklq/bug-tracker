@@ -32,6 +32,8 @@ func main() {
 	engine.AddFunc("statusToText", helpers.StatusToText)
 	engine.AddFunc("priorityToText", helpers.PriorityToText)
 
+	engine.AddFunc("c", helpers.CleanHTML)
+
 	// Init database pool
 	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
 

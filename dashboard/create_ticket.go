@@ -49,8 +49,8 @@ func handleTicketCreation(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 
 	_, err = q.CreateTicket(c.Context(), queryProvider.CreateTicketParams{
 		TicketID:    cuid.New(),
-		Title:       params.Title,
-		Description: pgtype.Text{String: params.Description, Valid: true},
+		Title:       helpers.CleanHTML(params.Title),
+		Description: pgtype.Text{String: helpers.CleanHTML(params.Description), Valid: true},
 		Priority:    params.Priority,
 		ProjectID:   c.Params("projectID"),
 		Status:      1,
