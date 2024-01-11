@@ -34,7 +34,7 @@
 
 <div class="px-8 py-4">
 
-    <div class="max-w-screen-lg flex gap-7">
+    <div class="max-w-screen-lg flex gap-2">
 
         {% if ticket.Description.Value %}
         <div class="w-1/2 bg-white rounded border py-4 px-6 flex-grow">
