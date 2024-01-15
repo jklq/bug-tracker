@@ -15,7 +15,7 @@ CREATE TABLE projects (
     project_id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     description TEXT,
-    created_by TEXT REFERENCES users(user_id),
+    created_by TEXT REFERENCES users(user_id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -29,7 +29,8 @@ CREATE TABLE tickets (
     priority SMALLINT NOT NULL,
     assigned_to TEXT REFERENCES users(user_id),
     created_by TEXT REFERENCES users(user_id) NOT NULL,
-    project_id TEXT REFERENCES projects(project_id) NOT NULL,
+    project_id TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );

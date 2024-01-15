@@ -9,7 +9,11 @@
 *.dylib
 db/*.go
 
+
 styles.css
+
+# Generated code from templ
+*_templ.go
 
 # Test binary, built with `go test -c`
 *.test

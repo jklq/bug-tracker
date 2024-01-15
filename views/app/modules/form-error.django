@@ -1,3 +1,0 @@
-<div class="bg-red-600 p-3">
-    {{error}}
-</div>

@@ -1,0 +1,90 @@
+package view
+
+import "github.com/jklq/bug-tracker/db"
+
+templ TicketEditView(template templ.Component, ticket db.GetTicketByIdRow) {
+	@template {
+		<div class="border-b border-gray-300 p-4">
+			<div class="flex max-w-screen-lg items-stretch gap-3">
+				<div>
+					<a
+						href="view"
+						hx-get="view"
+						hx-push-url="true"
+						class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3"
+					>
+						&lt;
+					</a>
+				</div>
+				<div class="flex-grow">
+					<h1 class="text-xl font-bold">Edit "{ ticket.Title }"</h1>
+					<p>{ ticket.Description.String }</p>
+				</div>
+			</div>
+		</div>
+		<div class="flex max-w-screen-lg">
+			<div class="flex-grow">
+				<form hx-push-url="true" action="edit" class="p-4" hx-target-error="#project-edit-error" method="post">
+					<!-- Ticket Title -->
+					<div class="mb-2">
+						<label for="ticket-name-input" class="block">Ticket Title:</label>
+						<input
+							id="ticket-name-input"
+							value={ ticket.Title }
+							class="w-full border border-gray-700 p-1 text-lg"
+							type="text"
+							name="title"
+						/>
+					</div>
+					<!-- Ticket Description -->
+					<div class="mb-2">
+						<label for="ticket-description-input" class="block">Ticket Description:</label>
+						<textarea
+							id="ticket-description-input"
+							class="w-full border border-gray-700 p-1 text-lg"
+							type="text"
+							name="description"
+						>{ ticket.Description.String }</textarea>
+					</div>
+					<!-- Ticket Status -->
+					<div class="mb-2">
+						<label for="ticket-status-input" class="block">Ticket Status:</label>
+						<select id="ticket-status-input" class="w-full border border-gray-700 p-1 text-lg" name="status">
+							<option value="1" selected?={ ticket.Status == 1 }>Open</option>
+							<option value="2" selected?={ ticket.Status == 2 }>In Progress</option>
+							<option value="0" selected?={ ticket.Status == 0 }>Closed</option>
+						</select>
+					</div>
+					<!-- Ticket Priority -->
+					<div class="mb-2">
+						<label for="ticket-priority-input" class="block">Ticket Priority:</label>
+						<select id="ticket-priority-input" class="w-full border border-gray-700 p-1 text-lg" name="priority">
+							<option value="3">Low</option>
+							<option value="2">Medium</option>
+							<option value="1">High</option>
+						</select>
+					</div>
+					<!-- Submit Button -->
+					<button type="submit" class="p-2 border border-black hover:bg-gray-300 duration-100 mt-3">
+						Save
+						changes
+					</button>
+					<!-- Error Display -->
+					<div class="text-red-600 inline-block p-2" id="project-edit-error"></div>
+				</form>
+			</div>
+			<div class="p-4 ">
+				<h2 class="text-xl text-bold mb-2">Other actions</h2>
+				<div class="p-3 border border-red-800 rounded">
+					<form action="post" method="post" hx-post="delete" hx-push-url="true" hx-push-url="true" method="post">
+						<input
+							type="submit"
+							class="p-1 py-2 bg-red-600 cursor-pointer rounded hover:bg-red-700 text-white duration-100 px-8"
+							value="Delete project"
+						/>
+					</form>
+				</div>
+			</div>
+		</div>
+	}
+}

@@ -1,7 +1,9 @@
 package helpers
 
 import (
+	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jklq/bug-tracker/view"
 )
 
 func HtmxTemplate(c *fiber.Ctx) string {
@@ -9,4 +11,11 @@ func HtmxTemplate(c *fiber.Ctx) string {
 		return ""
 	}
 	return "layouts/main"
+}
+
+func HtmxLayoutComponent(c *fiber.Ctx) templ.Component {
+	if IsHtmxRequest(c) {
+		return view.BasicEmpty()
+	}
+	return view.AppLayout(nil)
 }

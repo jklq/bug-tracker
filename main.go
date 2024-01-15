@@ -5,16 +5,20 @@ import (
 	"log"
 	"os"
 
+	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/template/django/v3"
+
+	"github.com/gofiber/template/html/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/jklq/bug-tracker/dashboard"
 	"github.com/jklq/bug-tracker/db"
-	"github.com/jklq/bug-tracker/helpers"
 	"github.com/jklq/bug-tracker/middleware"
+	"github.com/jklq/bug-tracker/project"
 	"github.com/jklq/bug-tracker/store"
+	"github.com/jklq/bug-tracker/ticket"
 	"github.com/jklq/bug-tracker/user"
+	"github.com/jklq/bug-tracker/view"
 	"github.com/joho/godotenv"
 )
 
@@ -24,15 +28,17 @@ func init() {
 func main() {
 
 	// Initialize standard Go html template engine
-	engine := django.New("./views", ".django")
+	// engine := django.New("./views", ".django")
+
+	engine := html.New("./view", ".html")
 
 	// register functions
-	engine.AddFunc("parseDate", helpers.ParseDate)
-	engine.AddFunc("parseTime", helpers.ParseTime)
-	engine.AddFunc("statusToText", helpers.StatusToText)
-	engine.AddFunc("priorityToText", helpers.PriorityToText)
+	//engine.AddFunc("parseDate", helpers.ParseDate)
+	//engine.AddFunc("parseTime", helpers.ParseTime)
+	//engine.AddFunc("statusToText", helpers.StatusToText)
+	//engine.AddFunc("priorityToText", helpers.PriorityToText)
 
-	engine.AddFunc("c", helpers.CleanHTML)
+	//engine.AddFunc("c", helpers.CleanHTML)
 
 	// Init database pool
 	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
@@ -56,20 +62,19 @@ func main() {
 
 	app.Use(middleware.RedirectTrailingSlash)
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		// Render index within layouts/main
-		return c.Render("index", fiber.Map{
-			"title": "Hello, World!",
-		}, "layouts/marketing")
-	})
-
 	app.Static("/static", "./public")
 
+	app.Use(middleware.EnsureHtmlContentType)
+
+	app.Get("/", adaptor.HTTPHandler(templ.Handler(view.Index("hello"))))
+
 	userRouter := app.Group("/user")
-	dashboardRouter := app.Group("/app")
+	projectRouter := app.Group("/app/project")
+	ticketRouter := app.Group("/app/project/:projectID/ticket")
 
 	user.InitModule(userRouter, queries, dbpool)
-	dashboard.InitModule(dashboardRouter, queries, dbpool)
+	project.InitModule(projectRouter, queries, dbpool)
+	ticket.InitModule(ticketRouter, queries, dbpool)
 
 	log.Fatal(app.Listen(":3001"))
 }

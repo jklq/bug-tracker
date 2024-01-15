@@ -5,6 +5,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/store"
+	"github.com/jklq/bug-tracker/view"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -14,39 +15,38 @@ type LoginParams struct {
 	Password string `validate:"required"`
 }
 
-// handleLoginGet renders the login page
-func handleLoginGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
-	return c.Render("login", fiber.Map{
-		"Title": "Login Page",
-	}, "layouts/marketing")
-}
-
 // handleLoginPost processes the login request
 func handleLoginPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+
 	var params LoginParams
 
 	if err := c.BodyParser(&params); err != nil {
-		return c.Status(fiber.StatusBadRequest).Render("login", fiber.Map{"error": "Invalid request format"}, "layouts/marketing")
+		c.Status(fiber.StatusUnauthorized)
+		return view.Login("Invalid credentials").Render(c.Context(), c.Response().BodyWriter())
 	}
 	user, err := q.GetUserByEmail(c.Context(), params.Email)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).Render("login", fiber.Map{"error": "Invalid credentials"}, "layouts/marketing")
+		c.Status(fiber.StatusUnauthorized)
+		return view.Login("Invalid credentials").Render(c.Context(), c.Response().BodyWriter())
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(params.Password)); err != nil {
-		return c.Status(fiber.StatusUnauthorized).Render("login", fiber.Map{"error": "Invalid credentials"}, "layouts/marketing")
+		c.Status(fiber.StatusUnauthorized)
+		return view.Login("Invalid credentials").Render(c.Context(), c.Response().BodyWriter())
 	}
 
 	// Create a new session and save the user ID or other necessary information
 	sess, err := store.Store.Get(c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("login", fiber.Map{"error": "Internal Server Error"}, "layouts/marketing")
+		c.Status(fiber.StatusInternalServerError)
+		return view.Login("Internal Server Error").Render(c.Context(), c.Response().BodyWriter())
 	}
 
 	sess.Set("user_id", user.UserID)
 
 	if err := sess.Save(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("login", fiber.Map{"error": "Internal Server Error"}, "layouts/marketing")
+		c.Status(fiber.StatusInternalServerError)
+		return view.Login("Internal Server Error").Render(c.Context(), c.Response().BodyWriter())
 	}
 
 	return c.Redirect("/app")

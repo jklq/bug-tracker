@@ -1,7 +1,0 @@
-<div>
-    TODO: add some stats
-</div>
-
-<div class="text-red-800">
-    {{ error }}
-</div>

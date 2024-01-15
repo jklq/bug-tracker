@@ -1,6 +1,0 @@
-<a hx-post="/app/ticket/{{ticket.TicketID}}/priority/set/{% if ticket.Priority == 1 %}3{% elif ticket.Priority == 2 %}1{% elif ticket.Priority == 3 %}2{% endif %}"
-    hx-target="#ticket-priority-col-{{ticket.TicketID}}"
-    class="select-none p-1 border border-transparent hover:border-gray-300 duration-50 rounded cursor-pointer">
-    {% if ticket.Priority == 1 %} High {% elif ticket.Priority == 2 %} Medium {% elif ticket.Priority == 3 %} Low
-    {% endif %}
-</a>

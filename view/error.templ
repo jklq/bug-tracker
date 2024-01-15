@@ -1,0 +1,9 @@
+package view
+
+templ ErrorView(layout templ.Component, errorMsg string) {
+	@layout {
+		<div>
+			<span class="text-red-600">{ errorMsg }</span>
+		</div>
+	}
+}

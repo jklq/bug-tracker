@@ -1,0 +1,45 @@
+
+
+package view
+
+templ ProjectCreateView(template templ.Component) {
+	@template {
+		<div class="p-10 max-w-screen-sm">
+			<a
+				href="/app/project"
+				hx-boost="true"
+				hx-target-error="#project-creation-error"
+				hx-push-url="true"
+				class="text-blue-900 hover:underline"
+			>
+				&lt; Go
+				back
+			</a>
+			<form
+				hx-ext="response-targets"
+				action="/app/project/create"
+				hx-post="/app/project/create"
+				hx-post="create"
+				hx-target-error="#project-creation-error"
+				method="post"
+			>
+				<h1 class="text-2xl">Create Project</h1>
+				<div class="mb-2">
+					<label for="project-name-input" class="block">Project Name:</label>
+					<input id="project-name-input" class="w-full border border-gray-700 p-1 text-lg" type="text" name="name"/>
+				</div>
+				<div class="mb-2">
+					<label for="project-name-description" class="block">Project Description:</label>
+					<textarea
+						id="project-name-description"
+						class="w-full border border-gray-700 p-1 text-lg"
+						type="text"
+						name="description"
+					></textarea>
+				</div>
+				<button type="submit" class="p-2 border border-black hover:bg-gray-200 duration-100">Create new project</button>
+			</form>
+			<div class="text-red-600" id="project-creation-error"></div>
+		</div>
+	}
+}

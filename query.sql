@@ -99,15 +99,7 @@ WHERE project_id = $1
 RETURNING *;
 
 -- name: DeleteProject :exec
-WITH deleted_user_projects AS (
-    DELETE FROM user_projects WHERE user_projects.project_id = $1
-),
-deleted_tickets AS (
-    DELETE FROM tickets WHERE tickets.project_id = $1
-)
 DELETE FROM projects WHERE projects.project_id = $1;
-
-
 
 -- Tickets Table Queries
 
@@ -173,6 +165,9 @@ UPDATE tickets SET
   updated_at = CURRENT_TIMESTAMP
 WHERE ticket_id = $1
 RETURNING *;
+
+-- name: DeleteTicketsByProjectID :exec
+DELETE FROM tickets WHERE project_id = $1;
 
 -- name: DeleteTicket :exec
 DELETE FROM tickets WHERE ticket_id = $1;

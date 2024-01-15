@@ -214,7 +214,7 @@ CREATE TRIGGER update_user_modtime BEFORE UPDATE ON public.users FOR EACH ROW EX
 --
 
 ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT projects_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(user_id);
+    ADD CONSTRAINT projects_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(user_id) ON DELETE SET NULL;
 
 
 --
@@ -238,7 +238,7 @@ ALTER TABLE ONLY public.tickets
 --
 
 ALTER TABLE ONLY public.tickets
-    ADD CONSTRAINT tickets_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(project_id);
+    ADD CONSTRAINT tickets_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(project_id) ON DELETE CASCADE;
 
 
 --
@@ -246,7 +246,7 @@ ALTER TABLE ONLY public.tickets
 --
 
 ALTER TABLE ONLY public.user_projects
-    ADD CONSTRAINT user_projects_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(project_id);
+    ADD CONSTRAINT user_projects_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(project_id) ON DELETE CASCADE;
 
 
 --
@@ -254,7 +254,7 @@ ALTER TABLE ONLY public.user_projects
 --
 
 ALTER TABLE ONLY public.user_projects
-    ADD CONSTRAINT user_projects_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+    ADD CONSTRAINT user_projects_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
 
 
 --
