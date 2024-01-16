@@ -261,7 +261,7 @@ templ TicketStatusDropdown(ticket queryProvider.GetTicketByIdRow, satusDropdownS
 		<a
 			id="fullscreen-overlay"
 			class="fixed inset-0 z-10"
-			hx-get={ fmt.Sprintf("/app/project/%s/ticket/%s/status-dropdown/open", ticket.ProjectID, ticket.TicketID) }
+			hx-get={ fmt.Sprintf("/app/project/%s/ticket/%s/status-dropdown/close", ticket.ProjectID, ticket.TicketID) }
 			hx-target={ fmt.Sprintf("#ticket-status-dropdown-%s", ticket.TicketID) }
 		></a>
 	}
