@@ -70,7 +70,7 @@ func main() {
 
 	userRouter := app.Group("/user")
 	projectRouter := app.Group("/app/project")
-	ticketRouter := app.Group("/app/project/:projectID/ticket")
+	ticketRouter := app.Group("/app")
 
 	user.InitModule(userRouter, queries, dbpool)
 	project.InitModule(projectRouter, queries, dbpool)

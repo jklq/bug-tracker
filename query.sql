@@ -50,6 +50,31 @@ SELECT p.* FROM projects p
 JOIN user_projects up ON p.project_id = up.project_id
 WHERE up.user_id = $1;
 
+-- name: GetProjectsByUserIdWithTicketAndMemberInfo :many
+SELECT 
+  p.project_id,
+  p.name,
+  p.description,
+  COUNT(DISTINCT t.ticket_id) FILTER (WHERE t.status != 0) AS open_tickets_assigned_to_user,
+  COUNT(DISTINCT tp.ticket_id) FILTER (WHERE tp.status != 0) AS total_open_tickets,
+  COUNT(DISTINCT u.user_id) AS project_member_count
+FROM 
+  projects p
+JOIN 
+  user_projects up ON p.project_id = up.project_id
+LEFT JOIN 
+  tickets t ON p.project_id = t.project_id AND t.assigned_to = up.user_id
+LEFT JOIN 
+  tickets tp ON p.project_id = tp.project_id AND tp.status != 0
+LEFT JOIN 
+  users u ON up.user_id = u.user_id
+WHERE 
+  up.user_id = $1
+GROUP BY 
+  p.project_id
+ORDER BY 
+  p.name;
+
 -- name: AddUserToProject :exec
 INSERT INTO user_projects (user_id, project_id) VALUES ($1, $2);
 
@@ -121,6 +146,12 @@ SELECT t.*, u.username AS assignee_username, u.email AS assignee_email
 FROM tickets t
 LEFT JOIN users u ON t.assigned_to = u.user_id
 WHERE t.ticket_id = $1;
+
+-- name: GetAssignedTickets :many
+SELECT t.*, u.username AS assignee_username, u.email AS assignee_email
+FROM tickets t
+LEFT JOIN users u ON t.assigned_to = u.user_id
+WHERE t.assigned_to = $1;
 
 
 -- name: GetTicketsByProjectId :many

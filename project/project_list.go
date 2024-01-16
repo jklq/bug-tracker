@@ -22,7 +22,7 @@ func handleProjectListGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	projects, err := q.GetProjectsByUserId(c.Context(), userId)
+	projects, err := q.GetProjectsByUserIdWithTicketAndMemberInfo(c.Context(), userId)
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)

@@ -13,13 +13,13 @@ func truncateText(s string, max int) string {
 	return s[:strings.LastIndex(s[:max], " ")]
 }
 
-templ ProjectList(layout templ.Component, projects []queryProvider.Project,  successMsg string) {
+templ ProjectList(layout templ.Component, projects []queryProvider.GetProjectsByUserIdWithTicketAndMemberInfoRow,  successMsg string) {
 	@layout {
 		<div class="max-w-screen-lg p-10">
 			if successMsg != "" {
 				<span class="text-green-800 bg-green-300 inline-block p-2">{ successMsg }</span>
 			}
-			<div class="flex items-end mb-5">
+			<div class="flex items-end mb-5 ">
 				<h1 class="flex-grow font-bold text-2xl">Your Projects</h1>
 				<a
 					href="/app/project/create"
@@ -49,23 +49,26 @@ templ ProjectList(layout templ.Component, projects []queryProvider.Project,  suc
 											{ truncateText(project.Description.String, 100) }
 										}
 									</div>
-									// TODO: add dynamic info for "your tickets", "tickets" and "assigned"
 									<div class="text-sm min-w-1/6">
 										<span>Your Tickets:</span>
 										<span class="whitespace-nowrap block text-lg">
-											3 open tickets
+											{ fmt.Sprintf("%v", project.OpenTicketsAssignedToUser) } open
 										</span>
 									</div>
 									<div class="text-sm min-w-1/6">
 										<span>Tickets:</span>
 										<span class="whitespace-nowrap block text-lg">
-											8 open tickets
+											{ fmt.Sprintf("%v", project.TotalOpenTickets) } open
 										</span>
 									</div>
 									<div class="text-sm min-w-1/6">
-										<span>Assigned:</span>
+										<span>Members:</span>
 										<span class="whitespace-nowrap block text-lg">
-											4 people
+											if project.ProjectMemberCount == 1 {
+												{ fmt.Sprintf("%v", project.ProjectMemberCount) } person
+											} else {
+												{ fmt.Sprintf("%v", project.ProjectMemberCount) } people
+											}
 										</span>
 									</div>
 								</a>

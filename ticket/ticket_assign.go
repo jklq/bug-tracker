@@ -9,6 +9,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/view"
+	"github.com/mitchellh/mapstructure"
 )
 
 func handleGetAssignee(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
@@ -34,19 +35,28 @@ func handleTicketAssignmentDropdownView(c *fiber.Ctx, q *queryProvider.Queries, 
 		return c.Render("app/project-view", fiber.Map{"error": "Error in finding ticket."}, "")
 	}
 
-	return view.TicketAssignmentDropdown(ticket, c.Params("action")).Render(c.Context(), c.Response().BodyWriter())
+	var ticketListTicket view.TicketList_ticket
+	mapstructure.Decode(ticket, &ticketListTicket)
+
+	return view.TicketAssignmentDropdown(ticketListTicket, c.Params("action")).Render(c.Context(), c.Response().BodyWriter())
 }
 
 func handleTicketAssigneeSearch(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	query := c.Query("q")
-	projectID := c.Params("projectID")
 	ticketID := c.Params("ticketID")
 
 	if len(query) < 2 {
 		return c.SendString("")
 	}
 
-	users, err := q.SearchUserByProject(c.Context(), queryProvider.SearchUserByProjectParams{ProjectID: projectID, Column2: pgtype.Text{String: query, Valid: true}})
+	ticket, err := q.GetTicketById(c.Context(), ticketID)
+
+	if err != nil {
+		log.Warn(err.Error())
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	users, err := q.SearchUserByProject(c.Context(), queryProvider.SearchUserByProjectParams{ProjectID: ticket.ProjectID, Column2: pgtype.Text{String: query, Valid: true}})
 
 	if err != nil {
 		log.Warn(err.Error())
@@ -77,5 +87,8 @@ func handleTicketDropdownAssign(c *fiber.Ctx, q *queryProvider.Queries, db *pgxp
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return view.TicketAssignmentDropdown(ticket, "close").Render(c.Context(), c.Response().BodyWriter())
+	var ticketListTicket view.TicketList_ticket
+	mapstructure.Decode(ticket, &ticketListTicket)
+
+	return view.TicketAssignmentDropdown(ticketListTicket, "close").Render(c.Context(), c.Response().BodyWriter())
 }

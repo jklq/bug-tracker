@@ -10,6 +10,7 @@ import (
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/helpers"
 	"github.com/jklq/bug-tracker/view"
+	"github.com/mitchellh/mapstructure"
 )
 
 func handleTicketStatusDropdownView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
@@ -19,7 +20,10 @@ func handleTicketStatusDropdownView(c *fiber.Ctx, q *queryProvider.Queries, db *
 		return c.Render("app/project-view", fiber.Map{"error": "Error in finding ticket."}, helpers.HtmxTemplate(c))
 	}
 
-	return view.TicketStatusDropdown(ticket, c.Params("action")).Render(c.Context(), c.Response().BodyWriter())
+	var ticketListTicket view.TicketList_ticket
+	mapstructure.Decode(ticket, &ticketListTicket)
+
+	return view.TicketStatusDropdown(ticketListTicket, c.Params("action")).Render(c.Context(), c.Response().BodyWriter())
 }
 
 func handleTicketSetStatus(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {

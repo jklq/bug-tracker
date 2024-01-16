@@ -4,16 +4,31 @@ import (
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"fmt"
 	"time"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func parseDate(d time.Time) string {
 	return d.Format("2006-01-02")
 }
 
+var ticketListProjects []TicketList_ticket
+
 type TicketPriorityTicker_ticket struct {
 	TicketID  string
 	ProjectID string
 	Priority  int16
+}
+
+// This has to be a subset of db.GetAssignedTicketsRow and db.GetTicketsByProjectIdRow
+type TicketList_ticket struct {
+	TicketID         string
+	ProjectID        string
+	Title            string
+	Priority         int16
+	Status           int16
+	AssignedTo       pgtype.Text
+	AssigneeUsername pgtype.Text
+	AssigneeEmail    pgtype.Text
 }
 
 templ ProjectDetailView(template templ.Component, project queryProvider.Project, tickets []queryProvider.GetTicketsByProjectIdRow, successMsg string) {
@@ -34,7 +49,7 @@ templ ProjectDetailView(template templ.Component, project queryProvider.Project,
 						</a>
 					</div>
 					<div class="mt-3">
-						@projectTicketList(tickets)
+						@ticketList(map_slice_to_TLT(tickets))
 					</div>
 				</div>
 			</div>
@@ -71,7 +86,7 @@ templ projectHeader(project queryProvider.Project) {
 	</div>
 }
 
-templ projectTicketList(tickets []queryProvider.GetTicketsByProjectIdRow) {
+templ ticketList(tickets []TicketList_ticket) {
 	if len(tickets) == 0 {
 		<span class="text-3xl text-gray-400 bg-gray-200 p-3 text-center block">(No tickets)</span>
 	} else {
@@ -79,9 +94,7 @@ templ projectTicketList(tickets []queryProvider.GetTicketsByProjectIdRow) {
 			<table class="w-full text-left">
 				<thead class="text-sm text-gray-700 uppercase bg-gray-200">
 					<tr>
-						<th scope="col" class="pl-3 ">
-							<span class="h-5 w-5"></span>
-						</th>
+						<th scope="col" class="pl-3 "></th>
 						<th scope="col" class="pl-2 pr-6 py-3">
 							Name
 						</th>
@@ -97,11 +110,11 @@ templ projectTicketList(tickets []queryProvider.GetTicketsByProjectIdRow) {
 					for _, ticket := range tickets {
 						<tr class="bg-gray-100 border-b border-x border-gray-300 hover:bg-gray-150 text-sm">
 							<td class="pl-3" id={ fmt.Sprintf("ticket-status-dropdown-%s", ticket.TicketID) }>
-								@TicketStatusDropdown(queryProvider.GetTicketByIdRow(ticket), "closed")
+								@TicketStatusDropdown(ticket, "closed")
 							</td>
 							<td scope="row" class="pl-2 pr-6 font-medium whitespace-nowrap h-full">
 								<a
-									href={ templ.URL(fmt.Sprintf("ticket/%s/view", ticket.TicketID)) }
+									href={ templ.URL(fmt.Sprintf("/app/project/%s/ticket/%s/view", ticket.ProjectID, ticket.TicketID)) }
 									hx-boost="true"
 									hx-push-url="true"
 									class="py-2 hover:text-green-700 flex-grow h-full flex items-center ml-1"
@@ -110,7 +123,7 @@ templ projectTicketList(tickets []queryProvider.GetTicketsByProjectIdRow) {
 								</a>
 							</td>
 							<td class="px-6 py-2" id={ fmt.Sprintf("ticket-assignment-dropdown-%s", ticket.TicketID) }>
-								@TicketAssignmentDropdown(queryProvider.GetTicketByIdRow(ticket), "close")
+								@TicketAssignmentDropdown(ticket, "close")
 							</td>
 							<td class="px-6 py-2" id={ fmt.Sprintf("ticket-priority-col-%s", ticket.TicketID) }>
 								@TicketPriorityTicker(TicketPriorityTicker_ticket{TicketID: ticket.TicketID, ProjectID: ticket.ProjectID, Priority: ticket.Priority})
@@ -123,11 +136,11 @@ templ projectTicketList(tickets []queryProvider.GetTicketsByProjectIdRow) {
 	}
 }
 
-templ TicketAssignmentDropdown(ticket queryProvider.GetTicketByIdRow, assignmentDropdownState string) {
+templ TicketAssignmentDropdown(ticket TicketList_ticket, assignmentDropdownState string) {
 	<a
 		hx-get={ fmt.Sprintf("/app/project/%s/ticket/%s/assignment-dropdown/open", ticket.TicketID, ticket.TicketID) }
 		hx-boost="true"
-		class="select-none p-1  border border-transparent hover:border-gray-300 duration-50 rounded cursor-pointer"
+		class="select-none p-1 border border-transparent hover:border-gray-300 duration-50 rounded cursor-pointer"
 		hx-target={ fmt.Sprintf("#ticket-assignment-dropdown-%s", ticket.TicketID) }
 	>
 		if ticket.AssignedTo.Valid {
@@ -146,7 +159,7 @@ templ TicketAssignmentDropdown(ticket queryProvider.GetTicketByIdRow, assignment
 				<input
 					class="w-full border border-gray-300 px-1"
 					id="assignment-dropdown-search-bar"
-					hx-get={ fmt.Sprintf("/app/project/%s/ticket/%s/assignTo/search", ticket.ProjectID, ticket.TicketID) }
+					hx-get={ fmt.Sprintf("/app/ticket/%s/assign/search", ticket.TicketID) }
 					name="q"
 					hx-trigger="keyup changed"
 					type="text"
@@ -172,7 +185,7 @@ templ TicketAssignmentSearchResults(ticketID string, users []queryProvider.User)
 			for _, user := range users {
 				<a
 					class="bg-gray-100 even:bg-white py-2 border border-transparent px-1 block cursor-pointer hover:pl-4 hover:border-gray-300 duration-100"
-					hx-post={ fmt.Sprintf("ticket/%s/assignTo/user/%s", ticketID, user.UserID) }
+					hx-post={ fmt.Sprintf("/app/ticket/%s/assignTo/user/%s", ticketID, user.UserID) }
 					hx-target={ fmt.Sprintf("#ticket-assignment-dropdown-%s", ticketID) }
 				>
 					{ user.Username } ({ user.Email })
@@ -180,7 +193,7 @@ templ TicketAssignmentSearchResults(ticketID string, users []queryProvider.User)
 			}
 			<a
 				class="hidden"
-				hx-post={ fmt.Sprintf("/ticket/%s/assignTo/user/%s", ticketID, users[0].UserID) }
+				hx-post={ fmt.Sprintf("/app/ticket/%s/assignTo/user/%s", ticketID, users[0].UserID) }
 				hx-target={ fmt.Sprintf("#ticket-assignment-dropdown-%s", ticketID) }
 				hx-trigger="keyup[keyCode==13] from:body"
 			></a>
@@ -218,9 +231,9 @@ func ticketStatusDropdown_getStatusColor(status int16) string {
 	}
 }
 
-templ TicketStatusDropdown(ticket queryProvider.GetTicketByIdRow, satusDropdownState string) {
+templ TicketStatusDropdown(ticket TicketList_ticket, satusDropdownState string) {
 	<a
-		class={ "h-5 w-5 rounded-full block cursor-pointer border border-gray-500 " + ticketStatusDropdown_getStatusColor(ticket.Status) }
+		class={ fmt.Sprintf("h-5 w-5 rounded-full block cursor-pointer border border-gray-500 %s", ticketStatusDropdown_getStatusColor(ticket.Status)) }
 		hx-get={ fmt.Sprintf("/app/project/%s/ticket/%s/status-dropdown/open", ticket.ProjectID, ticket.TicketID) }
 		hx-target={ fmt.Sprintf("#ticket-status-dropdown-%s", ticket.TicketID) }
 	></a>
