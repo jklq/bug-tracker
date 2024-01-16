@@ -44,7 +44,7 @@ templ ProjectList(layout templ.Component, projects []queryProvider.GetProjectsBy
 									class="block flex items-center gap-16 px-5 py-3 hover:bg-gray-50 duration-100 cursor-pointer"
 								>
 									<div class="flex-grow">
-										<b class="text-bold text-lg block">{ truncateText(project.Name, 30) }</b>
+										<span class="text-lg block font-bold">{ truncateText(project.Name, 30) }</span>
 										if project.Description.String != "" {
 											{ truncateText(project.Description.String, 100) }
 										}
