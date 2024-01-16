@@ -17,13 +17,13 @@ func map_slice_to_TLT[T any](tickets []T) []TicketList_ticket {
 
 		if err != nil {
 			log.Println(err.Error())
-			ticketListProjects = append(ticketListTickets, TicketList_ticket{})
+			ticketListTickets = append(ticketListTickets, TicketList_ticket{})
 			continue
 		}
 
-		ticketListProjects = append(ticketListTickets, ticketListTicket)
+		ticketListTickets = append(ticketListTickets, ticketListTicket)
 	}
-	return ticketListProjects
+	return ticketListTickets
 }
 
 templ AssignedTicketsView(template templ.Component, tickets []db.GetAssignedTicketsRow) {
