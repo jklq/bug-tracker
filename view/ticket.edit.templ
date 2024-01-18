@@ -2,7 +2,7 @@ package view
 
 import "github.com/jklq/bug-tracker/db"
 
-templ TicketEditView(template templ.Component, ticket db.GetTicketByIdRow) {
+templ TicketEditView(template templ.Component, ticket db.Ticket) {
 	@template {
 		<div class="border-b border-gray-300 p-4 px-8">
 			<div class="flex max-w-screen-lg items-stretch gap-3">

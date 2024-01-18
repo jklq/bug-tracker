@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-templ TicketDetailView(template templ.Component, projectID string, ticket queryProvider.GetTicketByIdRow) {
+templ TicketDetailView(template templ.Component, projectID string, ticket queryProvider.Ticket) {
 	@template {
 		<div class="border-b border-gray-300 px-8 py-4">
 			<div class="flex max-w-screen-lg items-center gap-10">

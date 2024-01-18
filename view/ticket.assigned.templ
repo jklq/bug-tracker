@@ -2,37 +2,15 @@ package view
 
 import (
 	"github.com/jklq/bug-tracker/db"
-	"github.com/mitchellh/mapstructure"
-	"log"
 )
 
-// prettty sketchy, unsafe and stuff
-func map_slice_to_TLT[T any](tickets []T) []TicketList_ticket {
-	var ticketListTickets []TicketList_ticket
-
-	for _, row := range tickets {
-
-		var ticketListTicket TicketList_ticket
-		err := mapstructure.Decode(row, &ticketListTicket)
-
-		if err != nil {
-			log.Println(err.Error())
-			ticketListTickets = append(ticketListTickets, TicketList_ticket{})
-			continue
-		}
-
-		ticketListTickets = append(ticketListTickets, ticketListTicket)
-	}
-	return ticketListTickets
-}
-
-templ AssignedTicketsView(template templ.Component, tickets []db.GetAssignedTicketsRow) {
+templ AssignedTicketsView(template templ.Component, tickets []db.Ticket) {
 	@template {
 		<div class="max-w-screen-lg p-10 pt-14">
 			<div class="flex items-end mb-5 ">
 				<h1 class="flex-grow font-bold text-2xl">Your Tickets</h1>
 			</div>
-			@ticketList(map_slice_to_TLT(tickets))
+			@ticketList(tickets)
 		</div>
 	}
 }

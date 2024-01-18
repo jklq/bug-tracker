@@ -9,7 +9,6 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/view"
-	"github.com/mitchellh/mapstructure"
 )
 
 func handleGetAssignee(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
@@ -19,7 +18,7 @@ func handleGetAssignee(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 		return c.Render("app/project-view", fiber.Map{"error": "Error in finding ticket."}, "")
 	}
 
-	user, err := q.GetUserById(c.Context(), ticket.AssignedTo.String)
+	user, err := q.GetUserById(c.Context(), ticket.AssigneeID.String)
 
 	if err != nil {
 		return c.Render("app/project-view", fiber.Map{"error": "Error in finding user."}, "")
@@ -35,10 +34,7 @@ func handleTicketAssignmentDropdownView(c *fiber.Ctx, q *queryProvider.Queries, 
 		return c.Render("app/project-view", fiber.Map{"error": "Error in finding ticket."}, "")
 	}
 
-	var ticketListTicket view.TicketList_ticket
-	mapstructure.Decode(ticket, &ticketListTicket)
-
-	return view.TicketAssignmentDropdown(ticketListTicket, c.Params("action")).Render(c.Context(), c.Response().BodyWriter())
+	return view.TicketAssignmentDropdown(ticket, c.Params("action")).Render(c.Context(), c.Response().BodyWriter())
 }
 
 func handleTicketAssigneeSearch(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
@@ -72,7 +68,7 @@ func handleTicketDropdownAssign(c *fiber.Ctx, q *queryProvider.Queries, db *pgxp
 
 	_, err := q.SetTicketAssignee(c.Context(), queryProvider.SetTicketAssigneeParams{
 		TicketID:   ticketID,
-		AssignedTo: pgtype.Text{String: userID, Valid: true},
+		AssigneeID: pgtype.Text{String: userID, Valid: true},
 	})
 
 	if err != nil {
@@ -87,8 +83,5 @@ func handleTicketDropdownAssign(c *fiber.Ctx, q *queryProvider.Queries, db *pgxp
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	var ticketListTicket view.TicketList_ticket
-	mapstructure.Decode(ticket, &ticketListTicket)
-
-	return view.TicketAssignmentDropdown(ticketListTicket, "close").Render(c.Context(), c.Response().BodyWriter())
+	return view.TicketAssignmentDropdown(ticket, "close").Render(c.Context(), c.Response().BodyWriter())
 }

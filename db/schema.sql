@@ -74,7 +74,9 @@ CREATE TABLE public.tickets (
     description text,
     status smallint NOT NULL,
     priority smallint NOT NULL,
-    assigned_to text,
+    assignee_id text,
+    assignee_username text,
+    assignee_email text,
     created_by text NOT NULL,
     project_id text NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -218,11 +220,11 @@ ALTER TABLE ONLY public.projects
 
 
 --
--- Name: tickets tickets_assigned_to_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: tickets tickets_assignee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tickets
-    ADD CONSTRAINT tickets_assigned_to_fkey FOREIGN KEY (assigned_to) REFERENCES public.users(user_id);
+    ADD CONSTRAINT tickets_assignee_id_fkey FOREIGN KEY (assignee_id) REFERENCES public.users(user_id);
 
 
 --

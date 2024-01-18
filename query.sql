@@ -55,7 +55,7 @@ SELECT
   p.project_id,
   p.name,
   p.description,
-  COUNT(DISTINCT t.ticket_id) FILTER (WHERE t.status != 0) AS open_tickets_assigned_to_user,
+  COUNT(DISTINCT t.ticket_id) FILTER (WHERE t.status != 0) AS open_tickets_assignee_id_user,
   COUNT(DISTINCT tp.ticket_id) FILTER (WHERE tp.status != 0) AS total_open_tickets,
   COUNT(DISTINCT u.user_id) AS project_member_count
 FROM 
@@ -63,7 +63,7 @@ FROM
 JOIN 
   user_projects up ON p.project_id = up.project_id
 LEFT JOIN 
-  tickets t ON p.project_id = t.project_id AND t.assigned_to = up.user_id
+  tickets t ON p.project_id = t.project_id AND t.assignee_id = up.user_id
 LEFT JOIN 
   tickets tp ON p.project_id = tp.project_id AND tp.status != 0
 LEFT JOIN 
@@ -136,30 +136,19 @@ INSERT INTO tickets (
   status,
   priority,
   created_by,
-  assigned_to,
+  assignee_id,
   project_id
 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING *;
 
 -- name: GetTicketById :one
-SELECT t.*, u.username AS assignee_username, u.email AS assignee_email
-FROM tickets t
-LEFT JOIN users u ON t.assigned_to = u.user_id
-WHERE t.ticket_id = $1;
+SELECT * FROM tickets WHERE ticket_id = $1;
 
 -- name: GetAssignedTickets :many
-SELECT t.*, u.username AS assignee_username, u.email AS assignee_email
-FROM tickets t
-LEFT JOIN users u ON t.assigned_to = u.user_id
-WHERE t.assigned_to = $1;
-
+SELECT * FROM tickets WHERE assignee_id = $1;
 
 -- name: GetTicketsByProjectId :many
-SELECT t.*, u.username AS assignee_username, u.email AS assignee_email
-FROM tickets t
-LEFT JOIN users u ON t.assigned_to = u.user_id
-WHERE t.project_id = $1
-ORDER BY t.status DESC, t.priority ASC, t.created_at DESC;
+SELECT * FROM tickets WHERE project_id = $1;
 
 -- name: GetAllTickets :many
 SELECT * FROM tickets ORDER BY created_at DESC;
@@ -179,12 +168,17 @@ WHERE ticket_id = $1
 RETURNING *;
 
 -- name: SetTicketAssignee :one
-UPDATE tickets SET 
-  assigned_to = $2,
+UPDATE tickets 
+SET 
+  assignee_id = $2,
+  assignee_username = u.username,
+  assignee_email = u.email,
   updated_at = CURRENT_TIMESTAMP
-WHERE ticket_id = $1
-RETURNING *;
-
+FROM users u
+WHERE 
+  tickets.ticket_id = $1 AND 
+  u.user_id = $2
+RETURNING tickets.*;
 
 -- name: UpdateTicket :one
 UPDATE tickets SET 
@@ -192,7 +186,7 @@ UPDATE tickets SET
   description = $3,
   status = $4,
   priority = $5,
-  assigned_to = $6,
+  assignee_id = $6,
   updated_at = CURRENT_TIMESTAMP
 WHERE ticket_id = $1
 RETURNING *;
