@@ -145,10 +145,10 @@ RETURNING *;
 SELECT * FROM tickets WHERE ticket_id = $1;
 
 -- name: GetAssignedTickets :many
-SELECT * FROM tickets WHERE assignee_id = $1;
+SELECT * FROM tickets WHERE assignee_id = $1 ORDER BY status DESC, priority ASC;
 
 -- name: GetTicketsByProjectId :many
-SELECT * FROM tickets WHERE project_id = $1;
+SELECT * FROM tickets WHERE project_id = $1 ORDER BY status DESC, priority ASC;
 
 -- name: GetAllTickets :many
 SELECT * FROM tickets ORDER BY created_at DESC;

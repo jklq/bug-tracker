@@ -63,11 +63,11 @@ templ TicketDetailView(template templ.Component, projectID string, ticket queryP
 					<p>
 						<span class="font-bold">Priority:</span>
 						switch ticket.Priority {
-							case 1:
+							case 3:
 								High
 							case 2: 
 								Medium
-							case 3:
+							case 1:
 								Low
 						}
 					</p>
