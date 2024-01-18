@@ -4,7 +4,7 @@ import "github.com/jklq/bug-tracker/db"
 
 templ TicketEditView(template templ.Component, ticket db.GetTicketByIdRow) {
 	@template {
-		<div class="border-b border-gray-300 p-4">
+		<div class="border-b border-gray-300 p-4 px-8">
 			<div class="flex max-w-screen-lg items-stretch gap-3">
 				<div>
 					<a
@@ -24,7 +24,7 @@ templ TicketEditView(template templ.Component, ticket db.GetTicketByIdRow) {
 		</div>
 		<div class="flex max-w-screen-lg">
 			<div class="flex-grow">
-				<form hx-push-url="true" action="edit" class="p-4" hx-target-error="#project-edit-error" method="post">
+				<form hx-push-url="true" action="edit" class="p-4 px-8" hx-target-error="#project-edit-error" method="post">
 					<!-- Ticket Title -->
 					<div class="mb-2">
 						<label for="ticket-name-input" class="block">Ticket Title:</label>
