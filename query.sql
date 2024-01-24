@@ -37,6 +37,13 @@ WHERE up.project_id = $1
 AND (u.username LIKE '%' || $2 || '%' OR u.email LIKE '%' || $2 || '%')
 LIMIT 5;
 
+-- name: SearchUserOutsideProject :many
+SELECT u.* FROM users u
+LEFT JOIN user_projects up ON u.user_id = up.user_id AND up.project_id = $1
+WHERE up.user_id IS NULL
+AND (u.username LIKE '%' || $2 || '%' OR u.email LIKE '%' || $2 || '%')
+LIMIT 5;
+
 
 
 -- name: DeleteUser :exec
@@ -87,6 +94,22 @@ SELECT project_id FROM user_projects WHERE user_id = $1;
 -- name: GetProjectUsers :many
 SELECT user_id FROM user_projects WHERE project_id = $1;
 
+-- name: GetProjectMembersWithRoles :many
+SELECT 
+  u.user_id,
+  u.username,
+  u.email,
+  up.project_id,
+  up.role
+FROM 
+  users u
+JOIN 
+  user_projects up ON u.user_id = up.user_id
+JOIN 
+  projects p ON up.project_id = p.project_id
+WHERE 
+  p.project_id = $1;
+
 
 -- name: CreateProject :one
 INSERT INTO projects (
@@ -103,9 +126,22 @@ WITH new_project AS (
     VALUES ($1, $2, $3, $4)
     RETURNING project_id
 )
-INSERT INTO user_projects (user_id, project_id)
-SELECT $4, project_id FROM new_project
+INSERT INTO user_projects (user_id, project_id, role)
+SELECT $4, project_id, 'project manager' FROM new_project
 RETURNING *;
+
+-- name: CreateProjectInvitation :exec
+INSERT INTO user_project_invitations (invitation_id, recipient_id, sender_id, project_id, role, status)
+VALUES ($1, $2, $3, $4, $5, 0);
+
+-- name: GetProjectInvitationsByUserAndProject :many
+SELECT * FROM user_project_invitations WHERE recipient_id = $1 AND project_id = $2;
+
+
+-- name: GetProjectInvitationsByUserId :many
+SELECT * FROM user_project_invitations WHERE recipient_id = $1;
+
+
 
 
 -- name: GetProjectById :one

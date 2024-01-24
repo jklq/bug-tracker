@@ -24,6 +24,34 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 
 
 --
+-- Name: update_resolved_at_column(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_resolved_at_column() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+   NEW.resolved_at = NOW();
+   RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: update_updated_at_column_project_invitations(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_updated_at_column_project_invitations() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+   NEW.updated_at = NOW();
+   RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: update_updated_at_column_users(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -40,6 +68,22 @@ $$;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: project_invitations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_invitations (
+    invitation_id text NOT NULL,
+    sender_id text,
+    recipient_id text,
+    project_id text,
+    role text NOT NULL,
+    status smallint DEFAULT 0 NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 
 --
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
@@ -85,11 +129,28 @@ CREATE TABLE public.tickets (
 
 
 --
+-- Name: user_project_invitations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_project_invitations (
+    invitation_id text NOT NULL,
+    sender_id text,
+    recipient_id text NOT NULL,
+    project_id text NOT NULL,
+    role text NOT NULL,
+    status smallint NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    resolved_at timestamp with time zone
+);
+
+
+--
 -- Name: user_projects; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.user_projects (
     user_id text NOT NULL,
+    role text NOT NULL,
     project_id text NOT NULL
 );
 
@@ -120,6 +181,14 @@ CREATE TABLE public.users (
 
 
 --
+-- Name: project_invitations project_invitations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_invitations
+    ADD CONSTRAINT project_invitations_pkey PRIMARY KEY (invitation_id);
+
+
+--
 -- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -141,6 +210,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.tickets
     ADD CONSTRAINT tickets_pkey PRIMARY KEY (ticket_id);
+
+
+--
+-- Name: user_project_invitations user_project_invitations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_invitations
+    ADD CONSTRAINT user_project_invitations_pkey PRIMARY KEY (invitation_id);
 
 
 --
@@ -191,6 +268,20 @@ CREATE INDEX e ON public.user_sessions USING btree (e);
 
 
 --
+-- Name: user_project_invitations update_invitation_resolved_time; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_invitation_resolved_time BEFORE UPDATE ON public.user_project_invitations FOR EACH ROW WHEN (((old.status <> new.status) AND (new.status = ANY (ARRAY[1, 2])))) EXECUTE FUNCTION public.update_resolved_at_column();
+
+
+--
+-- Name: project_invitations update_project_invitation_modtime; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_project_invitation_modtime BEFORE UPDATE ON public.project_invitations FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column_project_invitations();
+
+
+--
 -- Name: projects update_project_modtime; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -209,6 +300,30 @@ CREATE TRIGGER update_ticket_modtime BEFORE UPDATE ON public.tickets FOR EACH RO
 --
 
 CREATE TRIGGER update_user_modtime BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column_users();
+
+
+--
+-- Name: project_invitations project_invitations_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_invitations
+    ADD CONSTRAINT project_invitations_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(project_id) ON DELETE CASCADE;
+
+
+--
+-- Name: project_invitations project_invitations_recipient_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_invitations
+    ADD CONSTRAINT project_invitations_recipient_id_fkey FOREIGN KEY (recipient_id) REFERENCES public.users(user_id) ON DELETE SET NULL;
+
+
+--
+-- Name: project_invitations project_invitations_sender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_invitations
+    ADD CONSTRAINT project_invitations_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES public.users(user_id) ON DELETE SET NULL;
 
 
 --
@@ -244,6 +359,30 @@ ALTER TABLE ONLY public.tickets
 
 
 --
+-- Name: user_project_invitations user_project_invitations_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_invitations
+    ADD CONSTRAINT user_project_invitations_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(project_id) ON DELETE CASCADE;
+
+
+--
+-- Name: user_project_invitations user_project_invitations_recipient_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_invitations
+    ADD CONSTRAINT user_project_invitations_recipient_id_fkey FOREIGN KEY (recipient_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: user_project_invitations user_project_invitations_sender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_invitations
+    ADD CONSTRAINT user_project_invitations_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES public.users(user_id) ON DELETE SET NULL;
+
+
+--
 -- Name: user_projects user_projects_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -270,4 +409,5 @@ ALTER TABLE ONLY public.user_projects
 
 INSERT INTO public.schema_migrations (version) VALUES
     ('20231201152815'),
-    ('20231205191657');
+    ('20231205191657'),
+    ('20240124201118');

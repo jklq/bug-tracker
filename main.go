@@ -68,6 +68,8 @@ func main() {
 
 	app.Get("/", adaptor.HTTPHandler(templ.Handler(view.Index("hello"))))
 
+	app.Get("/app", func(c *fiber.Ctx) error { return c.Redirect("/app/project") })
+
 	userRouter := app.Group("/user")
 	projectRouter := app.Group("/app/project")
 	ticketRouter := app.Group("/app")

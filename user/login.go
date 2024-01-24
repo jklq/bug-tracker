@@ -49,5 +49,5 @@ func handleLoginPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) e
 		return view.Login("Internal Server Error").Render(c.Context(), c.Response().BodyWriter())
 	}
 
-	return c.Redirect("/app")
+	return c.Redirect("/app/project")
 }

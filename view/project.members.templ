@@ -1,0 +1,82 @@
+package view
+
+import (
+	queryProvider "github.com/jklq/bug-tracker/db"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+)
+
+func capitalizeWords(str string) string {
+	caser := cases.Title(language.English, cases.NoLower)
+	return caser.String(str)
+}
+
+templ ProjectMemberDetailView(template templ.Component, project queryProvider.Project, members []queryProvider.GetProjectMembersWithRolesRow) {
+	@template {
+		<div class="max-h-screen flex flex-col ">
+			@projectHeader(project, "view")
+			<div class="p-4 px-8 flex-grow flex gap-14">
+				<div class="max-w-screen-lg">
+					<h2 class="text-lg font-bold">Manage members</h2>
+					<ul>
+						for _, member := range members {
+							<li>{ capitalizeWords(member.Role) }: { member.Username } ({ member.Email })</li>
+						}
+					</ul>
+				</div>
+				<div class="border p-4">
+					<div class="mb-4">
+						//TODO: make this workd
+						<h2 class="font-bold text-lg">Invited users</h2>
+						<ul>
+							for _, member := range members {
+								<li class="border p-2 mb-2">
+									<span class="block text-gray-500">As { member.Role }</span> { member.Username } ({ member.Email }) 
+									<a href="" class="text-blue-800 hover:underline">[Remove invite]</a>
+								</li>
+								<li class="border p-2">
+									<span class="block text-gray-500">As { member.Role }</span> { member.Username } ({ member.Email }) 
+									<a href="" class="text-blue-800 hover:underline">[Remove invite]</a>
+								</li>
+							}
+						</ul>
+					</div>
+					<h2 class="font-bold text-lg mb-1">Invite user</h2>
+					<form>
+						<input
+							autocomplete="off"
+							hx-get="invite"
+							hx-target="#invite-user-search-results"
+							type="text"
+							hx-trigger="keyup changed"
+							name="q"
+							placeholder="search user..."
+							class="w-full border border-gray-300 px-1"
+						/>
+					</form>
+					<div id="invite-user-search-results" class="mt-2"></div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ InviteUserSearchResultView(user queryProvider.User) {
+	<div class="mt-2 text-green-700" id="invitation-success">
+		<form class="text-black" hx-post="invite" hx-target="#invitation-success" hx-target-error="#invitation-errors">
+			<div class="mt-4 flex gap-3 items-center">
+				<span>{ user.Username } ({ user.Email }) as</span>
+				<input type="text" class="hidden" name="userId" value={ user.UserID }/>
+				<select name="role" class="border p-1" id="">
+					<option value="viewer">Viewer</option>
+					<option value="editor">Editor</option>
+					<option value="project manager">Project Manager</option>
+				</select>
+			</div>
+			<div class="mt-4">
+				<input type="submit" class="py-1 px-8 cursor-pointer whitespace-nowrap rounded border border-lime-900 duration-100  hover:bg-gray-200" value="Invite User"/>
+			</div>
+			<div class="mt-2 text-red-600" id="invitation-errors"></div>
+		</form>
+	</div>
+}

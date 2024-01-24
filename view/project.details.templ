@@ -19,7 +19,14 @@ type TicketPriorityTicker_ticket struct {
 templ ProjectDetailView(template templ.Component, project queryProvider.Project, tickets []queryProvider.Ticket, successMsg string) {
 	@template {
 		<div class="max-h-screen flex flex-col ">
-			@projectHeader(project)
+			@projectHeader(project, "/app/project") {
+				<a href="members" hx-boost="true" hx-push-url="true" class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
+					Manage members
+				</a>
+				<a href="edit" hx-boost="true" hx-push-url="true" class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
+					Edit project
+				</a>
+			}
 			<div class="p-4 px-8 flex-grow ">
 				<div class="py-4 max-w-screen-lg">
 					if successMsg != "" {
@@ -42,12 +49,12 @@ templ ProjectDetailView(template templ.Component, project queryProvider.Project,
 	}
 }
 
-templ projectHeader(project queryProvider.Project) {
+templ projectHeader(project queryProvider.Project, backLink string) {
 	<div class="border-b border-gray-300 px-8 py-4">
-		<div class="flex max-w-screen-lg items-center gap-10">
+		<div class="flex max-w-screen-lg items-center gap-3">
 			<div class="flex flex-grow gap-3">
 				<div class="inline">
-					<a href="/app/project" hx-boost="true" class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3 max-h-[100px]">
+					<a href={ templ.SafeURL(backLink) } hx-boost="true" class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3 max-h-[100px]">
 						&lt;
 					</a>
 				</div>
@@ -58,15 +65,7 @@ templ projectHeader(project queryProvider.Project) {
 					</div>
 				</div>
 			</div>
-			<div>
-				<span class="font-bold">Created:</span>
-				<span class="whitespace-nowrap">{ parseDate(project.CreatedAt.Time) }</span>
-			</div>
-			<div>
-				<a href="edit" hx-boost="true" hx-push-url="true" class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
-					Edit project
-				</a>
-			</div>
+			{ children... }
 		</div>
 	</div>
 }
