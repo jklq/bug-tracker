@@ -11,7 +11,7 @@ func capitalizeWords(str string) string {
 	return caser.String(str)
 }
 
-templ ProjectMemberDetailView(template templ.Component, project queryProvider.Project, members []queryProvider.GetProjectMembersWithRolesRow) {
+templ ProjectMemberDetailView(template templ.Component, project queryProvider.Project, members []queryProvider.GetProjectMembersWithRolesRow, invitedUsers []queryProvider.GetUsersWithOpenProjectInvitationsRow) {
 	@template {
 		<div class="max-h-screen flex flex-col ">
 			@projectHeader(project, "view")
@@ -26,16 +26,13 @@ templ ProjectMemberDetailView(template templ.Component, project queryProvider.Pr
 				</div>
 				<div class="border p-4">
 					<div class="mb-4">
-						//TODO: make this workd
+						//TODO: make the "remove invite" work
+						// TODO: make this section update when a user is invited w/ the form below
 						<h2 class="font-bold text-lg">Invited users</h2>
 						<ul>
-							for _, member := range members {
+							for _, user := range invitedUsers {
 								<li class="border p-2 mb-2">
-									<span class="block text-gray-500">As { member.Role }</span> { member.Username } ({ member.Email }) 
-									<a href="" class="text-blue-800 hover:underline">[Remove invite]</a>
-								</li>
-								<li class="border p-2">
-									<span class="block text-gray-500">As { member.Role }</span> { member.Username } ({ member.Email }) 
+									<span class="block text-gray-500">As { user.Role }</span> { user.Username } ({ user.Email }) 
 									<a href="" class="text-blue-800 hover:underline">[Remove invite]</a>
 								</li>
 							}

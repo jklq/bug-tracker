@@ -141,6 +141,11 @@ SELECT * FROM user_project_invitations WHERE recipient_id = $1 AND project_id = 
 -- name: GetProjectInvitationsByUserId :many
 SELECT * FROM user_project_invitations WHERE recipient_id = $1;
 
+-- name: GetUsersWithOpenProjectInvitations :many
+SELECT u.username, u.email, upi.role 
+FROM user_project_invitations upi
+JOIN users u ON upi.recipient_id = u.user_id
+WHERE upi.project_id = $1 AND upi.status = 0;
 
 
 

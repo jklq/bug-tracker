@@ -37,7 +37,15 @@ func handleProjectMemberView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return view.ProjectMemberDetailView(layout, project, members).Render(c.Context(), c.Response().BodyWriter())
+	invitedUsers, err := q.GetUsersWithOpenProjectInvitations(c.Context(), projectID)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return view.ProjectMemberDetailView(layout, project, members, invitedUsers).Render(c.Context(), c.Response().BodyWriter())
 }
 
 func handleProjectMemberInviteSearch(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
