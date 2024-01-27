@@ -4,6 +4,7 @@ import (
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
+	"fmt"
 )
 
 func capitalizeWords(str string) string {
@@ -11,29 +12,44 @@ func capitalizeWords(str string) string {
 	return caser.String(str)
 }
 
-templ ProjectMemberDetailView(template templ.Component, project queryProvider.Project, members []queryProvider.GetProjectMembersWithRolesRow, invitedUsers []queryProvider.GetUsersWithOpenProjectInvitationsRow) {
+type ProjectMemberDetailViewParams struct {
+	Project      queryProvider.Project
+	Members      []queryProvider.GetProjectMembersWithRolesRow
+	InvitedUsers []queryProvider.GetUsersWithOpenProjectInvitationsRow
+}
+
+templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDetailViewParams) {
 	@template {
 		<div class="max-h-screen flex flex-col ">
-			@projectHeader(project, "view")
+			@projectHeader(params.Project, "view")
 			<div class="p-4 px-8 flex-grow flex gap-14">
 				<div class="max-w-screen-lg">
 					<h2 class="text-lg font-bold">Manage members</h2>
 					<ul>
-						for _, member := range members {
+						for _, member := range params.Members {
 							<li>{ capitalizeWords(member.Role) }: { member.Username } ({ member.Email })</li>
 						}
 					</ul>
 				</div>
 				<div class="border p-4">
 					<div class="mb-4">
-						//TODO: make the "remove invite" work
 						// TODO: make this section update when a user is invited w/ the form below
 						<h2 class="font-bold text-lg">Invited users</h2>
 						<ul>
-							for _, user := range invitedUsers {
+							for _, user := range params.InvitedUsers {
 								<li class="border p-2 mb-2">
-									<span class="block text-gray-500">As { user.Role }</span> { user.Username } ({ user.Email }) 
-									<a href="" class="text-blue-800 hover:underline">[Remove invite]</a>
+									<span class="text-green-700" id={ fmt.Sprintf("success-msg-remove-inv-%s", user.UserID) }>
+										<span class="text-black">
+											<span class="block text-gray-500">As { user.Role }</span> { user.Username } ({ user.Email }) 
+											<a
+												hx-delete={ fmt.Sprintf("/app/project/%s/uninvite/%s", params.Project.ProjectID, user.UserID) }
+												hx-target={ fmt.Sprintf("#success-msg-remove-inv-%s", user.UserID) }
+												hx-target-errpr={ fmt.Sprintf("#error-msg-remove-inv-%s", user.UserID) }
+												class="text-blue-800 hover:underline cursor-pointer"
+											>[Remove invite]</a>
+											<span class="text-green-700 block" id={ fmt.Sprintf("error-msg-remove-inv-%s", user.UserID) }></span>
+										</span>
+									</span>
 								</li>
 							}
 						</ul>

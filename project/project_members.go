@@ -45,7 +45,13 @@ func handleProjectMemberView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return view.ProjectMemberDetailView(layout, project, members, invitedUsers).Render(c.Context(), c.Response().BodyWriter())
+	params := view.ProjectMemberDetailViewParams{
+		Project:      project,
+		Members:      members,
+		InvitedUsers: invitedUsers,
+	}
+
+	return view.ProjectMemberDetailView(layout, params).Render(c.Context(), c.Response().BodyWriter())
 }
 
 func handleProjectMemberInviteSearch(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
@@ -144,5 +150,24 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 	}
 
 	return c.SendString("Invitation sent successfully!")
-	//return view.InviteUserSearchResultView().Render(c.Context(), c.Response().BodyWriter())
+}
+
+func handleProjectMemberUninvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	projectId := c.Params("projectID")
+	userId := c.Params("userID")
+
+	dbparams := queryProvider.DeleteProjectInvitationParams{
+		RecipientID: userId,
+		ProjectID:   projectId,
+	}
+
+	err := q.DeleteProjectInvitation(c.Context(), dbparams)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return c.SendString("Invitation deleted successfully!")
 }

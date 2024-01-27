@@ -134,6 +134,9 @@ RETURNING *;
 INSERT INTO user_project_invitations (invitation_id, recipient_id, sender_id, project_id, role, status)
 VALUES ($1, $2, $3, $4, $5, 0);
 
+-- name: DeleteProjectInvitation :exec
+DELETE FROM user_project_invitations WHERE recipient_id = $1 AND project_id = $2;
+
 -- name: GetProjectInvitationsByUserAndProject :many
 SELECT * FROM user_project_invitations WHERE recipient_id = $1 AND project_id = $2;
 
@@ -142,7 +145,7 @@ SELECT * FROM user_project_invitations WHERE recipient_id = $1 AND project_id = 
 SELECT * FROM user_project_invitations WHERE recipient_id = $1;
 
 -- name: GetUsersWithOpenProjectInvitations :many
-SELECT u.username, u.email, upi.role 
+SELECT u.user_id, u.username, u.email, upi.role 
 FROM user_project_invitations upi
 JOIN users u ON upi.recipient_id = u.user_id
 WHERE upi.project_id = $1 AND upi.status = 0;
