@@ -38,9 +38,12 @@ AND (u.username LIKE '%' || $2 || '%' OR u.email LIKE '%' || $2 || '%')
 LIMIT 5;
 
 -- name: SearchUserOutsideProject :many
-SELECT u.* FROM users u
+SELECT u.*
+FROM users u
 LEFT JOIN user_projects up ON u.user_id = up.user_id AND up.project_id = $1
+LEFT JOIN user_project_invitations upi ON u.user_id = upi.recipient_id AND upi.project_id = $1
 WHERE up.user_id IS NULL
+AND upi.invitation_id IS NULL
 AND (u.username LIKE '%' || $2 || '%' OR u.email LIKE '%' || $2 || '%')
 LIMIT 5;
 

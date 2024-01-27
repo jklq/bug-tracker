@@ -79,6 +79,28 @@ func handleProjectMemberInviteSearch(c *fiber.Ctx, q *queryProvider.Queries, db 
 	return view.InviteUserSearchResultView(users[0]).Render(c.Context(), c.Response().BodyWriter())
 }
 
+func handleProjectMemberInvitedList(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	projectID := c.Params("projectID")
+
+	project, err := q.GetProjectById(c.Context(), projectID)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	invitedUsers, err := q.GetUsersWithOpenProjectInvitations(c.Context(), projectID)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return view.InvitedUserList(invitedUsers, project).Render(c.Context(), c.Response().BodyWriter())
+}
+
 var validRoles = map[string]bool{
 	"viewer":          true,
 	"project manager": true,
@@ -148,6 +170,8 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
+
+	c.Set("HX-Trigger", "invite-user")
 
 	return c.SendString("Invitation sent successfully!")
 }

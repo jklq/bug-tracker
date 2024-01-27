@@ -32,32 +32,8 @@ templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDeta
 					</ul>
 				</div>
 				<div class="border p-4">
-					if len(params.InvitedUsers) > 0 {
-						<div class="mb-4">
-							// TODO: make this section update when a user is invited w/ the form below
-							// this would be done by adding a hx-target to the form below with the id of this div
-							// and making the server return the shtml for this div
-							<h2 class="font-bold text-lg">Invited users</h2>
-							<ul>
-								for _, user := range params.InvitedUsers {
-									<li class="border p-2 mb-2">
-										<span class="text-green-700" id={ fmt.Sprintf("success-msg-remove-inv-%s", user.UserID) }>
-											<span class="text-black">
-												<span class="block text-gray-500">As { user.Role }</span> { user.Username } ({ user.Email }) 
-												<a
-													hx-delete={ fmt.Sprintf("/app/project/%s/uninvite/%s", params.Project.ProjectID, user.UserID) }
-													hx-target={ fmt.Sprintf("#success-msg-remove-inv-%s", user.UserID) }
-													hx-target-errpr={ fmt.Sprintf("#error-msg-remove-inv-%s", user.UserID) }
-													class="text-blue-800 hover:underline cursor-pointer"
-												>[Remove invite]</a>
-												<span class="text-green-700 block" id={ fmt.Sprintf("error-msg-remove-inv-%s", user.UserID) }></span>
-											</span>
-										</span>
-									</li>
-								}
-							</ul>
-						</div>
-					}
+					// extracted invited user list
+					@InvitedUserList(params.InvitedUsers, params.Project)
 					<h2 class="font-bold text-lg mb-1">Invite user</h2>
 					<form>
 						<input
@@ -76,6 +52,45 @@ templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDeta
 			</div>
 		</div>
 	}
+}
+
+templ InvitedUserList(invitedUsers []queryProvider.GetUsersWithOpenProjectInvitationsRow, project queryProvider.Project) {
+	<div
+		class="mb-4"
+		id="invited-users-list"
+		hx-get={ fmt.Sprintf("/app/project/%s/invite/list", project.ProjectID) }
+		hx-trigger="invite-user from:body"
+		hx-swap="outerHTML"
+		hx-target="#invited-users-list"
+	>
+		// TODO: make this section update when a user is invited w/ the form below
+		// this would be done by adding a hx-target to the form below with the id of this div
+		// and making the server return the html for this div
+		<h2 class="font-bold text-lg">Invited users</h2>
+		if len(invitedUsers) == 0 {
+			<p class="text-gray-500">No users invited</p>
+		} else {
+			<ul>
+				for _, user := range invitedUsers {
+					<li class="border p-2 mb-2">
+						<span class="text-green-700" id={ fmt.Sprintf("success-msg-remove-inv-%s", user.UserID) }>
+							<span class="text-black">
+								<span class="block text-gray-500">As { user.Role }</span> { user.Username } ({ user.Email }) 
+								<a
+									hx-swap="innerHTML"
+									hx-delete={ fmt.Sprintf("/app/project/%s/uninvite/%s", project.ProjectID, user.UserID) }
+									hx-target={ fmt.Sprintf("#success-msg-remove-inv-%s", user.UserID) }
+									hx-target-errpr={ fmt.Sprintf("#error-msg-remove-inv-%s", user.UserID) }
+									class="text-blue-800 hover:underline cursor-pointer"
+								>[Remove invite]</a>
+								<span class="text-green-700 block" id={ fmt.Sprintf("error-msg-remove-inv-%s", user.UserID) }></span>
+							</span>
+						</span>
+					</li>
+				}
+			</ul>
+		}
+	</div>
 }
 
 templ InviteUserSearchResultView(user queryProvider.User) {

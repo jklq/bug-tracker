@@ -30,6 +30,9 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	protected.Get("/:projectID/invite", func(c *fiber.Ctx) error {
 		return handleProjectMemberInviteSearch(c, queries, db)
 	})
+	protected.Get("/:projectID/invite/list", func(c *fiber.Ctx) error {
+		return handleProjectMemberInvitedList(c, queries, db)
+	})
 	protected.Post("/:projectID/invite", func(c *fiber.Ctx) error {
 		return handleProjectMemberInvite(c, queries, db)
 	})
