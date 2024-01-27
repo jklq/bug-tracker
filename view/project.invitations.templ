@@ -1,0 +1,32 @@
+package view
+
+import "github.com/jklq/bug-tracker/db"
+import "fmt"
+
+// personal invitation view of all invites from all projects
+templ ProjectMemberInvitationView (template templ.Component, invitations []db.GetProjectInvitationsByUserRow) {
+	@template {
+		<div class="max-w-screen-lg p-10 pt-6">
+			<div class="flex items-end mb-5 ">
+				<h1 class="flex-grow font-bold text-2xl">Invitations</h1>
+			</div>
+			<div>
+				if len(invitations) == 0 {
+					<p class="text-gray-500">No invitations</p>
+				} else {
+					<ul>
+						for _, invite := range invitations {
+							<li class="border p-4 inline-block">
+								<p class="mb-2">Join the project <span class="italic font-bold">{ invite.ProjectName }</span> as <span class="italic">{ invite.Role }</span></p>
+								<div class="flex gap-2">
+									<a hx-post={ fmt.Sprintf("/app/project/%s/invite/accept", invite.ProjectID) } hx-boost="true" class=" bg-lime-300 whitespace-nowrap cursor-pointer rounded border border-lime-900 duration-100 py-1 px-6 hover:bg-lime-400">Accept</a>
+									<a hx-post={ fmt.Sprintf("/app/project/%s/invite/decline", invite.ProjectID) } hx-boost="true" class="whitespace-nowrap rounded border cursor-pointer border-lime-900 duration-100 py-1 px-6 hover:bg-gray-200 border-red-600 text-red-600">Decline</a>
+								</div>
+							</li>
+						}
+					</ul>
+				}
+			</div>
+		</div>
+	}
+}

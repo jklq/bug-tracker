@@ -20,11 +20,11 @@ type ProjectMemberDetailViewParams struct {
 
 templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDetailViewParams) {
 	@template {
-		<div class="max-h-screen flex flex-col ">
+		<div class="max-h-screen max-w-screen-lg flex flex-col ">
 			@projectHeader(params.Project, "view")
 			<div class="p-4 px-8 flex-grow flex gap-14">
-				<div class="max-w-screen-lg flex-grow">
-					<h2 class="text-lg font-bold">Members</h2>
+				<div class=" flex-grow">
+					<h2 class="text-xl font-bold">Members</h2>
 					<ul>
 						for _, member := range params.Members {
 							<li>{ capitalizeWords(member.Role) }: { member.Username } ({ member.Email })</li>

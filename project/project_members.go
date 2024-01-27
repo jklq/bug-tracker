@@ -195,3 +195,94 @@ func handleProjectMemberUninvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgx
 
 	return c.SendString("Invitation deleted successfully!")
 }
+
+func handleProjectMemberInvitationView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	layout := helpers.HtmxLayoutComponent(c)
+	sess, err := store.Store.Get(c)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	userId, ok := sess.Get("user_id").(string)
+
+	if !ok {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	invitations, err := q.GetProjectInvitationsByUser(c.Context(), userId)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return view.ProjectMemberInvitationView(layout, invitations).Render(c.Context(), c.Response().BodyWriter())
+}
+
+func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	projectID := c.Params("projectID")
+
+	sess, err := store.Store.Get(c)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	userId, ok := sess.Get("user_id").(string)
+
+	if !ok {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	invitation, err := q.AcceptProjectInvitation(c.Context(), projectID)
+
+	if invitation.RecipientID != userId {
+		return c.SendStatus(fiber.StatusUnauthorized)
+	}
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	dbparams := queryProvider.AddUserToProjectParams{
+		UserID:    userId,
+		ProjectID: projectID,
+		Role:      invitation.Role,
+	}
+
+	err = q.AddUserToProject(c.Context(), dbparams)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return c.SendString("Invitation accepted successfully!")
+}
+
+func handleProjectMemberInviteDecline(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	invitationId := c.Params("invitationID")
+
+	err := q.DeclineProjectInvitation(c.Context(), invitationId)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return c.SendString("Invitation declined successfully!")
+}

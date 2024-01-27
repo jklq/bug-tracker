@@ -86,7 +86,7 @@ ORDER BY
   p.name;
 
 -- name: AddUserToProject :exec
-INSERT INTO user_projects (user_id, project_id) VALUES ($1, $2);
+INSERT INTO user_projects (user_id, project_id, role) VALUES ($1, $2, $3);
 
 -- name: RemoveUserFromProject :exec
 DELETE FROM user_projects WHERE user_id = $1 AND project_id = $2;
@@ -141,7 +141,34 @@ VALUES ($1, $2, $3, $4, $5, 0);
 DELETE FROM user_project_invitations WHERE recipient_id = $1 AND project_id = $2;
 
 -- name: GetProjectInvitationsByUserAndProject :many
-SELECT * FROM user_project_invitations WHERE recipient_id = $1 AND project_id = $2;
+SELECT * FROM user_project_invitations WHERE recipient_id = $1 AND project_id = $2 AND status = 0;
+
+-- name: GetProjectInvitationsByUser :many
+SELECT 
+  upi.invitation_id,
+  upi.recipient_id,
+  upi.sender_id,
+  upi.project_id,
+  upi.role,
+  upi.status,
+  p.name AS project_name,
+  u.username AS sender_username,
+  u.email AS sender_email
+FROM
+  user_project_invitations upi
+JOIN
+  projects p ON upi.project_id = p.project_id
+JOIN
+  users u ON upi.sender_id = u.user_id
+WHERE
+  upi.recipient_id = $1 AND upi.status = 0;
+
+-- name: AcceptProjectInvitation :one
+UPDATE user_project_invitations SET status = 1 WHERE project_id = $1 RETURNING *;
+
+
+-- name: DeclineProjectInvitation :exec
+UPDATE user_project_invitations SET status = 2 WHERE project_id = $1;
 
 
 -- name: GetProjectInvitationsByUserId :many

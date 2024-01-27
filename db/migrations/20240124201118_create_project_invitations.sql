@@ -21,6 +21,7 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
+
 -- Create trigger for updating 'resolved_at' in user_project_invitations
 CREATE TRIGGER update_invitation_resolved_time 
 BEFORE UPDATE ON user_project_invitations 
@@ -29,6 +30,7 @@ WHEN (OLD.status <> NEW.status AND NEW.status IN (1, 2))
 EXECUTE FUNCTION update_resolved_at_column();
 
 -- migrate:down
+
 
 -- Drop the trigger on user_project_invitations table
 DROP TRIGGER IF EXISTS update_invitation_resolved_time ON user_project_invitations;
