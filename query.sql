@@ -64,15 +64,29 @@ WHERE up.user_id = $1;
 SELECT * FROM user_projects WHERE user_id = $1 AND project_id = $2;
 
 
--- This will also have a open_tickets_assignee_id_user, total_open_tickets, and project_member_count
+-- This will also have a your_tickets (assigned to you), open_tickets, and project_member_count
 -- name: GetProjectsByUserIdWithTicketAndMemberInfo :many
-SELECT 
+WITH ProjectCounts AS (
+  SELECT
+    p.project_id,
+    COUNT(t.project_id) AS ticket_count,
+    COUNT(up.project_id) AS member_count,
+    SUM(CASE WHEN t.status = 1 THEN 1 ELSE 0 END) AS open_ticket_count,
+    SUM(CASE WHEN t.status = 1 AND t.assignee_id = $1 THEN 1 ELSE 0 END) AS your_ticket_count
+  FROM projects p
+  JOIN user_projects up ON p.project_id = up.project_id
+  LEFT JOIN tickets t ON p.project_id = t.project_id
+  WHERE up.user_id = $1
+  GROUP BY p.project_id
+)
+SELECT
   p.*,
-  (SELECT COUNT(*) FROM tickets t WHERE t.project_id = p.project_id AND t.status = 0) AS open_tickets,
-  (SELECT COUNT(*) FROM user_projects up WHERE up.project_id = p.project_id) AS project_member_count
+  pc.ticket_count,
+  pc.member_count,
+  pc.open_ticket_count,
+  pc.your_ticket_count
 FROM projects p
-JOIN user_projects up ON p.project_id = up.project_id
-WHERE up.user_id = $1;
+JOIN ProjectCounts pc ON p.project_id = pc.project_id;
 
 
 -- name: AddUserToProject :exec

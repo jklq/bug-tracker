@@ -23,25 +23,6 @@ type EditTicketParams struct {
 func handleEditTicketView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	layout := helpers.HtmxLayoutComponent(c)
 
-	userID, err := helpers.GetSession(c)
-
-	if err != nil {
-		log.Error(err.Error())
-
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
-
-	_, err = q.GetProjectMemberRelation(c.Context(), queryProvider.GetProjectMemberRelationParams{
-		ProjectID: c.Params("projectID"),
-		UserID:    userID,
-	})
-
-	if err != nil {
-		log.Error(err.Error())
-
-		return c.SendStatus(fiber.StatusForbidden)
-	}
-
 	ticket, err := q.GetTicketById(c.Context(), c.Params("ticketID"))
 
 	if err != nil {

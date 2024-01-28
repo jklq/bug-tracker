@@ -1,7 +1,10 @@
 package project
 
 import (
+	"log"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/helpers"
@@ -22,9 +25,11 @@ func handleProjectListGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	projects, err := q.GetProjectsByUserIdWithTicketAndMemberInfo(c.Context(), userId)
+	projects, err := q.GetProjectsByUserIdWithTicketAndMemberInfo(c.Context(), pgtype.Text{String: userId, Valid: true})
 
 	if err != nil {
+		log.Println(err.Error())
+
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 

@@ -50,24 +50,24 @@ templ ProjectList(layout templ.Component, projects []queryProvider.GetProjectsBy
 										}
 									</div>
 									<div class="text-sm min-w-1/6">
-										<span>Your Tickets:</span>
+										<span>Your Open Tickets:</span>
 										<span class="whitespace-nowrap block text-lg">
-											{ fmt.Sprintf("%v", project.OpenTickets) } open
+											{ fmt.Sprintf("%v", project.YourTicketCount) } open
 										</span>
 									</div>
 									<div class="text-sm min-w-1/6">
-										<span>Tickets:</span>
+										<span>Open Tickets:</span>
 										<span class="whitespace-nowrap block text-lg">
-											{ fmt.Sprintf("%v", project.OpenTickets) } open
+											{ fmt.Sprintf("%v", project.OpenTicketCount) } open
 										</span>
 									</div>
 									<div class="text-sm min-w-1/6">
 										<span>Members:</span>
 										<span class="whitespace-nowrap block text-lg">
-											if project.ProjectMemberCount == 1 {
-												{ fmt.Sprintf("%v", project.ProjectMemberCount) } person
+											if project.MemberCount == 1 {
+												{ fmt.Sprintf("%v", project.MemberCount) } person
 											} else {
-												{ fmt.Sprintf("%v", project.ProjectMemberCount) } people
+												{ fmt.Sprintf("%v", project.MemberCount) } people
 											}
 										</span>
 									</div>
