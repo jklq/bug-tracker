@@ -60,10 +60,8 @@ SELECT p.* FROM projects p
 JOIN user_projects up ON p.project_id = up.project_id
 WHERE up.user_id = $1;
 
--- name: GetProjectMemberByUserId :one
-SELECT p.* FROM projects p
-JOIN user_projects up ON p.project_id = up.project_id
-WHERE up.user_id = $1 AND p.project_id = $2;
+-- name: GetProjectMemberRelation :one
+SELECT * FROM user_projects WHERE user_id = $1 AND project_id = $2;
 
 
 -- This will also have a open_tickets_assignee_id_user, total_open_tickets, and project_member_count

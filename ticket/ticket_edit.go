@@ -31,7 +31,7 @@ func handleEditTicketView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	_, err = q.GetProjectMemberByUserId(c.Context(), queryProvider.GetProjectMemberByUserIdParams{
+	_, err = q.GetProjectMemberRelation(c.Context(), queryProvider.GetProjectMemberRelationParams{
 		ProjectID: c.Params("projectID"),
 		UserID:    userID,
 	})
@@ -74,7 +74,7 @@ func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 	}
 
 	// then check if user is member of project
-	_, err = q.GetProjectMemberByUserId(c.Context(), queryProvider.GetProjectMemberByUserIdParams{
+	_, err = q.GetProjectMemberRelation(c.Context(), queryProvider.GetProjectMemberRelationParams{
 		ProjectID: c.Params("projectID"),
 		UserID:    userId,
 	})

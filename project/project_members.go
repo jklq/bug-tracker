@@ -112,7 +112,7 @@ var validRoles = map[string]bool{
 func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	var params InviteUserParams
 
-	projectId := c.Params("projectID")
+	projectID := c.Params("projectID")
 
 	if err := c.BodyParser(&params); err != nil {
 		c.Status(fiber.StatusBadRequest)
@@ -133,7 +133,7 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 
 	dbargs := queryProvider.GetProjectInvitationsByUserAndProjectParams{
 		RecipientID: params.UserID,
-		ProjectID:   projectId,
+		ProjectID:   projectID,
 	}
 
 	existingInvitations, err := q.GetProjectInvitationsByUserAndProject(c.Context(), dbargs)
@@ -154,7 +154,7 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 		RecipientID:  params.UserID,
 		SenderID:     pgtype.Text{String: userId, Valid: true},
 		Role:         params.Role,
-		ProjectID:    projectId,
+		ProjectID:    projectID,
 	}
 
 	err = q.CreateProjectInvitation(c.Context(), dbparams)
@@ -171,12 +171,12 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 }
 
 func handleProjectMemberUninvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
-	projectId := c.Params("projectID")
+	projectID := c.Params("projectID")
 	userId := c.Params("userID")
 
 	invitations, err := q.GetProjectInvitationsByUserAndProject(c.Context(), queryProvider.GetProjectInvitationsByUserAndProjectParams{
 		RecipientID: userId,
-		ProjectID:   projectId,
+		ProjectID:   projectID,
 	})
 
 	if err != nil {

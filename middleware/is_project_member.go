@@ -12,6 +12,7 @@ import (
 
 func IsProjectMemberMiddleware(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 
+	projectID := c.Params("projectID")
 	userId, err := helpers.GetSession(c)
 
 	if err != nil {
@@ -20,15 +21,11 @@ func IsProjectMemberMiddleware(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	projectId := c.Params("projectID")
-
 	fmt.Println("userId", userId)
-	fmt.Println("projectID", projectId)
+	fmt.Println("projectID", projectID)
 
-	fmt.Println(c.AllParams())
-
-	_, err = q.GetProjectMemberByUserId(c.Context(), queryProvider.GetProjectMemberByUserIdParams{
-		ProjectID: c.Params("projectID"),
+	_, err = q.GetProjectMemberRelation(c.Context(), queryProvider.GetProjectMemberRelationParams{
+		ProjectID: projectID,
 		UserID:    userId,
 	})
 
