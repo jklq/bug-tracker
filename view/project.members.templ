@@ -18,29 +18,30 @@ type ProjectMemberDetailViewParams struct {
 	InvitedUsers []queryProvider.GetUsersWithOpenProjectInvitationsRow
 }
 
-templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDetailViewParams) {
+templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDetailViewParams, role string) {
 	@template {
 		<div class="max-h-screen max-w-screen-lg flex flex-col ">
 			@projectHeader(params.Project, "view")
 			<div class="p-4 px-8 flex-grow flex gap-14">
-				<div class="border p-4 flex-grow">
-					// extracted invited user list
-					@InvitedUserList(params.InvitedUsers, params.Project)
-					<h2 class="font-bold text-lg mb-1">Invite user</h2>
-					<form>
-						<input
-							autocomplete="off"
-							hx-get="invite"
-							hx-target="#invite-user-search-results"
-							type="text"
-							hx-trigger="keyup changed"
-							name="q"
-							placeholder="search user..."
-							class="w-full border border-gray-300 px-1"
-						/>
-					</form>
-					<div id="invite-user-search-results" class="mt-2"></div>
-				</div>
+				if role == "project manager" {
+					<div class="border p-4 flex-grow">
+						@InvitedUserList(params.InvitedUsers, params.Project)
+						<h2 class="font-bold text-lg mb-1">Invite user</h2>
+						<form>
+							<input
+								autocomplete="off"
+								hx-get="invite"
+								hx-target="#invite-user-search-results"
+								type="text"
+								hx-trigger="keyup changed"
+								name="q"
+								placeholder="search user..."
+								class="w-full border border-gray-300 px-1"
+							/>
+						</form>
+						<div id="invite-user-search-results" class="mt-2"></div>
+					</div>
+				}
 				<div class=" ">
 					<h2 class="text-xl font-bold">Members</h2>
 					<ul>

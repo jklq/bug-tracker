@@ -27,5 +27,13 @@ func handleProjectView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 		return view.ErrorView(layout, "Did not find project.").Render(c.Context(), c.Response().BodyWriter())
 	}
 
-	return view.ProjectDetailView(layout, project, tickets, "").Render(c.Context(), c.Response().BodyWriter())
+	projectRole := helpers.GetProjectRole(c)
+
+	return view.ProjectDetailView(view.ProjectDetailViewParams{
+		Template:   layout,
+		Project:    project,
+		Tickets:    tickets,
+		SuccessMsg: "",
+		Role:       projectRole,
+	}).Render(c.Context(), c.Response().BodyWriter())
 }

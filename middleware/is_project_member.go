@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -21,10 +19,7 @@ func IsProjectMemberMiddleware(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	fmt.Println("userId", userId)
-	fmt.Println("projectID", projectID)
-
-	_, err = q.GetProjectMemberRelation(c.Context(), queryProvider.GetProjectMemberRelationParams{
+	relation, err := q.GetProjectMemberRelation(c.Context(), queryProvider.GetProjectMemberRelationParams{
 		ProjectID: projectID,
 		UserID:    userId,
 	})
@@ -34,6 +29,8 @@ func IsProjectMemberMiddleware(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 
 		return c.SendStatus(fiber.StatusForbidden)
 	}
+
+	c.Locals("projectRole", relation.Role)
 
 	return c.Next()
 }

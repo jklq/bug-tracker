@@ -106,5 +106,10 @@ func handleTicketCreation(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 
 	c.Set("HX-Push-Url", fmt.Sprintf("/app/project/%s/view", params.ProjectID))
 	layout := helpers.HtmxLayoutComponent(c)
-	return view.ProjectDetailView(layout, project, tickets, "Ticket added successfully!").Render(c.Context(), c.Response().BodyWriter())
+	return view.ProjectDetailView(view.ProjectDetailViewParams{
+		Template:   layout,
+		Project:    project,
+		Tickets:    tickets,
+		SuccessMsg: "Ticket added successfully!"},
+	).Render(c.Context(), c.Response().BodyWriter())
 }

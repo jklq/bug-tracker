@@ -49,13 +49,16 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 		projectMember.Delete("/uninvite/:userID", func(c *fiber.Ctx) error {
 			return handleProjectMemberUninvite(c, queries, db)
 		})
-		projectMember.Get("/edit", func(c *fiber.Ctx) error {
+
+		projectMember.Get("/edit", middleware.IsRole("project manager", queries), func(c *fiber.Ctx) error {
 			return handleEditProjectView(c, queries, db)
 		})
-		projectMember.Post("/edit", func(c *fiber.Ctx) error {
+
+		projectMember.Post("/edit", middleware.IsRole("project manager", queries), func(c *fiber.Ctx) error {
 			return handleEditProjectPost(c, queries, db)
 		})
-		projectMember.Post("/delete", func(c *fiber.Ctx) error {
+
+		projectMember.Post("/delete", middleware.IsRole("project manager", queries), func(c *fiber.Ctx) error {
 			return handleProjectDeletion(c, queries, db)
 		})
 

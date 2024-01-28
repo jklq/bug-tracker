@@ -52,7 +52,9 @@ func handleProjectMemberView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool
 		InvitedUsers: invitedUsers,
 	}
 
-	return view.ProjectMemberDetailView(layout, params).Render(c.Context(), c.Response().BodyWriter())
+	projectRole := helpers.GetProjectRole(c)
+
+	return view.ProjectMemberDetailView(layout, params, projectRole).Render(c.Context(), c.Response().BodyWriter())
 }
 
 func handleProjectMemberInviteSearch(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
@@ -63,7 +65,7 @@ func handleProjectMemberInviteSearch(c *fiber.Ctx, q *queryProvider.Queries, db 
 		return c.SendString("Keep typing!")
 	}
 
-	dbparams := queryProvider.SearchUserOutsideProjectParams{ProjectID: projectID, Column2: pgtype.Text{query, true}}
+	dbparams := queryProvider.SearchUserOutsideProjectParams{ProjectID: projectID, Column2: pgtype.Text{String: query, Valid: true}}
 
 	users, err := q.SearchUserOutsideProject(c.Context(), dbparams)
 

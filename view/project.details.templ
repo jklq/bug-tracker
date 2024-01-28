@@ -16,32 +16,46 @@ type TicketPriorityTicker_ticket struct {
 	Priority  int16
 }
 
-templ ProjectDetailView(template templ.Component, project queryProvider.Project, tickets []queryProvider.Ticket, successMsg string) {
-	@template {
+type ProjectDetailViewParams struct {
+	Template   templ.Component
+	Project    queryProvider.Project
+	Tickets    []queryProvider.Ticket
+	SuccessMsg string
+	Role       string
+}
+
+templ ProjectDetailView(params ProjectDetailViewParams) {
+	@params.Template {
 		<div class="max-h-screen flex flex-col ">
-			@projectHeader(project, "/app/project") {
+			@projectHeader(params.Project, "/app/project") {
 				<a href="members" hx-boost="true" hx-push-url="true" class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
-					Manage members
+					if params.Role == "project manager" {
+						Manage members
+					} else {
+						View members
+					}
 				</a>
-				<a href="edit" hx-boost="true" hx-push-url="true" class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
-					Edit project
-				</a>
+				if params.Role == "project manager" {
+					<a href="edit" hx-boost="true" hx-push-url="true" class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
+						Edit project
+					</a>
+				}
 			}
 			<div class="p-4 px-8 flex-grow ">
 				<div class="py-4 max-w-screen-lg">
-					if successMsg != "" {
-						<span class="text-green-800 bg-green-300 inline-block p-2">{ successMsg }</span>
+					if params.SuccessMsg != "" {
+						<span class="text-green-800 bg-green-300 inline-block p-2">{ params.SuccessMsg }</span>
 					}
 					<div class="flex gap-3 items-end pb-3">
 						<div class="flex-grow gap-3">
 							<h1 class="text-3xl">Tickets</h1>
 						</div>
-						<a href={ templ.URL(fmt.Sprintf("/app/project/%s/ticket/create", project.ProjectID)) } hx-boost="true" class="p-3 px-6 bg-lime-300 rounded border border-lime-900 duration-100 hover:bg-lime-400">
+						<a href={ templ.URL(fmt.Sprintf("/app/project/%s/ticket/create", params.Project.ProjectID)) } hx-boost="true" class="p-3 px-6 bg-lime-300 rounded border border-lime-900 duration-100 hover:bg-lime-400">
 							+ Add New Ticket
 						</a>
 					</div>
 					<div class="mt-3">
-						@ticketList(tickets)
+						@ticketList(params.Tickets)
 					</div>
 				</div>
 			</div>
