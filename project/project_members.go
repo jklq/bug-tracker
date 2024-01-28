@@ -1,13 +1,14 @@
 package project
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/helpers"
-	"github.com/jklq/bug-tracker/store"
 	"github.com/jklq/bug-tracker/view"
 	"github.com/lucsky/cuid"
 )
@@ -73,6 +74,7 @@ func handleProjectMemberInviteSearch(c *fiber.Ctx, q *queryProvider.Queries, db 
 	}
 
 	if len(users) == 0 {
+		c.Status(fiber.StatusNotFound)
 		return c.SendString("No users found!")
 	}
 
@@ -121,17 +123,9 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 		return c.SendString("Invalid request body")
 	}
 
-	sess, err := store.Store.Get(c)
+	userId, err := helpers.GetSession(c)
 
 	if err != nil {
-		log.Error(err.Error())
-
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
-
-	userId, ok := sess.Get("user_id").(string)
-
-	if !ok {
 		log.Error(err.Error())
 
 		return c.SendStatus(fiber.StatusInternalServerError)
@@ -144,7 +138,7 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 
 	existingInvitations, err := q.GetProjectInvitationsByUserAndProject(c.Context(), dbargs)
 
-	if !ok {
+	if err != nil {
 		log.Error(err.Error())
 
 		return c.SendStatus(fiber.StatusInternalServerError)
@@ -180,12 +174,31 @@ func handleProjectMemberUninvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgx
 	projectId := c.Params("projectID")
 	userId := c.Params("userID")
 
-	dbparams := queryProvider.DeleteProjectInvitationParams{
+	invitations, err := q.GetProjectInvitationsByUserAndProject(c.Context(), queryProvider.GetProjectInvitationsByUserAndProjectParams{
 		RecipientID: userId,
 		ProjectID:   projectId,
+	})
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	err := q.DeleteProjectInvitation(c.Context(), dbparams)
+	if len(invitations) == 0 {
+		c.Status(fiber.StatusNotFound)
+		return c.SendString("No invitation found!")
+	}
+
+	invitation := invitations[0]
+
+	if invitation.RecipientID != userId {
+		return c.SendStatus(fiber.StatusForbidden)
+	}
+
+	dbparams := invitation.InvitationID
+
+	err = q.DeleteProjectInvitation(c.Context(), dbparams)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -198,17 +211,10 @@ func handleProjectMemberUninvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgx
 
 func handleProjectMemberInvitationView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	layout := helpers.HtmxLayoutComponent(c)
-	sess, err := store.Store.Get(c)
+
+	userId, err := helpers.GetSession(c)
 
 	if err != nil {
-		log.Error(err.Error())
-
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
-
-	userId, ok := sess.Get("user_id").(string)
-
-	if !ok {
 		log.Error(err.Error())
 
 		return c.SendStatus(fiber.StatusInternalServerError)
@@ -226,9 +232,10 @@ func handleProjectMemberInvitationView(c *fiber.Ctx, q *queryProvider.Queries, d
 }
 
 func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+
 	projectID := c.Params("projectID")
 
-	sess, err := store.Store.Get(c)
+	userId, err := helpers.GetSession(c)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -236,19 +243,19 @@ func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db 
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	userId, ok := sess.Get("user_id").(string)
+	tx, err := db.Begin(c.Context())
 
-	if !ok {
-		log.Error(err.Error())
-
+	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	invitation, err := q.AcceptProjectInvitation(c.Context(), projectID)
+	defer tx.Rollback(c.Context())
+	qtx := q.WithTx(tx)
 
-	if invitation.RecipientID != userId {
-		return c.SendStatus(fiber.StatusUnauthorized)
-	}
+	invitations, err := qtx.GetProjectInvitationsByUserAndProject(c.Context(), queryProvider.GetProjectInvitationsByUserAndProjectParams{
+		RecipientID: userId,
+		ProjectID:   projectID,
+	})
 
 	if err != nil {
 		log.Error(err.Error())
@@ -256,13 +263,34 @@ func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db 
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	dbparams := queryProvider.AddUserToProjectParams{
+	if len(invitations) == 0 {
+		c.Status(fiber.StatusNotFound)
+		return c.SendString("No invitation found!")
+	}
+
+	invitation := invitations[0]
+
+	err = qtx.AddUserToProject(c.Context(), queryProvider.AddUserToProjectParams{
 		UserID:    userId,
 		ProjectID: projectID,
 		Role:      invitation.Role,
+	})
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	err = q.AddUserToProject(c.Context(), dbparams)
+	err = qtx.DeleteProjectInvitation(c.Context(), invitation.InvitationID)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	err = tx.Commit(c.Context())
 
 	if err != nil {
 		log.Error(err.Error())
@@ -274,9 +302,42 @@ func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db 
 }
 
 func handleProjectMemberInviteDecline(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
-	invitationId := c.Params("invitationID")
+	projectID := c.Params("projectID")
 
-	err := q.DeclineProjectInvitation(c.Context(), invitationId)
+	userID, err := helpers.GetSession(c)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	invitations, err := q.GetProjectInvitationsByUserAndProject(c.Context(), queryProvider.GetProjectInvitationsByUserAndProjectParams{
+		RecipientID: userID,
+		ProjectID:   projectID,
+	})
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	if len(invitations) == 0 {
+		c.Status(fiber.StatusNotFound)
+		return c.SendString("No invitation found!")
+	}
+
+	invitation := invitations[0]
+
+	if invitation.RecipientID != userID {
+		return c.SendStatus(fiber.StatusForbidden)
+	}
+
+	fmt.Println("Recipient", invitation)
+	fmt.Println("UserID", userID)
+
+	err = q.DeleteProjectInvitation(c.Context(), invitation.InvitationID)
 
 	if err != nil {
 		log.Error(err.Error())

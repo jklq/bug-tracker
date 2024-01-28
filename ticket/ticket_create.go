@@ -33,15 +33,11 @@ func handleTicketCreateView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.
 func handleGeneralTicketCreateView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	layout := helpers.HtmxLayoutComponent(c)
 
-	sess, err := store.Store.Get(c)
+	userId, err := helpers.GetSession(c)
 
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
+		log.Error(err.Error())
 
-	userId, ok := sess.Get("user_id").(string)
-
-	if !ok {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 

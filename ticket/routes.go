@@ -31,7 +31,9 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 	})
 
 	// Spesific routes here
-	projectTicket := protected.Group("/project/:projectID/ticket")
+	projectTicket := protected.Group("/project/:projectID/ticket", func(c *fiber.Ctx) error {
+		return middleware.IsProjectMemberMiddleware(c, queries, db)
+	})
 	{
 		projectTicket.Get("/create", func(c *fiber.Ctx) error {
 			return handleTicketCreateView(c, queries, db)

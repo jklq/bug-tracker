@@ -23,6 +23,25 @@ type EditTicketParams struct {
 func handleEditTicketView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	layout := helpers.HtmxLayoutComponent(c)
 
+	userID, err := helpers.GetSession(c)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	_, err = q.GetProjectMemberByUserId(c.Context(), queryProvider.GetProjectMemberByUserIdParams{
+		ProjectID: c.Params("projectID"),
+		UserID:    userID,
+	})
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusForbidden)
+	}
+
 	ticket, err := q.GetTicketById(c.Context(), c.Params("ticketID"))
 
 	if err != nil {
@@ -33,11 +52,9 @@ func handleEditTicketView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 }
 
 func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
-
 	var params EditTicketParams
 
 	if err := c.BodyParser(&params); err != nil {
-
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid request format")
 	}
 
@@ -45,6 +62,27 @@ func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 	if err != nil {
 		log.Error(err.Error())
 		return c.Status(fiber.StatusBadRequest).SendString(helpers.TranslateError(err, helpers.Translator)[0].Error())
+	}
+
+	// first get project id from session
+	userId, err := helpers.GetSession(c)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	// then check if user is member of project
+	_, err = q.GetProjectMemberByUserId(c.Context(), queryProvider.GetProjectMemberByUserIdParams{
+		ProjectID: c.Params("projectID"),
+		UserID:    userId,
+	})
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusForbidden)
 	}
 
 	status, err := strconv.Atoi(params.Status)
@@ -73,20 +111,6 @@ func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		log.Error(err.Error())
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
-
-	//TODO: CHECK IF USER IS AUTHORIZED TO UPDATE PROJECT! ROLE
-
-	// sess, err := store.Store.Get(c)
-
-	// if err != nil {
-	// 	return c.SendStatus(fiber.StatusInternalServerError)
-	// }
-
-	// userId, ok := sess.Get("user_id").(string)
-
-	// if !ok {
-	// 	return c.SendStatus(fiber.StatusInternalServerError)
-	// }
 
 	c.Set("HX-Push-Url", fmt.Sprintf("/app/project/%s/ticket/%s/view", c.Params("projectID"), c.Params("ticketID")))
 	return c.Redirect(fmt.Sprintf("/app/project/%s/ticket/%s/view", c.Params("projectID"), c.Params("ticketID")))

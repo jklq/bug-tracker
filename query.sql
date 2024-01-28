@@ -60,30 +60,22 @@ SELECT p.* FROM projects p
 JOIN user_projects up ON p.project_id = up.project_id
 WHERE up.user_id = $1;
 
+-- name: GetProjectMemberByUserId :one
+SELECT p.* FROM projects p
+JOIN user_projects up ON p.project_id = up.project_id
+WHERE up.user_id = $1 AND p.project_id = $2;
+
+
+-- This will also have a open_tickets_assignee_id_user, total_open_tickets, and project_member_count
 -- name: GetProjectsByUserIdWithTicketAndMemberInfo :many
 SELECT 
-  p.project_id,
-  p.name,
-  p.description,
-  COUNT(DISTINCT t.ticket_id) FILTER (WHERE t.status != 0) AS open_tickets_assignee_id_user,
-  COUNT(DISTINCT tp.ticket_id) FILTER (WHERE tp.status != 0) AS total_open_tickets,
-  COUNT(DISTINCT u.user_id) AS project_member_count
-FROM 
-  projects p
-JOIN 
-  user_projects up ON p.project_id = up.project_id
-LEFT JOIN 
-  tickets t ON p.project_id = t.project_id AND t.assignee_id = up.user_id
-LEFT JOIN 
-  tickets tp ON p.project_id = tp.project_id AND tp.status != 0
-LEFT JOIN 
-  users u ON up.user_id = u.user_id
-WHERE 
-  up.user_id = $1
-GROUP BY 
-  p.project_id
-ORDER BY 
-  p.name;
+  p.*,
+  (SELECT COUNT(*) FROM tickets t WHERE t.project_id = p.project_id AND t.status = 0) AS open_tickets,
+  (SELECT COUNT(*) FROM user_projects up WHERE up.project_id = p.project_id) AS project_member_count
+FROM projects p
+JOIN user_projects up ON p.project_id = up.project_id
+WHERE up.user_id = $1;
+
 
 -- name: AddUserToProject :exec
 INSERT INTO user_projects (user_id, project_id, role) VALUES ($1, $2, $3);
@@ -138,7 +130,10 @@ INSERT INTO user_project_invitations (invitation_id, recipient_id, sender_id, pr
 VALUES ($1, $2, $3, $4, $5, 0);
 
 -- name: DeleteProjectInvitation :exec
-DELETE FROM user_project_invitations WHERE recipient_id = $1 AND project_id = $2;
+DELETE FROM user_project_invitations WHERE invitation_id = $1;
+
+-- name: GetProjectInvitationById :one
+SELECT * FROM user_project_invitations WHERE invitation_id = $1 LIMIT 1;
 
 -- name: GetProjectInvitationsByUserAndProject :many
 SELECT * FROM user_project_invitations WHERE recipient_id = $1 AND project_id = $2 AND status = 0;
@@ -163,12 +158,7 @@ JOIN
 WHERE
   upi.recipient_id = $1 AND upi.status = 0;
 
--- name: AcceptProjectInvitation :one
-UPDATE user_project_invitations SET status = 1 WHERE project_id = $1 RETURNING *;
 
-
--- name: DeclineProjectInvitation :exec
-UPDATE user_project_invitations SET status = 2 WHERE project_id = $1;
 
 
 -- name: GetProjectInvitationsByUserId :many

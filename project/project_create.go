@@ -7,7 +7,6 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	queryProvider "github.com/jklq/bug-tracker/db"
 	"github.com/jklq/bug-tracker/helpers"
-	"github.com/jklq/bug-tracker/store"
 	"github.com/jklq/bug-tracker/view"
 	"github.com/lucsky/cuid"
 )
@@ -38,17 +37,9 @@ func handleProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 		return c.Status(fiber.StatusBadRequest).SendString(helpers.TranslateError(err, helpers.Translator)[0].Error())
 	}
 
-	sess, err := store.Store.Get(c)
+	userId, err := helpers.GetSession(c)
 
 	if err != nil {
-		log.Error(err.Error())
-
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
-
-	userId, ok := sess.Get("user_id").(string)
-
-	if !ok {
 		log.Error(err.Error())
 
 		return c.SendStatus(fiber.StatusInternalServerError)

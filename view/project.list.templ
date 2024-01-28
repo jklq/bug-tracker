@@ -52,13 +52,13 @@ templ ProjectList(layout templ.Component, projects []queryProvider.GetProjectsBy
 									<div class="text-sm min-w-1/6">
 										<span>Your Tickets:</span>
 										<span class="whitespace-nowrap block text-lg">
-											{ fmt.Sprintf("%v", project.OpenTicketsAssigneeIDUser) } open
+											{ fmt.Sprintf("%v", project.OpenTickets) } open
 										</span>
 									</div>
 									<div class="text-sm min-w-1/6">
 										<span>Tickets:</span>
 										<span class="whitespace-nowrap block text-lg">
-											{ fmt.Sprintf("%v", project.TotalOpenTickets) } open
+											{ fmt.Sprintf("%v", project.OpenTickets) } open
 										</span>
 									</div>
 									<div class="text-sm min-w-1/6">

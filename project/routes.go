@@ -21,46 +21,51 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 		return handleProjectPost(c, queries, db)
 	})
 
-	protected.Get("/:projectID/view", func(c *fiber.Ctx) error {
-		return handleProjectView(c, queries, db)
-	})
-	protected.Get("/:projectID/members", func(c *fiber.Ctx) error {
-		return handleProjectMemberView(c, queries, db)
-	})
-	protected.Get("/:projectID/invite", func(c *fiber.Ctx) error {
-		return handleProjectMemberInviteSearch(c, queries, db)
-	})
-
-	protected.Delete("/:projectID/uninvite/:userID", func(c *fiber.Ctx) error {
-		return handleProjectMemberUninvite(c, queries, db)
-	})
-
-	protected.Get("/:projectID/edit", func(c *fiber.Ctx) error {
-		return handleEditProjectView(c, queries, db)
-	})
-	protected.Post("/:projectID/edit", func(c *fiber.Ctx) error {
-		return handleEditProjectPost(c, queries, db)
-	})
-	protected.Post("/:projectID/delete", func(c *fiber.Ctx) error {
-		return handleProjectDeletion(c, queries, db)
-	})
-
-	// invitation routes
-	protected.Get("/:projectID/invite/list", func(c *fiber.Ctx) error {
-		return handleProjectMemberInvitedList(c, queries, db)
-	})
-	protected.Post("/:projectID/invite", func(c *fiber.Ctx) error {
-		return handleProjectMemberInvite(c, queries, db)
-	})
-
 	protected.Get("/invitation", func(c *fiber.Ctx) error {
 		return handleProjectMemberInvitationView(c, queries, db)
 	})
+
 	protected.Post("/:projectID/invite/accept", func(c *fiber.Ctx) error {
 		return handleProjectMemberInviteAccept(c, queries, db)
 	})
 	protected.Post("/:projectID/invite/decline", func(c *fiber.Ctx) error {
 		return handleProjectMemberInviteDecline(c, queries, db)
 	})
+
+	// "/app/project/:projectID" routes past this point
+	projectMember := protected.Group("/:projectID", func(c *fiber.Ctx) error {
+		return middleware.IsProjectMemberMiddleware(c, queries, db)
+	})
+	{
+		projectMember.Get("/view", func(c *fiber.Ctx) error {
+			return handleProjectView(c, queries, db)
+		})
+		projectMember.Get("/members", func(c *fiber.Ctx) error {
+			return handleProjectMemberView(c, queries, db)
+		})
+		projectMember.Get("/invite", func(c *fiber.Ctx) error {
+			return handleProjectMemberInviteSearch(c, queries, db)
+		})
+		projectMember.Delete("/uninvite/:userID", func(c *fiber.Ctx) error {
+			return handleProjectMemberUninvite(c, queries, db)
+		})
+		projectMember.Get("/edit", func(c *fiber.Ctx) error {
+			return handleEditProjectView(c, queries, db)
+		})
+		projectMember.Post("/edit", func(c *fiber.Ctx) error {
+			return handleEditProjectPost(c, queries, db)
+		})
+		projectMember.Post("/delete", func(c *fiber.Ctx) error {
+			return handleProjectDeletion(c, queries, db)
+		})
+
+		// invitation routes
+		projectMember.Get("/invite/list", func(c *fiber.Ctx) error {
+			return handleProjectMemberInvitedList(c, queries, db)
+		})
+		projectMember.Post("/invite", func(c *fiber.Ctx) error {
+			return handleProjectMemberInvite(c, queries, db)
+		})
+	}
 
 }
