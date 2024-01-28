@@ -64,9 +64,6 @@ templ InvitedUserList(invitedUsers []queryProvider.GetUsersWithOpenProjectInvita
 		hx-swap="outerHTML"
 		hx-target="#invited-users-list"
 	>
-		// TODO: make this section update when a user is invited w/ the form below
-		// this would be done by adding a hx-target to the form below with the id of this div
-		// and making the server return the html for this div
 		<h2 class="font-bold text-lg">Invited users</h2>
 		if len(invitedUsers) == 0 {
 			<p class="text-gray-500">No users invited</p>
