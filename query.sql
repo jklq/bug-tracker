@@ -95,6 +95,9 @@ INSERT INTO user_projects (user_id, project_id, role) VALUES ($1, $2, $3);
 -- name: RemoveUserFromProject :exec
 DELETE FROM user_projects WHERE user_id = $1 AND project_id = $2;
 
+-- name: RemoveUserFromProjectTickets :exec
+UPDATE tickets SET assignee_id = NULL WHERE assignee_id = $1 AND project_id = $2;
+
 -- name: GetUserProjects :many
 SELECT project_id FROM user_projects WHERE user_id = $1;
 

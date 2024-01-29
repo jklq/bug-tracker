@@ -13,7 +13,7 @@ func capitalizeWords(str string) string {
 }
 
 type ProjectMemberDetailViewParams struct {
-	UserID 		 string
+	UserID       string
 	Project      queryProvider.Project
 	Members      []queryProvider.GetProjectMembersWithRolesRow
 	InvitedUsers []queryProvider.GetUsersWithOpenProjectInvitationsRow
@@ -23,7 +23,7 @@ templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDeta
 	@template {
 		<div class="max-h-screen max-w-screen-lg flex flex-col ">
 			@projectHeader(params.Project, "view")
-			<div class="p-4 px-8 flex-grow flex gap-8">
+			<div class="p-4 px-8 flex flex-grow gap-8">
 				if role == "project manager" {
 					<div class="border p-4 flex-grow">
 						@InvitedUserList(params.InvitedUsers, params.Project)
@@ -43,26 +43,27 @@ templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDeta
 						<div id="invite-user-search-results" class="mt-2"></div>
 					</div>
 				}
-				<div class=" ">
+				<div class="w-1/3">
 					<h2 class="text-xl font-bold">Members</h2>
 					<ul class="flex flex-col gap-2 mt-2">
 						for _, member := range params.Members {
-							<li class="border p-2"  id={fmt.Sprintf("member-item-%s", member.UserID)}>
+							<li class="border p-2 text-green-700" id={ fmt.Sprintf("member-item-%s", member.UserID) }>
 								// TODO: add remove member button
 								<span class="block text-gray-400">{ capitalizeWords(member.Role) }</span>
-								<span class="block">{ member.Username } ({ member.Email })</span>
+								<span class="block text-stone-950">{ member.Username } ({ member.Email })</span>
 								if role == "project manager" && member.UserID != params.UserID {
-									<span class="block"> 
-									<a 
-										hx-target={fmt.Sprintf("#member-item-%s", member.UserID)} 
-										hx-target-error={fmt.Sprintf("#member-item-error-%s", member.UserID)}
-										hx-post={fmt.Sprintf("/app/project/%s/member/remove/%s", params.Project.ProjectID, member.UserID)}
-										class="text-blue-800 hover:underline cursor-pointer"
-									>
-										[Remove]
-									</a></span>
+									<span class="block">
+										<a
+											hx-target={ fmt.Sprintf("#member-item-%s", member.UserID) }
+											hx-target-error={ fmt.Sprintf("#member-item-error-%s", member.UserID) }
+											hx-post={ fmt.Sprintf("/app/project/%s/member/remove/%s", params.Project.ProjectID, member.UserID) }
+											class="text-blue-800 hover:underline cursor-pointer"
+										>
+											[Remove]
+										</a>
+									</span>
 								}
-								<span id={fmt.Sprintf("member-item-error-%s", member.UserID)} class="text-red-600"></span>
+								<span id={ fmt.Sprintf("member-item-error-%s", member.UserID) } class="text-red-600"></span>
 							</li>
 						}
 					</ul>
@@ -89,7 +90,7 @@ templ InvitedUserList(invitedUsers []queryProvider.GetUsersWithOpenProjectInvita
 				for _, user := range invitedUsers {
 					<li class="border p-2 mb-2">
 						<span class="text-green-700" id={ fmt.Sprintf("success-msg-remove-inv-%s", user.UserID) }>
-							<span class="text-black">
+							<span class="text-stone-950">
 								<span class="block text-gray-500">As { user.Role }</span> { user.Username } ({ user.Email }) 
 								<a
 									hx-swap="innerHTML"
@@ -110,7 +111,7 @@ templ InvitedUserList(invitedUsers []queryProvider.GetUsersWithOpenProjectInvita
 
 templ InviteUserSearchResultView(user queryProvider.User) {
 	<div class="mt-2 text-green-700" id="invitation-success">
-		<form class="text-black" hx-post="invite" hx-target="#invitation-success" hx-target-error="#invitation-errors">
+		<form class="text-stone-950" hx-post="invite" hx-target="#invitation-success" hx-target-error="#invitation-errors">
 			<div class="mt-4 flex gap-3 items-center">
 				<span>{ user.Username } ({ user.Email }) as</span>
 				<input type="text" class="hidden" name="userId" value={ user.UserID }/>

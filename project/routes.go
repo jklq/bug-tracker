@@ -69,7 +69,7 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 			return handleProjectMemberInvite(c, queries, db)
 		})
 		// remove member
-		projectMember.Post("/member/remove/:userID", middleware.IsRole("project manager", queries), func(c *fiber.Ctx) error {
+		projectMember.Post("/member/remove/:userID", middleware.IsRole("project manager"), func(c *fiber.Ctx) error {
 			return handleProjectMemberRemove(c, queries, db)
 		})
 

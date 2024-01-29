@@ -393,5 +393,17 @@ func handleProjectMemberRemove(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
+	// remove assignements from tickets
+	err = q.RemoveUserFromProjectTickets(c.Context(), queryProvider.RemoveUserFromProjectTicketsParams{
+		AssigneeID: pgtype.Text{String: userId, Valid: true},
+		ProjectID:  projectID,
+	})
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
 	return c.SendString("User removed from project successfully!")
 }
