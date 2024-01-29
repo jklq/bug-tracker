@@ -5,14 +5,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 
 	"github.com/gofiber/template/html/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jklq/bug-tracker/db"
+	"github.com/jklq/bug-tracker/helpers"
 	"github.com/jklq/bug-tracker/middleware"
 	"github.com/jklq/bug-tracker/project"
 	"github.com/jklq/bug-tracker/store"
@@ -66,7 +65,10 @@ func main() {
 
 	app.Use(middleware.EnsureHtmlContentType)
 
-	app.Get("/", adaptor.HTTPHandler(templ.Handler(view.Index("hello"))))
+	app.Get("/", func(c *fiber.Ctx) error {
+		layout := helpers.HtmxLayoutComponentBasic(c)
+		return view.Index(layout).Render(c.Context(), c.Response().BodyWriter())
+	})
 
 	app.Get("/app", func(c *fiber.Ctx) error { return c.Redirect("/app/project") })
 

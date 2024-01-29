@@ -19,3 +19,9 @@ func HtmxLayoutComponent(c *fiber.Ctx) templ.Component {
 	}
 	return view.AppLayout(nil)
 }
+func HtmxLayoutComponentBasic(c *fiber.Ctx) templ.Component {
+	if IsHtmxRequest(c) {
+		return view.BasicEmpty()
+	}
+	return view.BasicLayout()
+}
