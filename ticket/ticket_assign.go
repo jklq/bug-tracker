@@ -39,6 +39,7 @@ func handleTicketAssignmentDropdownView(c *fiber.Ctx, q *queryProvider.Queries, 
 
 func handleTicketAssigneeSearch(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	query := c.Query("q")
+	projectID := c.Params("projectID")
 	ticketID := c.Params("ticketID")
 
 	if len(query) < 2 {
@@ -59,7 +60,7 @@ func handleTicketAssigneeSearch(c *fiber.Ctx, q *queryProvider.Queries, db *pgxp
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	return view.TicketAssignmentSearchResults(ticketID, users).Render(c.Context(), c.Response().BodyWriter())
+	return view.TicketAssignmentSearchResults(projectID, ticketID, users).Render(c.Context(), c.Response().BodyWriter())
 }
 
 func handleTicketDropdownAssign(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {

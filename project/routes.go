@@ -43,30 +43,29 @@ func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool
 		projectMember.Get("/members", func(c *fiber.Ctx) error {
 			return handleProjectMemberView(c, queries, db)
 		})
-		projectMember.Get("/invite", func(c *fiber.Ctx) error {
-			return handleProjectMemberInviteSearch(c, queries, db)
-		})
-		projectMember.Delete("/uninvite/:userID", func(c *fiber.Ctx) error {
-			return handleProjectMemberUninvite(c, queries, db)
-		})
 
-		projectMember.Get("/edit", middleware.IsRole("project manager", queries), func(c *fiber.Ctx) error {
+		projectMember.Get("/edit", middleware.IsRole("project manager"), func(c *fiber.Ctx) error {
 			return handleEditProjectView(c, queries, db)
 		})
-
-		projectMember.Post("/edit", middleware.IsRole("project manager", queries), func(c *fiber.Ctx) error {
+		projectMember.Post("/edit", middleware.IsRole("project manager"), func(c *fiber.Ctx) error {
 			return handleEditProjectPost(c, queries, db)
 		})
-
-		projectMember.Post("/delete", middleware.IsRole("project manager", queries), func(c *fiber.Ctx) error {
+		projectMember.Post("/delete", middleware.IsRole("project manager"), func(c *fiber.Ctx) error {
 			return handleProjectDeletion(c, queries, db)
 		})
 
 		// invitation routes
-		projectMember.Get("/invite/list", func(c *fiber.Ctx) error {
+		projectMember.Get("/invite", middleware.IsRole("project manager"), func(c *fiber.Ctx) error {
+			return handleProjectMemberInviteSearch(c, queries, db)
+		})
+		projectMember.Delete("/uninvite/:userID", middleware.IsRole("project manager"), func(c *fiber.Ctx) error {
+			return handleProjectMemberUninvite(c, queries, db)
+		})
+
+		projectMember.Get("/invite/list", middleware.IsRole("project manager"), func(c *fiber.Ctx) error {
 			return handleProjectMemberInvitedList(c, queries, db)
 		})
-		projectMember.Post("/invite", func(c *fiber.Ctx) error {
+		projectMember.Post("/invite", middleware.IsRole("project manager"), func(c *fiber.Ctx) error {
 			return handleProjectMemberInvite(c, queries, db)
 		})
 	}

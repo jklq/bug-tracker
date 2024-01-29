@@ -2,14 +2,23 @@ package middleware
 
 import (
 	"github.com/gofiber/fiber/v2"
-	queryProvider "github.com/jklq/bug-tracker/db"
 )
 
-func IsRole(role string, q *queryProvider.Queries) func(c *fiber.Ctx) error {
+var NotViewer = []string{"project manager", "editor"}
+
+func IsRole(roles ...string) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		if c.Locals("projectRole") != role {
-			return c.SendStatus(fiber.StatusForbidden)
+		projectRole, ok := c.Locals("projectRole").(string)
+		if !ok {
+			return c.SendStatus(fiber.StatusInternalServerError)
 		}
-		return c.Next()
+
+		for _, role := range roles {
+			if projectRole == role {
+				return c.Next()
+			}
+		}
+
+		return c.SendStatus(fiber.StatusForbidden)
 	}
 }

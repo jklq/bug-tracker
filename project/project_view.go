@@ -27,7 +27,13 @@ func handleProjectView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 		return view.ErrorView(layout, "Did not find project.").Render(c.Context(), c.Response().BodyWriter())
 	}
 
-	projectRole := helpers.GetProjectRole(c)
+	projectRole, ok := c.Locals("projectRole").(string)
+
+	if !ok {
+		log.Error("c.Locals(\"projectRole\") is not a string")
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
 
 	return view.ProjectDetailView(view.ProjectDetailViewParams{
 		Template:   layout,

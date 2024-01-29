@@ -52,7 +52,13 @@ func handleProjectMemberView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool
 		InvitedUsers: invitedUsers,
 	}
 
-	projectRole := helpers.GetProjectRole(c)
+	projectRole, ok := c.Locals("projectRole").(string)
+
+	if !ok {
+		log.Error("c.Locals(\"projectRole\") is not a string")
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
 
 	return view.ProjectMemberDetailView(layout, params, projectRole).Render(c.Context(), c.Response().BodyWriter())
 }

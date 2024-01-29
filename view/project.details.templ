@@ -157,7 +157,7 @@ templ TicketAssignmentDropdown(ticket queryProvider.Ticket, assignmentDropdownSt
 				<input
 					class="w-full border border-gray-300 px-1"
 					id="assignment-dropdown-search-bar"
-					hx-get={ fmt.Sprintf("/app/ticket/%s/assign/search", ticket.TicketID) }
+					hx-get={ fmt.Sprintf("/app/project/%s/ticket/%s/assign/search", ticket.ProjectID, ticket.TicketID) }
 					name="q"
 					hx-trigger="keyup changed"
 					type="text"
@@ -177,13 +177,13 @@ templ TicketAssignmentDropdown(ticket queryProvider.Ticket, assignmentDropdownSt
 	}
 }
 
-templ TicketAssignmentSearchResults(ticketID string, users []queryProvider.User) {
+templ TicketAssignmentSearchResults(projectID string, ticketID string, users []queryProvider.User) {
 	<div class="whitespace-nowrap mt-3">
 		if len(users) > 0 {
 			for _, user := range users {
 				<a
 					class="bg-gray-100 even:bg-white py-2 border border-transparent px-1 block cursor-pointer hover:pl-4 hover:border-gray-300 duration-100"
-					hx-post={ fmt.Sprintf("/app/ticket/%s/assignTo/user/%s", ticketID, user.UserID) }
+					hx-post={ fmt.Sprintf("/app/project/%s/ticket/%s/assignTo/user/%s", projectID, ticketID, user.UserID) }
 					hx-target={ fmt.Sprintf("#ticket-assignment-dropdown-%s", ticketID) }
 				>
 					{ user.Username } ({ user.Email })
@@ -191,7 +191,7 @@ templ TicketAssignmentSearchResults(ticketID string, users []queryProvider.User)
 			}
 			<a
 				class="hidden"
-				hx-post={ fmt.Sprintf("/app/ticket/%s/assignTo/user/%s", ticketID, users[0].UserID) }
+				hx-post={ fmt.Sprintf("/app/project/%s/ticket/%s/assignTo/user/%s", projectID, ticketID, users[0].UserID) }
 				hx-target={ fmt.Sprintf("#ticket-assignment-dropdown-%s", ticketID) }
 				hx-trigger="keyup[keyCode==13] from:body"
 			></a>
