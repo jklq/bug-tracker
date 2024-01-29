@@ -10,20 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
-
-
---
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
-
-
---
 -- Name: update_resolved_at_column(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -32,20 +18,6 @@ CREATE FUNCTION public.update_resolved_at_column() RETURNS trigger
     AS $$
 BEGIN
    NEW.resolved_at = NOW();
-   RETURN NEW;
-END;
-$$;
-
-
---
--- Name: update_updated_at_column_project_invitations(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.update_updated_at_column_project_invitations() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.updated_at = NOW();
    RETURN NEW;
 END;
 $$;
@@ -68,22 +40,6 @@ $$;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
-
---
--- Name: project_invitations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.project_invitations (
-    invitation_id text NOT NULL,
-    sender_id text,
-    recipient_id text,
-    project_id text,
-    role text NOT NULL,
-    status smallint DEFAULT 0 NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
-
 
 --
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
@@ -181,14 +137,6 @@ CREATE TABLE public.users (
 
 
 --
--- Name: project_invitations project_invitations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_invitations
-    ADD CONSTRAINT project_invitations_pkey PRIMARY KEY (invitation_id);
-
-
---
 -- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -275,13 +223,6 @@ CREATE TRIGGER update_invitation_resolved_time BEFORE UPDATE ON public.user_proj
 
 
 --
--- Name: project_invitations update_project_invitation_modtime; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER update_project_invitation_modtime BEFORE UPDATE ON public.project_invitations FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column_project_invitations();
-
-
---
 -- Name: projects update_project_modtime; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -300,30 +241,6 @@ CREATE TRIGGER update_ticket_modtime BEFORE UPDATE ON public.tickets FOR EACH RO
 --
 
 CREATE TRIGGER update_user_modtime BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column_users();
-
-
---
--- Name: project_invitations project_invitations_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_invitations
-    ADD CONSTRAINT project_invitations_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(project_id) ON DELETE CASCADE;
-
-
---
--- Name: project_invitations project_invitations_recipient_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_invitations
-    ADD CONSTRAINT project_invitations_recipient_id_fkey FOREIGN KEY (recipient_id) REFERENCES public.users(user_id) ON DELETE SET NULL;
-
-
---
--- Name: project_invitations project_invitations_sender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_invitations
-    ADD CONSTRAINT project_invitations_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES public.users(user_id) ON DELETE SET NULL;
 
 
 --

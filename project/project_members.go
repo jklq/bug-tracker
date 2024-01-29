@@ -21,6 +21,14 @@ type InviteUserParams struct {
 func handleProjectMemberView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	projectID := c.Params("projectID")
 
+	userID, err := helpers.GetSession(c)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
 	project, err := q.GetProjectById(c.Context(), projectID)
 	layout := helpers.HtmxLayoutComponent(c)
 
@@ -47,6 +55,7 @@ func handleProjectMemberView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool
 	}
 
 	params := view.ProjectMemberDetailViewParams{
+		UserID:       userID,
 		Project:      project,
 		Members:      members,
 		InvitedUsers: invitedUsers,
@@ -348,4 +357,35 @@ func handleProjectMemberInviteDecline(c *fiber.Ctx, q *queryProvider.Queries, db
 	}
 
 	return c.SendString("Invitation declined successfully!")
+}
+
+// handleProjectMemberRemove
+func handleProjectMemberRemove(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
+	projectID := c.Params("projectID")
+	userID := c.Params("userID")
+
+	userId, err := helpers.GetSession(c)
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	if userId == userID {
+		return c.SendStatus(fiber.StatusForbidden)
+	}
+
+	err = q.RemoveUserFromProject(c.Context(), queryProvider.RemoveUserFromProjectParams{
+		UserID:    userID,
+		ProjectID: projectID,
+	})
+
+	if err != nil {
+		log.Error(err.Error())
+
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return c.SendString("User removed from project successfully!")
 }
