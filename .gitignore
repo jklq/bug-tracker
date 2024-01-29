@@ -7,7 +7,6 @@
 *.dll
 *.so
 *.dylib
-db/*.go
 
 
 styles.css
