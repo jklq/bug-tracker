@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -80,5 +81,5 @@ func main() {
 	project.InitModule(projectRouter, queries, dbpool)
 	ticket.InitModule(ticketRouter, queries, dbpool)
 
-	log.Fatal(app.Listen(":3001"))
+	log.Fatal(app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT"))))
 }
