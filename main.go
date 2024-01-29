@@ -62,7 +62,6 @@ func main() {
 
 	app.Use(middleware.RedirectTrailingSlash)
 
-	app.Static("/", "./public") // test
 	app.Static("/static", "./public")
 
 	app.Use(middleware.EnsureHtmlContentType)
