@@ -368,7 +368,7 @@ func handleProjectMemberInviteDecline(c *fiber.Ctx, q *queryProvider.Queries, db
 // handleProjectMemberRemove
 func handleProjectMemberRemove(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	projectID := c.Params("projectID")
-	userID := c.Params("userID")
+	memberID := c.Params("memberID")
 
 	userID, err := helpers.GetSession(c)
 
@@ -378,7 +378,7 @@ func handleProjectMemberRemove(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	if userID == userID {
+	if memberID == userID {
 		return c.SendStatus(fiber.StatusForbidden)
 	}
 
