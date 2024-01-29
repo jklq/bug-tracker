@@ -33,7 +33,7 @@ func handleTicketCreateView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.
 func handleGeneralTicketCreateView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	layout := helpers.HtmxLayoutComponent(c)
 
-	userId, err := helpers.GetSession(c)
+	userID, err := helpers.GetSession(c)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -41,7 +41,7 @@ func handleGeneralTicketCreateView(c *fiber.Ctx, q *queryProvider.Queries, db *p
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	projects, err := q.GetProjectsByUserId(c.Context(), userId)
+	projects, err := q.GetProjectsByUserId(c.Context(), userID)
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
@@ -69,7 +69,7 @@ func handleTicketCreation(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	userId, ok := sess.Get("user_id").(string)
+	userID, ok := sess.Get("user_id").(string)
 
 	if !ok {
 		return c.SendStatus(fiber.StatusInternalServerError)
@@ -82,7 +82,7 @@ func handleTicketCreation(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		Priority:    params.Priority,
 		ProjectID:   params.ProjectID,
 		Status:      1,
-		CreatedBy:   userId,
+		CreatedBy:   userID,
 	})
 
 	if err != nil {

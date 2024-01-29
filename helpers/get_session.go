@@ -15,7 +15,7 @@ func GetSession(c *fiber.Ctx) (string, error) {
 		return "", err
 	}
 
-	userId, ok := sess.Get("user_id").(string)
+	userID, ok := sess.Get("user_id").(string)
 
 	if !ok {
 		log.Error(err.Error())
@@ -23,5 +23,5 @@ func GetSession(c *fiber.Ctx) (string, error) {
 		return "", err
 	}
 
-	return userId, nil
+	return userID, nil
 }

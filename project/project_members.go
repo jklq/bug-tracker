@@ -140,7 +140,7 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 		return c.SendString("Invalid request body")
 	}
 
-	userId, err := helpers.GetSession(c)
+	userID, err := helpers.GetSession(c)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -169,7 +169,7 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 	dbparams := queryProvider.CreateProjectInvitationParams{
 		InvitationID: cuid.New(),
 		RecipientID:  params.UserID,
-		SenderID:     pgtype.Text{String: userId, Valid: true},
+		SenderID:     pgtype.Text{String: userID, Valid: true},
 		Role:         params.Role,
 		ProjectID:    projectID,
 	}
@@ -189,10 +189,10 @@ func handleProjectMemberInvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 
 func handleProjectMemberUninvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	projectID := c.Params("projectID")
-	userId := c.Params("userID")
+	userID := c.Params("userID")
 
 	invitations, err := q.GetProjectInvitationsByUserAndProject(c.Context(), queryProvider.GetProjectInvitationsByUserAndProjectParams{
-		RecipientID: userId,
+		RecipientID: userID,
 		ProjectID:   projectID,
 	})
 
@@ -209,7 +209,7 @@ func handleProjectMemberUninvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgx
 
 	invitation := invitations[0]
 
-	if invitation.RecipientID != userId {
+	if invitation.RecipientID != userID {
 		return c.SendStatus(fiber.StatusForbidden)
 	}
 
@@ -229,7 +229,7 @@ func handleProjectMemberUninvite(c *fiber.Ctx, q *queryProvider.Queries, db *pgx
 func handleProjectMemberInvitationView(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
 	layout := helpers.HtmxLayoutComponent(c)
 
-	userId, err := helpers.GetSession(c)
+	userID, err := helpers.GetSession(c)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -237,7 +237,7 @@ func handleProjectMemberInvitationView(c *fiber.Ctx, q *queryProvider.Queries, d
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	invitations, err := q.GetProjectInvitationsByUser(c.Context(), userId)
+	invitations, err := q.GetProjectInvitationsByUser(c.Context(), userID)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -252,7 +252,7 @@ func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db 
 
 	projectID := c.Params("projectID")
 
-	userId, err := helpers.GetSession(c)
+	userID, err := helpers.GetSession(c)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -270,7 +270,7 @@ func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db 
 	qtx := q.WithTx(tx)
 
 	invitations, err := qtx.GetProjectInvitationsByUserAndProject(c.Context(), queryProvider.GetProjectInvitationsByUserAndProjectParams{
-		RecipientID: userId,
+		RecipientID: userID,
 		ProjectID:   projectID,
 	})
 
@@ -288,7 +288,7 @@ func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db 
 	invitation := invitations[0]
 
 	err = qtx.AddUserToProject(c.Context(), queryProvider.AddUserToProjectParams{
-		UserID:    userId,
+		UserID:    userID,
 		ProjectID: projectID,
 		Role:      invitation.Role,
 	})
@@ -370,7 +370,7 @@ func handleProjectMemberRemove(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 	projectID := c.Params("projectID")
 	userID := c.Params("userID")
 
-	userId, err := helpers.GetSession(c)
+	userID, err := helpers.GetSession(c)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -378,7 +378,7 @@ func handleProjectMemberRemove(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	if userId == userID {
+	if userID == userID {
 		return c.SendStatus(fiber.StatusForbidden)
 	}
 
@@ -395,7 +395,7 @@ func handleProjectMemberRemove(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpo
 
 	// remove assignements from tickets
 	err = q.RemoveUserFromProjectTickets(c.Context(), queryProvider.RemoveUserFromProjectTicketsParams{
-		AssigneeID: pgtype.Text{String: userId, Valid: true},
+		AssigneeID: pgtype.Text{String: userID, Valid: true},
 		ProjectID:  projectID,
 	})
 

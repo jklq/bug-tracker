@@ -19,13 +19,13 @@ func handleProjectListGet(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	userId, ok := sess.Get("user_id").(string)
+	userID, ok := sess.Get("user_id").(string)
 
 	if !ok {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	projects, err := q.GetProjectsByUserIdWithTicketAndMemberInfo(c.Context(), pgtype.Text{String: userId, Valid: true})
+	projects, err := q.GetProjectsByUserIdWithTicketAndMemberInfo(c.Context(), pgtype.Text{String: userID, Valid: true})
 
 	if err != nil {
 		log.Println(err.Error())

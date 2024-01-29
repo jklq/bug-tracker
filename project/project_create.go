@@ -37,7 +37,7 @@ func handleProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 		return c.Status(fiber.StatusBadRequest).SendString(helpers.TranslateError(err, helpers.Translator)[0].Error())
 	}
 
-	userId, err := helpers.GetSession(c)
+	userID, err := helpers.GetSession(c)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -49,7 +49,7 @@ func handleProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool)
 		ProjectID:   cuid.New(),
 		Name:        params.Name,
 		Description: pgtype.Text{String: params.Description, Valid: true},
-		UserID:      userId,
+		UserID:      userID,
 	})
 
 	if err != nil {

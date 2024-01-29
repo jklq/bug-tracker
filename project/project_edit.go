@@ -58,7 +58,7 @@ func handleEditProjectPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.P
 	// 	return c.SendStatus(fiber.StatusInternalServerError)
 	// }
 
-	// userId, ok := sess.Get("user_id").(string)
+	// userID, ok := sess.Get("user_id").(string)
 
 	// if !ok {
 	// 	return c.SendStatus(fiber.StatusInternalServerError)

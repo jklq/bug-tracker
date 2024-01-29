@@ -114,7 +114,7 @@ templ InviteUserSearchResultView(user queryProvider.User) {
 		<form class="text-stone-950" hx-post="invite" hx-target="#invitation-success" hx-target-error="#invitation-errors">
 			<div class="mt-4 flex gap-3 items-center">
 				<span>{ user.Username } ({ user.Email }) as</span>
-				<input type="text" class="hidden" name="userId" value={ user.UserID }/>
+				<input type="text" class="hidden" name="userID" value={ user.UserID }/>
 				<select name="role" class="border p-1" id="">
 					<option value="viewer">Viewer</option>
 					<option value="editor">Editor</option>

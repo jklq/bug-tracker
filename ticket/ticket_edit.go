@@ -46,7 +46,7 @@ func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 	}
 
 	// first get project id from session
-	userId, err := helpers.GetSession(c)
+	userID, err := helpers.GetSession(c)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -57,7 +57,7 @@ func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 	// then check if user is member of project
 	_, err = q.GetProjectMemberRelation(c.Context(), queryProvider.GetProjectMemberRelationParams{
 		ProjectID: c.Params("projectID"),
-		UserID:    userId,
+		UserID:    userID,
 	})
 
 	if err != nil {

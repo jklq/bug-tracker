@@ -20,13 +20,13 @@ func handleAssignedTicketList(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpoo
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	userId, ok := sess.Get("user_id").(string)
+	userID, ok := sess.Get("user_id").(string)
 
 	if !ok {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	tickets, err := q.GetAssignedTickets(c.Context(), pgtype.Text{String: userId, Valid: true})
+	tickets, err := q.GetAssignedTickets(c.Context(), pgtype.Text{String: userID, Valid: true})
 	if err != nil {
 		log.Error(err.Error())
 
