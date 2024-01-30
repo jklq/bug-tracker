@@ -11,6 +11,10 @@ func RedirectIfLoggedIn(c *fiber.Ctx) error {
 	isLoggedIn := helpers.IsLoggedIn(c)
 
 	if isLoggedIn {
+		if helpers.IsHtmxRequest(c) {
+			c.Set("HX-Redirect", "/app")
+			return c.SendString("Redirecting...")
+		}
 		return c.Redirect("/app")
 	}
 
