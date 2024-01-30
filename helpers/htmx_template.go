@@ -15,6 +15,7 @@ func HtmxTemplate(c *fiber.Ctx) string {
 
 func HtmxLayoutComponent(c *fiber.Ctx) templ.Component {
 	if IsHtmxRequest(c) {
+		c.Set("Cache-Control", "no-store, max-age=0")
 		return view.BasicEmpty()
 	}
 	return view.AppLayout(nil)
