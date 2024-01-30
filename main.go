@@ -26,19 +26,7 @@ func init() {
 	godotenv.Load(".env")
 }
 func main() {
-
-	// Initialize standard Go html template engine
-	// engine := django.New("./views", ".django")
-
 	engine := html.New("./view", ".html")
-
-	// register functions
-	//engine.AddFunc("parseDate", helpers.ParseDate)
-	//engine.AddFunc("parseTime", helpers.ParseTime)
-	//engine.AddFunc("statusToText", helpers.StatusToText)
-	//engine.AddFunc("priorityToText", helpers.PriorityToText)
-
-	//engine.AddFunc("c", helpers.CleanHTML)
 
 	// Init database pool
 	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
