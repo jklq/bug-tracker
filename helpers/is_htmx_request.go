@@ -7,5 +7,5 @@ import (
 )
 
 func IsHtmxRequest(c *fiber.Ctx) bool {
-	return strings.ToLower(c.Get("HX-Request")) == "true"
+	return strings.ToLower(c.Get("HX-Request")) == "true" && strings.ToLower(c.Get("HX-History-Restore-Request")) != "true"
 }
