@@ -69,13 +69,13 @@ SELECT * FROM user_projects WHERE user_id = $1 AND project_id = $2;
 WITH ProjectCounts AS (
   SELECT
     p.project_id,
-    COUNT(t.project_id) AS ticket_count,
-    COUNT(up.project_id) AS member_count,
+    COUNT(DISTINCT t.ticket_id) AS ticket_count, -- Count distinct tickets
+    COUNT(DISTINCT up.user_id) AS member_count, -- Count distinct members
     SUM(CASE WHEN t.status = 1 THEN 1 ELSE 0 END) AS open_ticket_count,
     SUM(CASE WHEN t.status = 1 AND t.assignee_id = $1 THEN 1 ELSE 0 END) AS your_ticket_count
   FROM projects p
-  JOIN user_projects up ON p.project_id = up.project_id
   LEFT JOIN tickets t ON p.project_id = t.project_id
+  JOIN user_projects up ON p.project_id = up.project_id
   WHERE up.user_id = $1
   GROUP BY p.project_id
 )
@@ -87,7 +87,6 @@ SELECT
   pc.your_ticket_count
 FROM projects p
 JOIN ProjectCounts pc ON p.project_id = pc.project_id;
-
 
 -- name: AddUserToProject :exec
 INSERT INTO user_projects (user_id, project_id, role) VALUES ($1, $2, $3);
@@ -224,10 +223,10 @@ RETURNING *;
 SELECT * FROM tickets WHERE ticket_id = $1;
 
 -- name: GetAssignedTickets :many
-SELECT * FROM tickets WHERE assignee_id = $1 ORDER BY status DESC, priority ASC;
+SELECT * FROM tickets WHERE assignee_id = $1 ORDER BY status DESC, priority DESC;
 
 -- name: GetTicketsByProjectId :many
-SELECT * FROM tickets WHERE project_id = $1 ORDER BY status DESC, priority ASC;
+SELECT * FROM tickets WHERE project_id = $1 ORDER BY status DESC, priority DESC;
 
 -- name: GetAllTickets :many
 SELECT * FROM tickets ORDER BY created_at DESC;
