@@ -59,9 +59,9 @@ templ TicketEditView(template templ.Component, ticket db.Ticket) {
 					<div class="mb-2">
 						<label for="ticket-priority-input" class="block">Ticket Priority:</label>
 						<select id="ticket-priority-input" class="w-full border border-gray-700 p-1 text-lg" name="priority">
-							<option value="1">Low</option>
-							<option value="2">Medium</option>
-							<option value="3">High</option>
+							<option value="1" selected?={ ticket.Priority == 1 }>Low</option>
+							<option value="2" selected?={ ticket.Priority == 2 }>Medium</option>
+							<option value="3" selected?={ ticket.Priority == 3 }>High</option>
 						</select>
 					</div>
 					<!-- Submit Button -->

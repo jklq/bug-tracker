@@ -108,7 +108,37 @@ func TicketEditView(template templ.Component, ticket db.Ticket) templ.Component 
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(">Closed</option></select></div><!-- Ticket Priority --><div class=\"mb-2\"><label for=\"ticket-priority-input\" class=\"block\">Ticket Priority:</label> <select id=\"ticket-priority-input\" class=\"w-full border border-gray-700 p-1 text-lg\" name=\"priority\"><option value=\"1\">Low</option> <option value=\"2\">Medium</option> <option value=\"3\">High</option></select></div><!-- Submit Button --><button type=\"submit\" class=\"p-2 border border-black hover:bg-gray-300 duration-100 mt-3\">Save changes</button><!-- Error Display --><div class=\"text-red-600 inline-block p-2\" id=\"project-edit-error\"></div></form></div><div class=\"p-4 \"><h2 class=\"text-xl text-bold mb-2\">Other actions</h2><div class=\"p-3 border border-red-800 rounded\"><form action=\"post\" method=\"post\" hx-post=\"delete\" hx-push-url=\"true\" hx-push-url=\"true\" method=\"post\"><input type=\"submit\" class=\"p-1 py-2 bg-red-600 cursor-pointer rounded hover:bg-red-700 text-white duration-100 px-8\" value=\"Delete project\"></form></div></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(">Closed</option></select></div><!-- Ticket Priority --><div class=\"mb-2\"><label for=\"ticket-priority-input\" class=\"block\">Ticket Priority:</label> <select id=\"ticket-priority-input\" class=\"w-full border border-gray-700 p-1 text-lg\" name=\"priority\"><option value=\"1\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if ticket.Priority == 1 {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" selected")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(">Low</option> <option value=\"2\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if ticket.Priority == 2 {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" selected")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(">Medium</option> <option value=\"3\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if ticket.Priority == 3 {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" selected")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(">High</option></select></div><!-- Submit Button --><button type=\"submit\" class=\"p-2 border border-black hover:bg-gray-300 duration-100 mt-3\">Save changes</button><!-- Error Display --><div class=\"text-red-600 inline-block p-2\" id=\"project-edit-error\"></div></form></div><div class=\"p-4 \"><h2 class=\"text-xl text-bold mb-2\">Other actions</h2><div class=\"p-3 border border-red-800 rounded\"><form action=\"post\" method=\"post\" hx-post=\"delete\" hx-push-url=\"true\" hx-push-url=\"true\" method=\"post\"><input type=\"submit\" class=\"p-1 py-2 bg-red-600 cursor-pointer rounded hover:bg-red-700 text-white duration-100 px-8\" value=\"Delete project\"></form></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

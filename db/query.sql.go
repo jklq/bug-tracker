@@ -357,7 +357,7 @@ func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
 }
 
 const getAssignedTickets = `-- name: GetAssignedTickets :many
-SELECT ticket_id, title, description, status, priority, assignee_id, assignee_username, assignee_email, created_by, project_id, created_at, updated_at FROM tickets WHERE assignee_id = $1 ORDER BY status DESC, priority ASC
+SELECT ticket_id, title, description, status, priority, assignee_id, assignee_username, assignee_email, created_by, project_id, created_at, updated_at FROM tickets WHERE assignee_id = $1 ORDER BY status DESC, priority DESC
 `
 
 func (q *Queries) GetAssignedTickets(ctx context.Context, assigneeID pgtype.Text) ([]Ticket, error) {
@@ -695,13 +695,13 @@ const getProjectsByUserIdWithTicketAndMemberInfo = `-- name: GetProjectsByUserId
 WITH ProjectCounts AS (
   SELECT
     p.project_id,
-    COUNT(t.project_id) AS ticket_count,
-    COUNT(up.project_id) AS member_count,
+    COUNT(DISTINCT t.ticket_id) AS ticket_count, -- Count distinct tickets
+    COUNT(DISTINCT up.user_id) AS member_count, -- Count distinct members
     SUM(CASE WHEN t.status = 1 THEN 1 ELSE 0 END) AS open_ticket_count,
     SUM(CASE WHEN t.status = 1 AND t.assignee_id = $1 THEN 1 ELSE 0 END) AS your_ticket_count
   FROM projects p
-  JOIN user_projects up ON p.project_id = up.project_id
   LEFT JOIN tickets t ON p.project_id = t.project_id
+  JOIN user_projects up ON p.project_id = up.project_id
   WHERE up.user_id = $1
   GROUP BY p.project_id
 )
@@ -785,7 +785,7 @@ func (q *Queries) GetTicketById(ctx context.Context, ticketID string) (Ticket, e
 }
 
 const getTicketsByProjectId = `-- name: GetTicketsByProjectId :many
-SELECT ticket_id, title, description, status, priority, assignee_id, assignee_username, assignee_email, created_by, project_id, created_at, updated_at FROM tickets WHERE project_id = $1 ORDER BY status DESC, priority ASC
+SELECT ticket_id, title, description, status, priority, assignee_id, assignee_username, assignee_email, created_by, project_id, created_at, updated_at FROM tickets WHERE project_id = $1 ORDER BY status DESC, priority DESC
 `
 
 func (q *Queries) GetTicketsByProjectId(ctx context.Context, projectID string) ([]Ticket, error) {

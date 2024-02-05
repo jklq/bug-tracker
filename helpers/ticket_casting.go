@@ -15,11 +15,11 @@ func StatusToText(status int16) string {
 
 func PriorityToText(status int16) string {
 	switch status {
-	case 1:
+	case 3:
 		return "High"
 	case 2:
 		return "Medium"
-	case 3:
+	case 1:
 		return "Low"
 	}
 

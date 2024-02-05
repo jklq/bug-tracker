@@ -73,6 +73,8 @@ func handleEditTicketPost(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Po
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
+	fmt.Println("PRIORITY:", params.Priority)
+
 	priority, err := strconv.Atoi(params.Priority)
 
 	if err != nil {

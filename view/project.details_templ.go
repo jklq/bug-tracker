@@ -599,7 +599,7 @@ func TicketPriorityTicker(ticket TicketPriorityTicker_ticket) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		switch ticket.Priority {
-		case 1:
+		case 3:
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("High")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -609,7 +609,7 @@ func TicketPriorityTicker(ticket TicketPriorityTicker_ticket) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		case 3:
+		case 1:
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Low")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
