@@ -12,7 +12,7 @@ This repository contains the source code for a Bug Tracker web application. Buil
 
 ## Todo
 
-- Fix errror where if you have a cookie that appears logged in in the session, you cant log in, even if the user does not actually exist
+- Fix error where if you have a cookie that appears logged in in the session, you cant log in, even if the user does not actually exist
 
 ## Inspiration
 
