@@ -1,5 +1,5 @@
 [phases.install]
-cmds = ["GOPROXY=https://goproxy.cn go get github.com/klauspost/compress", "GOPROXY=https://goproxy.cn go get github.com/gabriel-vasile/mimetype", "go get"]
+cmds = ["GOPROXY=https://goproxy.cn go get github.com/klauspost/compress@1.16.7", "GOPROXY=https://goproxy.cn go get github.com/gabriel-vasile/mimetype@v1.4.2", "go get"]
 [phases.pre_build]
 cmds = ["./bin/templ generate"]
 [phases.build]
