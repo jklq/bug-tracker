@@ -3,8 +3,7 @@ cmds = ["GOPROXY=https://goproxy.cn go get github.com/klauspost/compress@v1.16.7
 [phases.pre_build]
 cmds = ["./bin/templ generate"]
 [phases.build]
-cmds = ["go build -o ./bin/bug-tracker ./."]
+cmds = ["go build -o ./out ./."]
 [phases.pre_start]
 cmds = ["./bin/dbmate up"]
-[start]
-cmds = ["./bin/bug-tracker"]
+
