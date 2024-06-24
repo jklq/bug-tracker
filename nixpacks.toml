@@ -1,5 +1,7 @@
+[phases.pre_build]
+cmds = ["./bin/templ generate"]
 [phases.build]
-cmds = ["./bin/templ generate", "go build -o ./bin/bug-tracker ./."]
+cmds = ["go build -o ./bin/bug-tracker ./."]
 [phases.pre_start]
 cmds = ["./bin/dbmate up"]
 [phases.start]
