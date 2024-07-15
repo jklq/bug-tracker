@@ -16,7 +16,5 @@ This repository contains the source code for a Bug Tracker web application. Buil
 
 ## Inspiration
 
-I typically design projects closely aligned with my inspirations, since I don't focus on showcasing my pure design skills (as they are probably not very good either). My key strength is in transforming an existing design, whether it's a mockup, image, or concept, into a fully functional website with added interactivity, backend features, etc.
-
 - ["Admin dashboard: analytics UX" by Halo Product](https://dribbble.com/shots/19687516-Admin-dashboard-analytics-UX])
   ![Image of Admin Dashboard](https://cdn.dribbble.com/userupload/3831213/file/original-c8996d294ff916cb9d0e3f3991cefdb9.png?resize=1024x768)
