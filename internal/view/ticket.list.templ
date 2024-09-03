@@ -65,7 +65,7 @@ templ ProjectDetailView(params ProjectDetailViewParams) {
 
 templ ticketList(tickets []queryProvider.Ticket) {
 	if len(tickets) == 0 {
-		<span class="text-3xl text-gray-400 bg-gray-200 p-3 text-center block">(No tickets)</span>
+		<p class="text-gray-500">No tickets</p>
 	} else {
 		<div class="border border-gray-300 ">
 			<table class="w-full text-left">

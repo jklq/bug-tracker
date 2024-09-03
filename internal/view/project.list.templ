@@ -10,7 +10,7 @@ func truncateText(s string, max int) string {
 	if max > len(s) {
 		return s
 	}
-	return s[:strings.LastIndex(s[:max], " ")]
+	return s[:strings.LastIndex(s[:max], " ")] + "..."
 }
 
 templ ProjectList(layout templ.Component, projects []queryProvider.GetProjectsByUserIdWithTicketAndMemberInfoRow, successMsg string) {
