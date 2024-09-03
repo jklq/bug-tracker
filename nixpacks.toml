@@ -1,9 +1,8 @@
 [phases.install]
-cmds = ["GOPROXY=https://goproxy.cn go get github.com/klauspost/compress@v1.16.7", "GOPROXY=https://goproxy.cn go get github.com/gabriel-vasile/mimetype@v1.4.2", "go get"]
+cmds = ["go install github.com/a-h/templ/cmd/templ@latest", "go get"]
 [phases.pre_build]
 cmds = ["./bin/templ generate"]
 [phases.build]
 cmds = ["go build -o ./out ./."]
 [phases.pre_start]
 cmds = ["./bin/dbmate up"]
-

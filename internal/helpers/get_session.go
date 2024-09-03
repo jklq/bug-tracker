@@ -18,8 +18,6 @@ func GetSession(c *fiber.Ctx) (string, error) {
 	userID, ok := sess.Get("user_id").(string)
 
 	if !ok {
-		log.Error(err.Error())
-
 		return "", err
 	}
 
