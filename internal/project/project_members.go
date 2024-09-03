@@ -315,7 +315,7 @@ func handleProjectMemberInviteAccept(c *fiber.Ctx, q *queryProvider.Queries, db 
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return c.SendString("Invitation accepted successfully!")
+	return c.SendString("<span class=\"p-10 pt-6\">Invitation accepted successfully!</span>")
 }
 
 func handleProjectMemberInviteDecline(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {
@@ -362,7 +362,7 @@ func handleProjectMemberInviteDecline(c *fiber.Ctx, q *queryProvider.Queries, db
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return c.SendString("Invitation declined successfully!")
+	return c.SendString("<span class=\"p-10 pt-6\">Invitation accepted successfully!</span>")
 }
 
 // handleProjectMemberRemove

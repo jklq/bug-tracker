@@ -15,7 +15,7 @@ func truncateText(s string, max int) string {
 
 templ ProjectList(layout templ.Component, projects []queryProvider.GetProjectsByUserIdWithTicketAndMemberInfoRow, successMsg string) {
 	@layout {
-		<div class="max-w-screen-lg p-10 pt-6">
+		<div class="max-w-screen-lg pb-10 py-6 mx-10">
 			if successMsg != "" {
 				<span class="text-green-800 bg-green-300 inline-block p-2">{ successMsg }</span>
 			}
