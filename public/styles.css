@@ -753,10 +753,6 @@ video {
   gap: 0.25rem;
 }
 
-.gap-10 {
-  gap: 2.5rem;
-}
-
 .gap-16 {
   gap: 4rem;
 }
@@ -805,11 +801,6 @@ video {
 .border-black {
   --tw-border-opacity: 1;
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
-}
-
-.border-cyan-900 {
-  --tw-border-opacity: 1;
-  border-color: rgb(22 78 99 / var(--tw-border-opacity));
 }
 
 .border-gray-300 {
@@ -1149,6 +1140,13 @@ video {
   a-z-a--z: \-\.;
 }
 
+.development-primary-button {
+}
+
+.development-logo-text {
+  color: red;
+}
+
 .progress {
   position: fixed;
   top: 0;
@@ -1179,7 +1177,8 @@ video {
   left: 0;
   bottom: 0;
   will-change: left, right;
-  animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1)
+    infinite;
   animation-delay: 1.15s;
 }
 

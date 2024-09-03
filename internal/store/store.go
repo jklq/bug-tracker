@@ -3,12 +3,15 @@ package store
 import (
 	"time"
 
+	"os"
+
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/storage/postgres/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var Store *session.Store
+var Environment string
 
 func InitializeStore(dbPool *pgxpool.Pool) {
 	// Initialize custom config
@@ -25,4 +28,6 @@ func InitializeStore(dbPool *pgxpool.Pool) {
 		Storage:        storage,
 		Expiration:     7 * 24 * time.Hour,
 	})
+
+	Environment = os.Getenv("ENV")
 }
