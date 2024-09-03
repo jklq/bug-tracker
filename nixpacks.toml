@@ -1,5 +1,4 @@
-[phases.install]
-cmds = ["go get"]
+
 [phases.pre_build]
 cmds = ["./bin/templ generate"]
 [phases.build]
