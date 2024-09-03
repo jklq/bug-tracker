@@ -22,7 +22,7 @@ type ProjectMemberDetailViewParams struct {
 templ ProjectMemberDetailView(template templ.Component, params ProjectMemberDetailViewParams, role string) {
 	@template {
 		<div class="max-h-screen max-w-screen-lg flex flex-col ">
-			@projectHeader(params.Project, "view")
+			@appHeader(params.Project.Name, "", "view")
 			<div class="p-4 px-8 flex flex-grow gap-8">
 				if role == "project manager" {
 					<div class="border p-4 flex-grow">

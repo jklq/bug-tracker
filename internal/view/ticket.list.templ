@@ -1,8 +1,8 @@
 package view
 
 import (
-	queryProvider "github.com/jklq/project-tracker/internal/db"
 	"fmt"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
 	"time"
 )
 
@@ -27,7 +27,7 @@ type ProjectDetailViewParams struct {
 templ ProjectDetailView(params ProjectDetailViewParams) {
 	@params.Template {
 		<div class="max-h-screen flex flex-col ">
-			@projectHeader(params.Project, "/app/project") {
+			@appHeader(truncateText(params.Project.Name, 40), truncateText(params.Project.Description.String, 80), "/app/project") {
 				<a href="members" hx-boost="true" hx-push-url="true" class="p-2 px-8 rounded hover:bg-gray-200 border border-lime-900 duration-100 whitespace-nowrap">
 					if params.Role == "project manager" {
 						Manage members
@@ -61,27 +61,6 @@ templ ProjectDetailView(params ProjectDetailViewParams) {
 			</div>
 		</div>
 	}
-}
-
-templ projectHeader(project queryProvider.Project, backLink string) {
-	<div class="border-b border-gray-300 px-8 py-4">
-		<div class="flex max-w-screen-lg items-center gap-3">
-			<div class="flex flex-grow gap-3">
-				<div class="inline">
-					<a href={ templ.SafeURL(backLink) } hx-boost="true" class="p-1 h-full flex items-center block rounded hover:bg-gray-200 border border-lime-900 duration-100 px-3 max-h-[100px]">
-						&lt;
-					</a>
-				</div>
-				<div class="flex-grow flex items-center">
-					<div>
-						<h1 class="text-xl font-bold">{ truncateText(project.Name, 40) }</h1>
-						<p>{ truncateText(project.Description.String, 80) }</p>
-					</div>
-				</div>
-			</div>
-			{ children... }
-		</div>
-	</div>
 }
 
 templ ticketList(tickets []queryProvider.Ticket) {
@@ -210,7 +189,7 @@ templ TicketPriorityTicker(ticket TicketPriorityTicker_ticket) {
 		switch ticket.Priority {
 			case 3:
 				High
-			case 2: 
+			case 2:
 				Medium
 			case 1:
 				Low
