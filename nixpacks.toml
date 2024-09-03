@@ -1,7 +1,7 @@
 [phases.install]
 cmds = ["go install github.com/a-h/templ/cmd/templ@latest", "go get"]
 [phases.pre_build]
-cmds = ["./bin/templ generate"]
+cmds = ["templ generate"]
 [phases.build]
 cmds = ["go build -o ./out ./."]
 [phases.pre_start]
