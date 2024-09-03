@@ -1,13 +1,15 @@
 package view
 
-import "github.com/jklq/project-tracker/internal/db"
-import "fmt"
+import (
+	"fmt"
+	"github.com/jklq/project-tracker/internal/db"
+)
 
 // personal invitation view of all invites from all projects
-templ ProjectMemberInvitationView (template templ.Component, invitations []db.GetProjectInvitationsByUserRow) {
+templ ProjectMemberInvitationView(template templ.Component, invitations []db.GetProjectInvitationsByUserRow) {
 	@template {
-		<div class="max-w-screen-lg p-10 pt-14">
-			<div class="flex items-end mb-5 ">
+		<div class="max-w-screen-lg p-10 pt-6">
+			<div class="flex items-end mb-5 h-8">
 				<h1 class="flex-grow font-serif text-2xl">Invitations</h1>
 			</div>
 			<div>

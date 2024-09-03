@@ -1,15 +1,13 @@
 package view
 
-
 import (
-	queryProvider "github.com/jklq/project-tracker/internal/db"
 	"fmt"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
 )
 
-templ ProjectEditView(template templ.Component, project queryProvider.Project ) {
+templ ProjectEditView(template templ.Component, project queryProvider.Project) {
 	@template {
 		@appHeader(fmt.Sprintf("Edit \"%s\"", project.Name), "", "view")
-
 		<div class="flex max-w-screen-lg ">
 			<div class="flex-grow">
 				<form hx-push-url="true" hx-post="edit" class="p-4 px-8" hx-target-error="#edit-error" method="post">
