@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	queryProvider "github.com/jklq/bug-tracker/internal/db"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
 )
 
 func TicketDetailView(template templ.Component, projectID string, ticket queryProvider.Ticket) templ.Component {

@@ -3,9 +3,9 @@ package user
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
-	queryProvider "github.com/jklq/bug-tracker/internal/db"
-	"github.com/jklq/bug-tracker/internal/middleware"
-	"github.com/jklq/bug-tracker/internal/store"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
+	"github.com/jklq/project-tracker/internal/middleware"
+	"github.com/jklq/project-tracker/internal/store"
 )
 
 func InitModule(router fiber.Router, queries *queryProvider.Queries, db *pgxpool.Pool) {

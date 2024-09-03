@@ -3,7 +3,7 @@ package helpers
 import (
 	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
-	"github.com/jklq/bug-tracker/internal/view"
+	"github.com/jklq/project-tracker/internal/view"
 )
 
 func HtmxTemplate(c *fiber.Ctx) string {

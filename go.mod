@@ -1,4 +1,4 @@
-module github.com/jklq/bug-tracker
+module github.com/jklq/project-tracker
 
 go 1.22.4
 

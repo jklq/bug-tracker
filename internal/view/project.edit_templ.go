@@ -8,7 +8,7 @@ package view
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import queryProvider "github.com/jklq/bug-tracker/internal/db"
+import queryProvider "github.com/jklq/project-tracker/internal/db"
 
 func ProjectEditView(template templ.Component, project queryProvider.Project) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {

@@ -26,7 +26,7 @@ func AppLayout(err error) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html id=\"doc\"><head><title>Bug Tracker</title><link rel=\"stylesheet\" href=\"/static/styles.css\"><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><script src=\"/static/htmx.min.js\"></script><script src=\"/static/htmx-error-ex.min.js\"></script></head><body class=\"bg-stone-100 text-stone-950\" hx-ext=\"response-targets\" hx-indicator=\".progress\"><div class=\"progress\" style=\"height: 3px;\"><div class=\" indeterminate bg-lime-400\"></div></div><div class=\"flex\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html id=\"doc\"><head><title>Project Tracker</title><link rel=\"stylesheet\" href=\"/static/styles.css\"><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><script src=\"/static/htmx.min.js\"></script><script src=\"/static/htmx-error-ex.min.js\"></script></head><body class=\"bg-stone-100 text-stone-950\" hx-ext=\"response-targets\" hx-indicator=\".progress\"><div class=\"progress\" style=\"height: 3px;\"><div class=\" indeterminate bg-lime-400\"></div></div><div class=\"flex\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

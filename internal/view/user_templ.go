@@ -43,7 +43,7 @@ func Index(template templ.Component) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"px-8 max-w-screen-lg mx-auto mt-12\"><span class=\"text-red-700 md:hidden\">Denne nettsiden er ikke mobilvennlig!</span><h1 class=\"text-2xl\">Welcome to the Bug Tracker!</h1><div class=\"mt-4\"><a href=\"/user/register\" hx-boost=\"true\" class=\"py-2 px-3 bg-lime-300 whitespace-nowrap rounded border border-lime-900 duration-100 hover:bg-lime-400\">Make an account</a> <a href=\"/user/login\" hx-boost=\"true\" class=\"py-2 px-3 border border-lime-900 hover:bg-gray-200 duration-100 rounded ml-1\">Log in</a></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"px-8 max-w-screen-lg mx-auto mt-12\"><span class=\"text-red-700 md:hidden\">Denne nettsiden er ikke mobilvennlig!</span><h1 class=\"text-2xl\">Welcome to the Project Tracker!</h1><div class=\"mt-4\"><a href=\"/user/register\" hx-boost=\"true\" class=\"py-2 px-3 bg-lime-300 whitespace-nowrap rounded border border-lime-900 duration-100 hover:bg-lime-400\">Make an account</a> <a href=\"/user/login\" hx-boost=\"true\" class=\"py-2 px-3 border border-lime-900 hover:bg-gray-200 duration-100 rounded ml-1\">Log in</a></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

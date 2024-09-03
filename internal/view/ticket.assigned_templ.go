@@ -9,7 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/jklq/bug-tracker/internal/db"
+	"github.com/jklq/project-tracker/internal/db"
 )
 
 func AssignedTicketsView(template templ.Component, tickets []db.Ticket) templ.Component {

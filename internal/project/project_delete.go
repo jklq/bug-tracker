@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/jackc/pgx/v5/pgxpool"
-	queryProvider "github.com/jklq/bug-tracker/internal/db"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
 )
 
 type DeleteProjectParams struct {

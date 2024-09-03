@@ -3,7 +3,7 @@ package ticket
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
-	queryProvider "github.com/jklq/bug-tracker/internal/db"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
 )
 
 func handleTicketDeletion(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {

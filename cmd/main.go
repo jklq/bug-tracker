@@ -11,14 +11,14 @@ import (
 
 	"github.com/gofiber/template/html/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/jklq/bug-tracker/internal/db"
-	"github.com/jklq/bug-tracker/internal/helpers"
-	"github.com/jklq/bug-tracker/internal/middleware"
-	"github.com/jklq/bug-tracker/internal/project"
-	"github.com/jklq/bug-tracker/internal/store"
-	"github.com/jklq/bug-tracker/internal/ticket"
-	"github.com/jklq/bug-tracker/internal/user"
-	"github.com/jklq/bug-tracker/internal/view"
+	"github.com/jklq/project-tracker/internal/db"
+	"github.com/jklq/project-tracker/internal/helpers"
+	"github.com/jklq/project-tracker/internal/middleware"
+	"github.com/jklq/project-tracker/internal/project"
+	"github.com/jklq/project-tracker/internal/store"
+	"github.com/jklq/project-tracker/internal/ticket"
+	"github.com/jklq/project-tracker/internal/user"
+	"github.com/jklq/project-tracker/internal/view"
 	"github.com/joho/godotenv"
 )
 

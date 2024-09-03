@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	queryProvider "github.com/jklq/bug-tracker/internal/db"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )

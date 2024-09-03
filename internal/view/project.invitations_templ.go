@@ -8,7 +8,7 @@ package view
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/jklq/bug-tracker/internal/db"
+import "github.com/jklq/project-tracker/internal/db"
 import "fmt"
 
 // personal invitation view of all invites from all projects

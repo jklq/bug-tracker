@@ -1,8 +1,8 @@
-![Bug Tracker Banner](banner.png)
+![Project Tracker Banner](banner.png)
 
-# Bug Tracker 🐛
+# Project Tracker 🐛
 
-This repository contains the source code for a Bug Tracker web application. Built with Go and HTMX. It is currently under construction.
+This repository contains the source code for a Project Tracker web application. Built with Go and HTMX. It is currently under construction.
 
 1. First fill out the env file (see `.env.example`)
 2. Run `dbmate up` to push the migrations

@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/jackc/pgx/v5/pgxpool"
-	queryProvider "github.com/jklq/bug-tracker/internal/db"
-	"github.com/jklq/bug-tracker/internal/helpers"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
+	"github.com/jklq/project-tracker/internal/helpers"
 )
 
 func IsProjectMemberMiddleware(c *fiber.Ctx, q *queryProvider.Queries, db *pgxpool.Pool) error {

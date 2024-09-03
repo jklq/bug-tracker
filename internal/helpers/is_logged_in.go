@@ -3,7 +3,7 @@ package helpers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
-	"github.com/jklq/bug-tracker/internal/store"
+	"github.com/jklq/project-tracker/internal/store"
 )
 
 // Middleware to check if user is logged in

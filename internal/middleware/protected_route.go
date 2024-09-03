@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jklq/bug-tracker/internal/store"
+	"github.com/jklq/project-tracker/internal/store"
 )
 
 // Middleware to check if user is logged in

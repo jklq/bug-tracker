@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	queryProvider "github.com/jklq/bug-tracker/internal/db"
+	queryProvider "github.com/jklq/project-tracker/internal/db"
 	"strings"
 )
 
@@ -74,7 +74,7 @@ func ProjectList(layout templ.Component, projects []queryProvider.GetProjectsByU
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex items-end mb-5 \"><h1 class=\"flex-grow font-bold text-2xl\">Your Projects</h1><a href=\"/app/project/create\" hx-boost=\"true\" hx-push-url=\"true\" class=\"border border-lime-900 flex items-center bg-lime-300 rounded hover:bg-lime-400 duration-100 pl-5 pr-7 py-3\"><span>+ Add New Project</span></a></div><div class=\"mt-3\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex items-end mb-5 \"><h1 class=\"flex-grow text-2xl font-serif\">Your Projects</h1><a href=\"/app/project/create\" hx-boost=\"true\" hx-push-url=\"true\" class=\"border border-lime-900 flex items-center bg-lime-300 rounded hover:bg-lime-400 duration-100 pl-5 pr-7 py-3\"><span>+ Add New Project</span></a></div><div class=\"mt-3\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
