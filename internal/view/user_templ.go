@@ -43,7 +43,7 @@ func Index(template templ.Component) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"max-w-screen-lg mx-auto mt-12\"><h1 class=\"text-2xl\">Welcome to the Bug Tracker!</h1><div class=\"mt-4\"><a href=\"/user/register\" hx-boost=\"true\" class=\"py-2 px-3 bg-lime-300 whitespace-nowrap rounded border border-lime-900 duration-100 hover:bg-lime-400\">Make an account</a> <a href=\"/user/login\" hx-boost=\"true\" class=\"py-2 px-3 border border-lime-900 hover:bg-gray-200 duration-100 rounded ml-1\">Log in</a></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"px-8 max-w-screen-lg mx-auto mt-12\"><span class=\"text-red-700 md:hidden\">Denne nettsiden er ikke mobilvennlig!</span><h1 class=\"text-2xl\">Welcome to the Bug Tracker!</h1><div class=\"mt-4\"><a href=\"/user/register\" hx-boost=\"true\" class=\"py-2 px-3 bg-lime-300 whitespace-nowrap rounded border border-lime-900 duration-100 hover:bg-lime-400\">Make an account</a> <a href=\"/user/login\" hx-boost=\"true\" class=\"py-2 px-3 border border-lime-900 hover:bg-gray-200 duration-100 rounded ml-1\">Log in</a></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -87,14 +87,14 @@ func Login(template templ.Component, errorMsg string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"max-w-screen-lg mx-auto mt-12\"><a href=\"/\" hx-boost=\"true\" class=\"mb-2 inline-block hover:underline\">&lt;&lt; Go back</a><form id=\"content\" method=\"POST\"><h1 class=\"text-2xl mb-3\">Login</h1><input class=\"px-2 py-3 border mb-3\" type=\"email\" name=\"email\" placeholder=\"Email\"> <input class=\"px-2 py-3 border block mb-3\" type=\"password\" name=\"password\" placeholder=\"Password\"> <button class=\"px-2 py-1 bg-lime-300 rounded hover:bg-lime-400 border border-lime-900 duration-100 px-8\" type=\"submit\">Login</button><div class=\"mt-3 text-red-600\" id=\"error\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"px-8 max-w-screen-lg mx-auto mt-12\"><a href=\"/\" hx-boost=\"true\" class=\"mb-2 inline-block hover:underline\">&lt;&lt; Go back</a><form id=\"content\" method=\"POST\"><h1 class=\"text-2xl mb-3\">Login</h1><input class=\"px-2 py-3 border mb-3\" type=\"email\" name=\"email\" placeholder=\"Email\"> <input class=\"px-2 py-3 border block mb-3\" type=\"password\" name=\"password\" placeholder=\"Password\"> <button class=\"px-2 py-1 bg-lime-300 rounded hover:bg-lime-400 border border-lime-900 duration-100 px-8\" type=\"submit\">Login</button><div class=\"mt-3 text-red-600\" id=\"error\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(errorMsg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/user.templ`, Line: 36, Col: 56}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/user.templ`, Line: 38, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -144,14 +144,14 @@ func Register(template templ.Component, errorMsg string, params RegisterParams) 
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"max-w-screen-lg mx-auto mt-12\"><a href=\"/\" hx-boost=\"true\" class=\"mb-2 inline-block hover:underline\">&lt;&lt; Go back</a><h1 class=\"text-2xl mb-3\">Register an account!</h1><form id=\"content\" method=\"POST\"><div><label class=\"block\" for=\"username-field\">Username</label> <input id=\"username-field\" value=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"px-8 max-w-screen-lg mx-auto mt-12\"><a href=\"/\" hx-boost=\"true\" class=\"mb-2 inline-block hover:underline\">&lt;&lt; Go back</a><h1 class=\"text-2xl mb-3\">Register an account!</h1><form id=\"content\" method=\"POST\"><div><label class=\"block\" for=\"username-field\">Username</label> <input id=\"username-field\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(params.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/user.templ`, Line: 50, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/user.templ`, Line: 52, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -164,7 +164,7 @@ func Register(template templ.Component, errorMsg string, params RegisterParams) 
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(params.Email)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/user.templ`, Line: 54, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/user.templ`, Line: 56, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -182,7 +182,7 @@ func Register(template templ.Component, errorMsg string, params RegisterParams) 
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(errorMsg)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/user.templ`, Line: 71, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/user.templ`, Line: 73, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
